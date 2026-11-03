@@ -1,6 +1,6 @@
 # 1号：集成负责人、核心与构建
 
-先读[总README](../../../README.md)、[环境](../../ENVIRONMENT.md)、[契约](../../CONTRACTS.md)、[里程碑](../../MILESTONES.md)。本指南是任务说明，当前尚无工程。
+先读[总README](../../../README.md)、[环境](../../ENVIRONMENT.md)、[契约](../../CONTRACTS.md)、[里程碑](../../MILESTONES.md)。本指南是完整任务说明；当前bootstrap分支实现与待验证项见[进度记录](PROGRESS.md)。
 
 ## 你负责什么
 

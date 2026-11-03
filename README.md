@@ -2,7 +2,7 @@
 
 第十九届图灵杯“强军·电波 2027”比赛系统。GitHub 仓库：[kanfeng-eng/Turing-Signal-Relay](https://github.com/kanfeng-eng/Turing-Signal-Relay)。
 
-**当前状态（2026-11-03）：需求与五人协作文档已建立，GitHub 远程仓库已创建；尚无 Unity 工程、服务端代码或可运行游戏。本文中的模块路径和启动入口是后续实现约定，不代表已经存在。**
+**当前状态（2026-11-03，feat/1-bootstrap）：新增最小Unity工程源文件和tick演示，纯C#检查已通过；目标Unity导入、Play和构建尚未验证，服务端与正式玩法尚未实现。详细证据与环境阻碍见[1号进度](docs/team/1/PROGRESS.md)。本文其余模块路径仍是后续实现约定。**
 
 ## 1. 已确认的目标
 
@@ -78,13 +78,13 @@ git switch -c feat/1-bootstrap
 
 将 `1-bootstrap` 换成自己的编号与任务，例如 `2-pathfinding`。日常分支、PR、Scene 协作见 [GitHub 协作约定](CONTRIBUTING.md)。
 
-M0 合入后：Unity Hub → Add project from disk → 选择 `game/` → 用锁定版本打开 → 打开 `Assets/Game/Scenes/Bootstrap.unity` → Play。此入口由 1 号实现，当前尚不存在。
+当前分支已加入Bootstrap场景源文件，目标Unity验证并合入M0后：Unity Hub → Add project from disk → 选择 `game/` → 用锁定版本打开 → 打开 `Assets/Game/Scenes/Bootstrap.unity` → Play。当前可做纯C#检查；Unity验证步骤见1号进度。
 
 首次打开成功标准：Console 无编译错误、能看到 tick 计数递增、暂停恢复正常。后续在同场景选择本地两支样例 AI 进行演示，控制项由 1、4、5 号在 M1 接通。
 
 ## 5. 约定的目标目录
 
-以下是目标结构，当前只交付文档及 Git 配置，未创建游戏目录。
+以下是目标结构；当前分支已创建game最小基础，server/sdk/deploy及其余玩法仍待实现。
 
 ```text
 README.md / CONTRIBUTING.md
