@@ -46,6 +46,18 @@
 
 5 号任务较重：1 号承担 headless 构建和 worker 调度集成；3 号承担结算明细与回放数据；4 号承担提交/裁判页面的简单布局；5 号主攻协议桥接与隔离。交接边界写入各自指南。
 
+### 每个人具体用什么，交付什么
+
+| 编号 | 必须使用的技术栈 | 要做出的具体成果 |
+| --- | --- | --- |
+| 1 | C#、Unity工程/asmdef、固定tick、Unity Editor构建API、JSONL文件读写；协助部分用.NET 10进程管理 | 全员共用的Unity工程；规则推进器；Windows观战包与Linux裁判包；回放写入；worker调用裁判的MatchRunner |
+| 2 | 纯C#、二维数组/集合、A*、队列、固定点/整数tick、Unity Test Framework | 对称地图；可达路径；按地形速度移动的单位；渡口/桥排队；每方可见信息集合 |
+| 3 | 纯C#、图连通搜索、状态机、事件调度、整数半分账本、Unity Test Framework | 可通断的通信网络；报文/器材/建设系统；天气与终局；可审计的得分明细和胜负结果 |
+| 4 | C#、Unity Tilemap/SpriteRenderer、LineRenderer、uGUI/TextMeshPro、UnityWebRequest；网页部分用Razor/HTML/CSS | 地图与单位画面；链路/迷雾；观战面板；可暂停跳转的回放播放器；提交/裁判/结果页面布局 |
+| 5 | C++17/GCC、nlohmann/json；C#/.NET 10/ASP.NET Core/Razor Pages/Identity/EF Core SQLite；Ubuntu/nsjail/systemd | C++ SDK和样例AI；AI进程桥；账号与提交API；隔离编译/运行；持久化评测任务；Ubuntu部署 |
+
+表中是工程实现基线，具体依赖补丁由负责人在首个PR锁定；nsjail需先通过目标宿主验证。**不要求每个人学会整张表**，只掌握自己一行及与相邻成员的接口。技术选择、完整目录和交接清单见[技术栈与联调手册](docs/IMPLEMENTATION_GUIDE.md)，每个编号指南另有文件级任务表。
+
 ## 4. 拉取后的操作顺序
 
 ### 工程初始化前

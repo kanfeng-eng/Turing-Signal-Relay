@@ -24,7 +24,7 @@
 | ResolveRules(state) | 链路、任务、得分，供 Step 调用 | 3 |
 | Snapshot / Event / ScoreEntry | 展示与审计的只读数据 | 1、3、4 |
 
-M0 先落共享类型和空测试数据，不为每个函数创建一层无用途接口。实际依赖顺序：Core 为基础；World/Rules 只依赖 Core；Integration 调用规则推进；Presentation 读取数据。
+M0 先落共享类型和空测试数据，不为每个函数创建一层无用途接口。实际依赖顺序：Core 为基础；World/Rules 只依赖 Core；Integration 中的 MatchEngine/Step 组合调用移动与规则推进；Presentation 读取数据。Core不反向引用World/Rules，避免asmdef循环。文件归属和技术选型见[实施手册](IMPLEMENTATION_GUIDE.md)。
 
 ## AI 协议
 
@@ -70,7 +70,7 @@ UTF-8、每行一条完整 JSON；`protocolVersion` 必填。stdin/stdout 由可
 | GET /api/matches/{id} | 查询排队/运行/结束/失败及双方结果 |
 | GET /api/matches/{id}/artifacts | 按权限查询结果、日志、回放下载入口 |
 
-实时观战先沿用同一只读快照结构，4、5 号在 M1 选定一个简单传输入口；不得因此开发第二套游戏逻辑。离线回放先于远程实时观战验收。
+实时观战沿用同一只读快照结构。首版基线：5号提供授权的 `GET /api/matches/{id}/snapshot`，响应含版本、tick、比赛状态和快照；4号用UnityWebRequest非阻塞轮询并丢弃过期响应。轮询频率是展示参数，实测决定；不得影响裁判tick或把观战全图数据发给AI。离线回放先于远程实时观战验收。
 
 ## M0 必须提交的 fixture
 

@@ -55,3 +55,15 @@ dotnet --info
 在对应代码落地的同一个 PR 中，将这里替换成实际路径和可复制命令。当前没有项目启动命令；不要运行想象中的脚本。
 
 官方依据：[Unity 平台要求](https://docs.unity3d.com/6000.3/Documentation/Manual/system-requirements.html)、[Dedicated Server 构建](https://docs.unity3d.com/6000.3/Documentation/Manual/dedicated-server-build.html)、[.NET LTS](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)。
+
+## 按编号安装，避免全员安装所有服务器工具
+
+| 编号 | 在全员必装之外准备什么 | 不必提前准备什么 |
+| --- | --- | --- |
+| 1 | Linux Server构建模块、.NET10 SDK、Ubuntu构建验证环境 | 页面前端工具链、美术软件 |
+| 2 | Unity Test Framework（工程包统一引入），C#编辑器 | EF数据库、nsjail、Web平台运行环境 |
+| 3 | Unity Test Framework、规则fixture编辑环境 | C++编译器（除非本人要做完整AI联调）、运维环境 |
+| 4 | 工程统一的Tilemap/uGUI/TMP包；参与页面布局时安装.NET10 SDK | React/Vue/Node、数据库服务器、AI训练环境 |
+| 5 | .NET10 SDK、Ubuntu24.04/GCC/CMake、nsjail验证环境；部署时systemd/Nginx | 3D建模软件、额外Unity联网框架 |
+
+1号统一引入Unity侧Newtonsoft Json等工程包，5号统一锁定服务端Identity/EF Core和C++ JSON依赖；其他成员拉取锁文件后恢复环境，不手工复制DLL。详细用途见[技术手册](IMPLEMENTATION_GUIDE.md)。
