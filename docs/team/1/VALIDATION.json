@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-03",
+  "stage": "bootstrap-partial",
+  "editorInstalled": "6000.3.26f1_de8167e7440c",
+  "linuxServerModuleInstalled": true,
+  "pureLogicChecks": "passed",
+  "unityApiStaticCompilation": "passed",
+  "metadataGuids": 29,
+  "assemblyGraph": "passed",
+  "assemblyCount": 7,
+  "localMarkdownLinksChecked": 41,
+  "unityImport": "not-run-policy-rejection",
+  "unityPlayMode": "not-run-policy-rejection",
+  "unityReplayChecks": "not-run-policy-rejection",
+  "windowsBuild": "not-run",
+  "linuxBuild": "not-run",
+  "ubuntuExecution": "not-run-no-target",
+  "sourceSha256": {
+    "game/Assets/Game/Core/Models.cs": "ccdffdbf23160484e420be00d52df2e4de15eb6a2c942ec690607899533fe583",
+    "game/Assets/Game/Core/TickClock.cs": "9e69551e44673098d9b6f3ca3eac464ffd7f6e23bee24a795c218907cea0851f",
+    "game/Assets/Game/Editor/BuildGame.cs": "accd3521f1a4ebdd1d1787c246ddcb001a31a4702dd26544d562728f629d5a45",
+    "game/Assets/Game/Editor/SmokeChecks.cs": "67854bbeccdbc232b935dca85266984a9f4f928d2a777a4139c1733d979d5eeb",
+    "game/Assets/Game/Integration/BootstrapController.cs": "b1492ab495940fe8f44d3490a8ab8adb69f8e963c2b5842822ee99dd66ef87f5",
+    "game/Assets/Game/Integration/Headless/HeadlessEntry.cs": "0a0ad2a080631deecaa154f00ce3a020aa8bef58a261bcacb3f14a084551eee4",
+    "game/Assets/Game/Integration/MatchEngine.cs": "6a743863d7d9056f1cc9ee28ad0e6bc60f13772bc1e57a82ae19bbd16d41a52d",
+    "game/Assets/Game/Integration/Replay/BootstrapReplay.cs": "2b2a505fbf2cbc49372d3c1a1200426238bb41560edc06e91c701d6ad9776d91",
+    "game/Assets/Game/Tests/Core/BootstrapChecks.cs": "5a1446e8c8fa3c2512760fae1a3ba93979314901f15b6ea473dccf90cc5f2785"
+  }
+}

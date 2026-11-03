@@ -9,6 +9,9 @@ namespace TuringSignalRelay.Editor
         [UnityEditor.MenuItem("Turing Signal Relay/Run Bootstrap Checks")]
         public static void Run()
         {
+            UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/Game/Scenes/Bootstrap.unity");
+            if (UnityEngine.Object.FindFirstObjectByType<BootstrapController>() == null)
+                throw new Exception("Bootstrap scene is missing its controller.");
             Tests.BootstrapChecks.Run();
             string path = Path.Combine(Path.GetTempPath(), "tsr-bootstrap-" + Guid.NewGuid() + ".jsonl");
             try

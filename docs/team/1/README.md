@@ -58,7 +58,7 @@ Unity脚本不直接使用.NET10专有API；.NET10只用于server。所有组件
 
 ## 文件级任务表（按顺序开PR）
 
-下列文件均待实现。更多目录边界见[技术手册](../../IMPLEMENTATION_GUIDE.md)。
+下列是完整任务目标；bootstrap分支中已实现与待验证项以[进度记录](PROGRESS.md)为准。更多目录边界见[技术手册](../../IMPLEMENTATION_GUIDE.md)。
 
 | 任务卡 | 主要位置 | 输入 → 输出 | 本卡验收 |
 | --- | --- | --- | --- |

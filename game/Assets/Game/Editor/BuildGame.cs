@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
@@ -21,7 +22,8 @@ namespace TuringSignalRelay.Editor
                 throw new InvalidOperationException("Use Unity 6000.3.26f1; refusing a different editor.");
             EditorSettings.serializationMode = SerializationMode.ForceText;
             var options = new BuildPlayerOptions {
-                scenes = new[] { Scene }, target = target, locationPathName = output,
+                scenes = new[] { Scene }, target = target,
+                locationPathName = Path.GetFullPath(Path.Combine(Application.dataPath, "..", output)),
                 options = BuildOptions.Development
             };
             options.subtarget = (int)(server ? StandaloneBuildSubtarget.Server : StandaloneBuildSubtarget.Player);

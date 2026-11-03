@@ -1,6 +1,6 @@
 # 1号进度：Bootstrap基础交付
 
-更新：2026-11-03。分支：`feat/1-bootstrap`。**这是待目标Unity验证的工程基础，不是1号全部任务完成，也不是正式比赛游戏。**
+更新：2026-11-03。分支：`feat/1-bootstrap`，[草稿PR #1](https://github.com/kanfeng-eng/Turing-Signal-Relay/pull/1)。**这是待Unity实际运行验证的工程基础，不是1号全部任务完成，也不是正式比赛游戏。**
 
 ## 已实现
 
@@ -22,19 +22,35 @@ Windows .NET Framework C#编译器已实际编译Models、TickClock、MatchEngin
 
 输出：`PASS: tick timing, pause/step, completion, snapshots, validation, 9000 callbacks.`
 
-这个检查仅证明纯C#逻辑，不证明Unity导入、Scene反序列化、JsonUtility、GUI或构建可用。Roslyn自带编译器首次尝试因缺省基础程序集引用失败，改用Windows内置编译器后通过。
+这个检查仅证明纯C#逻辑，不证明Unity导入、Scene反序列化、JsonUtility、GUI或构建可用。
 
-## 环境阻碍
+目标版本API静态编译检查也已通过（包含运行时代码、Editor构建/场景检查和纯逻辑检查代码）：
 
-本机仅找到Unity2020安装，没有6000.3.26f1。官方Release API列出目标版本及安装包，但以下地址实际下载返回HTTP404：
+```powershell
+./tools/verify-unity-api.ps1 -EditorDirectory 'D:\kanfe\Unity\6000.3.26f1\Editor'
+```
+
+此命令只执行C#编译器、引用已安装Unity程序集，不启动Unity；不能替代asmdef实际导入、Play、回放或构建验收。
+
+## 已完成环境安装与剩余阻碍
+
+本次已独立安装，原Unity2020保持不动：
+
+- Editor：`D:\kanfe\Unity\6000.3.26f1\Editor\Unity.exe`，文件版本为`6000.3.26f1_de8167e7440c`。
+- Linux Dedicated Server模块：`Editor/Data/PlaybackEngines/LinuxStandaloneSupport/Variations/`已存在Mono/IL2CPP服务器目标。
+- Editor下载大小4206721368字节，官方摘要`md5-UKkDuF2LWXGXkj1lwujDuw==`匹配；安装包Unity Technologies发布者签名有效。
+- Linux Server模块下载大小158296840字节，官方摘要`md5-YE/4apRkiL1JjevrumJ9fA==`匹配；发布者签名有效。
+- 初次直连下载返回404；使用系统已有代理后以下官方地址返回200并完成下载与安装。未更改系统代理设置。
 
 ```text
 https://download.unity3d.com/download_unity/de8167e7440c/Windows64EditorInstaller/UnitySetup64-6000.3.26f1.exe
 ```
 
-未用旧版本打开或升级工程。Unity导入/Play、Unity内回放检查、Windows构建、Linux构建与Ubuntu运行均 **未验证**。当前game为源文件搭建的最小项目；首次目标Editor导入会补齐默认ProjectSettings和包锁，需审查后提交。
+**当前执行阻碍**：自动审批两次拒绝启动Unity项目检查（合并安装/启动命令一次、模块安装完成后单独启动一次），返回理由仅为`blocked by policy`。模块安装本身获准且已完成。未通过其他入口绕过被拒绝的Unity启动。
 
-## 安装目标Editor后接着做
+因此Unity导入/Play、Unity内回放检查、Windows构建、Linux构建与Ubuntu运行均 **未验证**。本机WSL未安装，也未配置远程Ubuntu目标。当前game为源文件搭建的最小项目；首次Editor导入会补齐默认ProjectSettings和包锁，需审查后提交。
+
+## Unity运行许可恢复后接着做
 
 1. Unity Hub添加game/，使用6000.3.26f1，确认Console没有编译错误。
 2. 打开Assets/Game/Scenes/Bootstrap.unity，Play；tick递增，Pause停止，Step增加1，Resume继续，Restart归零。

@@ -43,7 +43,9 @@ dotnet --info
 - 5 人各自从 Git 拉取后独立打开一次，不拷贝任何人的 `Library`。
 - 若锁定补丁出现项目相关阻断，1 号先做最小复现，再提出团队统一补丁变更；禁止各自换版本。
 
-## 目标运行入口（尚未实现）
+## 目标运行入口
+
+bootstrap分支已加入最小场景、构建菜单及headless演示入口，尚未获准启动Unity执行验证；[1号进度](team/1/PROGRESS.md)记录了安装位置、现有验证命令和阻碍。下表中的正式对战/平台入口仍待后续模块实现。
 
 | 场景 | 计划入口 | 落地负责人 |
 | --- | --- | --- |
@@ -52,7 +54,7 @@ dotnet --info
 | Ubuntu 裁判 | Linux Server 可执行文件读取比赛清单 | 1 |
 | 提交和评测 | ASP.NET 平台 + 隔离 worker | 5 |
 
-在对应代码落地的同一个 PR 中，将这里替换成实际路径和可复制命令。当前没有项目启动命令；不要运行想象中的脚本。
+在对应代码落地的同一个 PR 中补充实际路径、命令和验证结果。不要把bootstrap的零分时钟演示当作正式AI对战；具体已落地入口见1号进度。
 
 官方依据：[Unity 平台要求](https://docs.unity3d.com/6000.3/Documentation/Manual/system-requirements.html)、[Dedicated Server 构建](https://docs.unity3d.com/6000.3/Documentation/Manual/dedicated-server-build.html)、[.NET LTS](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)。
 
