@@ -1,6 +1,8 @@
 {
   "name": "TuringSignalRelay.Presentation",
   "references": [
-    "TuringSignalRelay.Core"
+    "TuringSignalRelay.Core",
+    "TuringSignalRelay.Integration",
+    "UnityEngine.UI"
   ]
 }

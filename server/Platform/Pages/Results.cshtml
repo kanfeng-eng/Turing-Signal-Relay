@@ -1,0 +1,41 @@
+@page
+@model DemoPageModel
+@{ ViewData["Title"] = "比赛结果"; }
+<h1>比赛结果</h1>
+<p>DEMO-MATCH · 演示分数</p>
+<section class="scores">
+<article>
+<span>示例队伍 A</span>
+<strong>@Model.TeamATotal</strong>
+<small>两局合计</small>
+</article>
+<article>
+<span>示例队伍 B</span>
+<strong>@Model.TeamBTotal</strong>
+<small>两局合计</small>
+</article>
+</section>
+<div class="table-wrap">
+<table>
+<caption>双局换边明细</caption>
+<thead>
+<tr>
+<th>局次</th>
+<th>红方</th>
+<th>蓝方</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>@foreach (var game in Model.Games) {<tr>
+<td>第 @game.Number 局</td>
+<td>@game.RedTeam · @(game.RedScoreHalfPoints / 2m)</td>
+<td>@game.BlueTeam · @(game.BlueScoreHalfPoints / 2m)</td>
+<td>@game.Status</td>
+</tr>}</tbody>
+</table>
+</div>
+<article>
+<h2>得分与运行诊断</h2>
+<p>分项账本、异常原因和授权回放链接由评测服务提供。</p>
+<button disabled>下载回放</button>
+</article>

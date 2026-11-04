@@ -1,0 +1,139 @@
+:root{
+  font-family:"Segoe UI","Microsoft YaHei",sans-serif;
+  color:#243447;
+  background:#eef3f7;
+  line-height:1.6}
+  *{
+    box-sizing:border-box}
+    body{
+      margin:0}
+      header{
+        background:#183d55;
+        color:white;
+        padding:24px max(24px,calc((100vw - 1160px)/2));
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:24px;
+        flex-wrap:wrap}
+        a{
+          color:inherit;
+          text-decoration:none}
+          .brand{
+            font-size:24px;
+            font-weight:700}
+            .brand small{
+              display:block;
+              font:11px Consolas,monospace;
+              letter-spacing:.13em}
+              nav{
+                display:flex;
+                gap:24px}
+                nav a:hover,nav a:focus-visible{
+                  border-bottom:2px solid #82d3ce}
+                  main{
+                    max-width:1160px;
+                    margin:auto;
+                    padding:32px 24px 80px}
+                    .notice{
+                      padding:12px 16px;
+                      background:#dcebec;
+                      border-left:4px solid #207d80;
+                      font-size:14px}
+                      h1{
+                        font-size:44px;
+                        line-height:1.2;
+                        letter-spacing:-.03em;
+                        margin:24px 0 16px}
+                        h2{
+                          font-size:22px}
+                          .intro{
+                            padding:24px 0 32px}
+                            .eyebrow{
+                              color:#286e7f;
+                              font-weight:600}
+                              .grid{
+                                display:grid;
+                                grid-template-columns:2fr 1fr;
+                                gap:24px}
+                                article,aside{
+                                  padding:28px;
+                                  background:white;
+                                  border:1px solid #d5dfe6;
+                                  border-radius:8px;
+                                  margin-bottom:24px}
+                                  form{
+                                    display:grid;
+                                    gap:12px}
+                                    label{
+                                      font-weight:600}
+                                      input,select,button{
+                                        font:inherit;
+                                        padding:12px;
+                                        border:1px solid #a5b7c5;
+                                        border-radius:4px;
+                                        max-width:100%;
+                                        min-width:0}
+                                        input:focus-visible,select:focus-visible,a:focus-visible{
+                                          outline:3px solid #317c9f;
+                                          outline-offset:3px}
+                                          button{
+                                            background:#205b78;
+                                            color:white;
+                                            margin-top:12px}
+                                            button:disabled{
+                                              opacity:.6;
+                                              cursor:not-allowed}
+                                              small{
+                                                display:block}
+                                                .table-wrap{
+                                                  overflow:auto;
+                                                  background:white;
+                                                  border:1px solid #d5dfe6;
+                                                  margin:24px 0}
+                                                  table{
+                                                    width:100%;
+                                                    border-collapse:collapse;
+                                                    text-align:left}
+                                                    caption{
+                                                      text-align:left;
+                                                      padding:18px;
+                                                      font-weight:600}
+                                                      th,td{
+                                                        padding:16px;
+                                                        border-top:1px solid #d5dfe6}
+                                                        th{
+                                                          background:#e4edf3}
+                                                          .badge{
+                                                            background:#fff0cd;
+                                                            padding:4px 9px;
+                                                            border-radius:3px}
+                                                            pre{
+                                                              white-space:pre-wrap}
+                                                              .scores{
+                                                                display:grid;
+                                                                grid-template-columns:1fr 1fr;
+                                                                gap:24px}
+                                                                .scores strong{
+                                                                  display:block;
+                                                                  font:56px Georgia,serif;
+                                                                  color:#1b6686}
+                                                                  .scores article:last-child strong{
+                                                                    color:#9c4d40}
+                                                                    footer{
+                                                                      max-width:1160px;
+                                                                      margin:auto;
+                                                                      padding:24px;
+                                                                      color:#617789}
+                                                                      @media(max-width:700px){
+                                                                        .grid,.scores{
+                                                                          grid-template-columns:1fr}
+                                                                          h1{
+                                                                            font-size:34px}
+                                                                            nav{
+                                                                              gap:16px}
+                                                                              article,aside{
+                                                                                padding:20px}
+                                                                                main{
+                                                                                  padding:20px 16px}
+                                                                                }

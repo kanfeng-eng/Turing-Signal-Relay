@@ -1,0 +1,31 @@
+@page
+@model DemoPageModel
+@{ ViewData["Title"] = "提交 AI"; }
+<section class="intro">
+<p class="eyebrow">队伍工作台</p>
+<h1>让你的 AI 接力。</h1>
+<p>上传 C++17 源文件，查看编译与评测进度。</p>
+</section>
+<section class="grid">
+<article>
+<h2>提交新版本</h2>
+<form>
+<label for="source">AI 源文件</label>
+<input id="source" name="source" type="file" accept=".cpp" aria-describedby="source-help">
+<p id="source-help">选择 ai.cpp。上传限制由评测服务提供。</p>
+<label for="note">版本说明</label>
+<input id="note" name="note" maxlength="200" placeholder="例如 优化跨河运输路线">
+<button disabled>提交 AI</button>
+</form>
+</article>
+<aside>
+<h2>提交流程</h2>
+<ol>
+<li>保存源文件</li>
+<li>隔离编译</li>
+<li>进入评测队列</li>
+<li>查看结果与回放</li>
+</ol>
+<p>当前页面使用演示状态，选择的文件保留在浏览器中。</p>
+</aside>
+</section>

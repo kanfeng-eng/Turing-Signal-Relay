@@ -3,7 +3,9 @@
   "references": [
     "TuringSignalRelay.Core",
     "TuringSignalRelay.Integration",
-    "TuringSignalRelay.Checks"
+    "TuringSignalRelay.Checks",
+    "TuringSignalRelay.Presentation",
+    "UnityEngine.UI"
   ],
   "includePlatforms": [
     "Editor"

@@ -1,79 +1,68 @@
-# 1号进度：Bootstrap基础交付
+# 1号与4号联合进度
 
-更新：2026-11-04。分支：`feat/1-bootstrap`，[草稿PR #1](https://github.com/kanfeng-eng/Turing-Signal-Relay/pull/1)。**当前交付是时钟和工程基础，不是正式比赛游戏，也不代表1号全部任务完成。**
+更新于2026-11-04，分支`feat/1-bootstrap`，见[草稿PR #1](https://github.com/kanfeng-eng/Turing-Signal-Relay/pull/1)。用户同时承担1号和4号。
 
-## 版本决定
+## 当前交付
 
-按用户最新要求，团队基线保持`6000.3.26f1`，ProjectVersion.txt与原提交完全相同。撤回未提交的6000.3.28f1调整；不把团队升级到6000.6.8f1。新版仅在脚本生成的独立副本开发，源码通过原版API静态编译检查；原版实际运行兼容性仍待补验。
+| 任务 | 已实现和验证 | 继续完成所需输入 |
+| --- | --- | --- |
+| 1-A 工程 | Bootstrap/Observer场景、预制体、7个asmdef、Windows/Linux构建入口 | 全员在团队版本独立拉取验收 |
+| 1-B 共享模型 | Bootstrap配置、时钟快照、Observer展示帧及格式验证 | 2/3/5号冻结正式动作、坐标、事件与协议 |
+| 1-C 组合推进 | 10Hz固定时钟、暂停/单步、结束停止、9000 tick | 2号World、3号Rules及批准后的R15顺序 |
+| 1-D 文件 | Bootstrap v2 JSONL、逐帧SHA256、结果摘要、v1读取；4号查看器读取9001帧 | 正式动作/事件审计回放 |
+| 1-E 双平台 | Windows客户端、Linux Dedicated Server；Ubuntu实际运行通过 | 团队6000.3.26f1完整构建和运行复验 |
+| 1-F 调度 | .NET10可信裁判双进程调度、超时回收、产物摘要校验、目录占用保护 | 5号MatchJob、AI桥和沙箱适配 |
+| 4号表现 | 原生uGUI地图、链路、掩码、镜头、面板、曲线、小地图、离线回放与在线轮询 | 正式地图/规则帧、授权观战接口 |
+| 4号网页 | Razor提交、历史、裁判和结果4页，演示数据明确标注，后台操作禁用 | 5号账号、提交、任务和结果服务 |
 
-## 已实现
+MatchEngine当前推进时钟与零分状态。正式AI动作、移动、交报、计分和双局换边仍需其他模块接入。
 
-- 最小Unity工程、稳定.meta、Bootstrap场景及构建场景列表。
-- Core/World/Rules/Presentation/Integration/Editor和Checks的7个asmdef。
-- 纯C# DTO草案、10Hz固定时钟、暂停/单步/完成停止、快照复制。
-- 临时IMGUI调试界面，供4号后续替换。
-- Bootstrap v2 JSONL快照写入、逐帧SHA256和流式读取；保留v1读取。headless支持配置输入、指定回放/结果路径，结果含最终状态哈希和回放文件摘要。
-- Windows/Linux Dedicated Server构建入口；默认检查原版本。脚本明确启用的新版副本可产出开发验证包，日志标明其用途。
-- `tools/run-unity-check.ps1`核对实际Editor版本、等待进程退出，并验证完成标记；新版副本构建前先执行场景和回放检查。
+## 版本与实现选择
 
-## 本次已验证
+- 团队基线保持`6000.3.26f1`，ProjectVersion.txt与既有提交相同。`6000.6.8f1`仅用于脚本创建的独立副本。
+- 本机6000.3.26f1与6000.3.28f1在UPM阶段报HTTP500，纯英文路径、独立缓存和空工程均复现。6.6副本通过。具体工具链根因仍待定位。
+- 原版Unity API静态编译通过。uGUI使用固定2.0.0包，静态检查引用6.6副本中导入的同包UI程序集，原版实际兼容性待验。
+- 观战使用原生Canvas、RawImage/Image、Text和MaskableGraphic。地图以纹理绘制，布局用C#维护。
+- 从旧目录选取13个FBX，重新配置材质并生成256×256透明精灵。素材许可待补，模型、材质和派生贴图保留本地。公开代码无素材时使用基础标记。
 
-| 检查 | 结果与边界 |
+## 实际验证
+
+| 检查 | 结果 |
 | --- | --- |
-| 纯C#检查 | 通过：固定tick、暂停/单步、非法参数、结束停止、快照隔离、9000次回调；固定字节哈希与独立参考值一致 |
-| 原版6000.3.26f1 API静态编译 | 通过；包含本次构建脚本改动；不代表原版Editor实际导入 |
-| 新版未带副本开关 | 脚本拒绝，未启动原工程 |
-| 6000.6.8f1独立副本 | 实际导入、asmdef编译、加载Bootstrap场景、Unity回放往返、改分/改种子/重复tick/截断/畸形JSON/未知版本拒绝和旧v1读取均通过，日志有BOOTSTRAP_CHECKS_PASSED |
-| 6000.6.8f1 Editor Play（上轮，显示代码本轮未改） | 实际打开独立副本Bootstrap场景，进入Play并看到tick递增和运行状态；原工程未被新版打开 |
-| Windows开发包 | 实际构建成功，进程退出0且有BOOTSTRAP_BUILD_COMPLETED StandaloneWindows64 |
-| Windows headless运行 | 默认9000 tick、重复运行和配置3 tick均实际退出0；逐帧哈希、结果和回放文件摘要独立复核通过；重复运行哈希一致 |
-| CLI失败处理 | 无效配置、缺参、选项误作路径、重复/未知参数、缺回放参数、覆盖已有文件均退出1；原产物保持完整 |
-| Windows客户端界面（上轮，显示代码本轮未改） | 实际观察tick递增；暂停293后保持不变，单步294，恢复继续递增，重启从tick 0重新运行 |
-| Linux Server开发包 | 实际构建成功，退出0且有BOOTSTRAP_BUILD_COMPLETED StandaloneLinux64；入口和UnityPlayer.so均核对为ELF64 x86_64 |
-| 两份开发副本源码一致性 | 所有Assets文件逐字节等于原仓库源码；未为新版改写玩法代码或升级包依赖 |
-| Ubuntu实际运行 | 未执行；本机未安装WSL、未提供Ubuntu目标 |
+| 纯C#核心 | 固定时钟、暂停/单步、快照隔离、9000次回调、独立哈希参考值通过 |
+| 6.6副本导入 | 编译、场景加载、v1/v2回放、非法/损坏回放拒绝通过 |
+| 原生UI | 14个按钮、3个输入框、时间轴、地图纹理初始化通过 |
+| 公开源码副本 | 缺少私有旧素材，sprites=0时仍通过UI和9001帧检查 |
+| Windows真实进程 | 默认/重复9000 tick、配置3 tick、7项参数和文件保护检查通过 |
+| Ubuntu真实进程 | Ubuntu24.04.4 x86_64，实际执行同10项检查通过 |
+| 跨平台哈希 | 最终状态SHA256均为`47683abf831ae7c667b7b3f7f657355ba55fc8da133145ba98bccc4f9b073423` |
+| .NET调度器 | 两局独立成功、异常退出、缺结果、超时回收、同目录并发占用保护通过 |
+| Razor页面 | 编译与Ubuntu四页/CSS HTTP200通过，响应HTML在1280/375宽度离线渲染和布局检查通过 |
 
-文件格式、4号流式读取与5号结果核对见[Bootstrap交接](../../BOOTSTRAP.md)。
+原生窗口操作记录及最终证据路径见[观战交接](../../OBSERVER.md)和[机器验证记录](VALIDATION.json)。平台布局检查使用Ubuntu实际响应的HTML与内联CSS，在线后台流程尚待5号接入。Windows本地网页预览启动曾被自动审批以`blocked by policy`拒绝。
 
-验证命令与副本开发操作见[环境准备](../../ENVIRONMENT.md#临时使用新版开发基线保持不变)。
+## 复现
 
 ```powershell
 ./tools/verify-bootstrap.ps1 -Compiler 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
-./tools/verify-unity-api.ps1 -EditorDirectory 'D:\kanfe\Unity\6000.3.26f1\Editor'
+./tools/run-unity-check.ps1 -EditorDirectory 'C:\Program Files\Unity\Hub\Editor\6000.6.8f1\Editor' -DevelopmentCopy -Action Windows
+./tools/run-unity-check.ps1 -EditorDirectory 'C:\Program Files\Unity\Hub\Editor\6000.6.8f1\Editor' -DevelopmentCopy -Action LinuxServer
+./tools/verify-unity-api.ps1 -EditorDirectory 'D:\kanfe\Unity\6000.3.26f1\Editor' -UiAssembly '<独立副本>\game\Library\ScriptAssemblies\UnityEngine.UI.dll'
 ```
 
-## 本地证据位置
+对生成的客户端或Ubuntu裁判执行以下检查，output需为新目录。
 
-以下均在忽略目录artifacts中，不提交二进制和含本机信息的原始日志：
-
-- Windows副本：`artifacts/development-6000.6.8f1-bce1b4bebfe348ffb36953e0654202e7/`，game为可打开的开发副本，artifacts/windows为可执行包，artifacts下有unity-check.log、unity-windows.log、headless-checks/下的逐项日志、回放、结果和CHECKS.json。
-- Linux副本：`artifacts/development-6000.6.8f1-646bd7816f10423aa9a67d0af04ddfdf/`，artifacts/linux为裁判基础包，artifacts下有unity-check.log、unity-linuxserver.log。
-- 原版/补丁排查日志：`artifacts/unity-cli-checks.log`、`unity-ascii-checks.log`、`unity-fresh-checks.log`、`unity-check.log`；新版对照日志：`unity-fresh66-checks.log`、`unity-source66-checks.log`。
-- 原Editor自动生成但尚未验收的默认设置已保留在`artifacts/diagnostics/original-editor-generated-settings/`，不混入本次源码提交。
-- 本轮可分享的开发验证包位于`artifacts/delivery/bootstrap-v2/`（旧包保留在上级目录），版本与实际测试状态写在包内说明中。
-
-## 原版阻碍与排查结论
-
-Unity Hub及Personal许可证已由用户激活，启动权限问题已解除。6000.3.26f1和6000.3.28f1在本机均于UPM包解析阶段返回HTTP 500，错误为`The "path" argument must be of type string. Received undefined`。独立缓存、纯英文路径、原版空工程也能复现；6000.6.8f1空工程和同源码副本通过。
-
-这些对照仅定位到当前机器的6.3工具链组合，尚未证明具体根因，不能宣称Unity 6.3在其他机器普遍不可用。保留原版本，不继续无目的更换补丁或修改规则源码。
-
-## Ubuntu接手验证
-
-将开发验证Linux包完整解压到Ubuntu x86_64，在目录中执行（本机尚未执行）：
-
-```bash
-chmod +x ./TuringSignalRelay
-./TuringSignalRelay -batchmode -nographics -logFile ./bootstrap.log --bootstrap-replay ./bootstrap.jsonl
+```text
+python tools/check-bootstrap-headless.py --player <裁判可执行文件> --output <新检查目录>
 ```
 
-必须退出0、日志含BOOTSTRAP_COMPLETED ticks=9000，并核对回放头+9001份快照。这只验证零分时钟基础，不代表AI对战、正式比赛裁判或安全沙箱。
+Ubuntu使用`python3`。服务端运行方式见[Worker说明](../../../server/Worker/README.md)，观战操作与页面入口见[观战交接](../../OBSERVER.md)。
 
-## 交接和未完成项
+Ubuntu验证目录位于用户目录`turing-signal-relay/validation-20261104`，运行时安装在该目录。HTTP检查绑定回环临时端口，完成后结束服务进程。服务器未配置正式公网平台。
 
-- 2/3/5号审查DTO；实体结构、移动精度、R15顺序尚未冻结；MatchEngine尚不执行AI动作、移动或计分。
-- 正式1-C组合入口等待2号World/3号Rules；1-D动作/事件审计回放等待正式协议；1-F MatchRunner等待5号MatchJob和沙箱契约。
-- 4号继续场景、地图与观战界面；当前仅为临时IMGUI。
-- 原版实际导入、Play、Windows/Linux构建仍须解决UPM后重新验收；新版结果不替代这些检查。
-- 正式Build Profiles和默认项目设置待原版Editor正常生成并审查，当前使用BuildPipeline入口。
-- 五人独立拉取验收尚未进行；不合并main，PR维持草稿。
+## 待完成的联合验收
+
+1. 接入2号地图、移动和可见性，接入3号规则、计分与事件，按批准规则冻结状态顺序。
+2. 与5号完成正式AI进程、MatchJob、沙箱、真实在线观战及平台后台联调。
+3. 原版本UPM恢复后，补齐团队版本导入、Play、Windows/Linux构建与Ubuntu复验。
+4. 其他成员独立拉取验收，并补充素材来源许可。PR保持草稿。

@@ -2,7 +2,7 @@
 
 第十九届图灵杯“强军·电波 2027”比赛系统。GitHub 仓库：[kanfeng-eng/Turing-Signal-Relay](https://github.com/kanfeng-eng/Turing-Signal-Relay)。
 
-**当前状态（2026-11-04，feat/1-bootstrap）：团队基线保持6000.3.26f1；同一套源码已在6000.6.8f1独立副本完成导入、Editor Play、Windows/Linux Server构建和Windows 9000 tick回放验证，现补充稳定哈希、配置输入与结构化结果。原版Editor仍受UPM故障阻碍，尚未证明原版完整运行；正式玩法与平台仍待实现。详见[1号进度](docs/team/1/PROGRESS.md)。**
+**当前状态（2026-11-04，feat/1-bootstrap）：1号与4号由同一人接手。已加入原生uGUI观战、回放控制、旧素材本地修复和四个Razor页面。Linux裁判与基础调度已在Ubuntu实测，Windows/Ubuntu状态哈希一致。团队Editor基线6000.3.26f1，本机使用6000.6.8f1独立副本验证。正式玩法、AI和平台后台仍需2/3/5号接入。详见[观战交接](docs/OBSERVER.md)和[联合进度](docs/team/4/PROGRESS.md)。**
 
 ## 1. 已确认的目标
 
@@ -24,7 +24,7 @@
 | Unity | Unity 6.3 LTS，统一锁定 `6000.3.26f1`；获准的新版本开发仅在独立副本进行 |
 | 客户端 | Unity 2D，先用基础精灵和 UI，不以商业素材作为联调前提 |
 | 正式裁判 | 同工程构建 Linux Dedicated Server，共用 C# 规则核心 |
-| 服务器 | Ubuntu Server 24.04 LTS，x86_64；当前未部署验证 |
+| 服务器 | Ubuntu Server 24.04 LTS，x86_64；裁判与基础调度已实测，正式平台待接入 |
 | 提交平台 | ASP.NET Core / .NET 10 LTS；单体服务、SQLite、磁盘产物，先支持单机部署 |
 | AI | C++17 SDK；提交 `ai.cpp`，正式环境统一编译，不接收用户可执行文件 |
 | 隔离 | 独立低权限评测 worker，编译和运行均隔离；具体沙箱执行器由 5 号提交小型验证后定稿 |
@@ -82,7 +82,7 @@ git switch -c feat/1-bootstrap
 
 当前分支已加入Bootstrap场景源文件，目标Unity验证并合入M0后：Unity Hub → Add project from disk → 选择 `game/` → 用锁定版本打开 → 打开 `Assets/Game/Scenes/Bootstrap.unity` → Play。当前可做纯C#检查；Unity验证步骤见1号进度。
 
-首次打开成功标准：Console 无编译错误、能看到 tick 计数递增、暂停恢复正常。后续在同场景选择本地两支样例 AI 进行演示，控制项由 1、4、5 号在 M1 接通。
+首次打开成功标准：Console 无编译错误，点击观战界面的播放后 tick 递增、暂停恢复正常。后续在同场景选择本地两支样例 AI 进行演示，控制项由 1、4、5 号在 M1 接通。
 
 ## 5. 约定的目标目录
 

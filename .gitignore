@@ -35,3 +35,12 @@ runtime-data/
 __pycache__/
 Thumbs.db
 .DS_Store
+
+# User-supplied legacy art awaiting source/license confirmation
+/Model/
+/game/Assets/Game/Art/LegacyModels/
+/game/Assets/Game/Art/LegacyModels.meta
+/game/Assets/Game/Art/LegacyMaterials/
+/game/Assets/Game/Art/LegacyMaterials.meta
+/game/Assets/Game/Resources/LegacySprites/
+/game/Assets/Game/Resources/LegacySprites.meta

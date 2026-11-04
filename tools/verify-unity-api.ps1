@@ -1,6 +1,7 @@
 param(
     [Parameter(Mandatory=$true)][string]$EditorDirectory,
-    [string]$Compiler = 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
+    [string]$Compiler = 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe',
+    [string]$UiAssembly
 )
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
@@ -15,6 +16,9 @@ $taskReferences = Get-ChildItem -LiteralPath $taskManaged -Recurse -Filter '*.dl
         '/reference:' + $taskReference.FullName
     }
 $taskReferences += '/reference:' + $taskStandard
+if (!$UiAssembly) { $UiAssembly = Join-Path $taskRoot 'game\Library\ScriptAssemblies\UnityEngine.UI.dll' }
+if (!(Test-Path -LiteralPath $UiAssembly)) { throw 'Pass -UiAssembly pointing to UnityEngine.UI.dll imported from the pinned com.unity.ugui 2.0.0 package.' }
+$taskReferences += '/reference:' + $UiAssembly
 $taskSources = Get-ChildItem (Join-Path $taskRoot 'game\Assets\Game') -Recurse -Filter '*.cs' | ForEach-Object FullName
 $taskOutput = Join-Path $taskRoot 'artifacts\checks'
 New-Item -ItemType Directory -Force -Path $taskOutput | Out-Null

@@ -1,0 +1,22 @@
+@page
+@model DemoPageModel
+@{ ViewData["Title"] = "裁判台"; }
+<h1>裁判台</h1>
+<p>安排双局换边比赛</p>
+<article>
+<form class="judge">
+<label for="red">红方提交</label>
+<select id="red">
+<option>DEMO-003 · 示例队伍 A</option>
+</select>
+<label for="blue">蓝方提交</label>
+<select id="blue">
+<option>DEMO-004 · 示例队伍 B</option>
+</select>
+<label for="seed">随机种子</label>
+<input id="seed" type="number" value="7">
+<label for="rules">规则版本</label>
+<input id="rules" value="待冻结" readonly>
+<button disabled>发起双局比赛</button>
+</form>
+</article>

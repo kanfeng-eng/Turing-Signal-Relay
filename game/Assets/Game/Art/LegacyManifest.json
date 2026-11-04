@@ -1,0 +1,109 @@
+{
+  "status": "local-evaluation",
+  "assets": [
+    {
+      "importedFile": "angle road 01.fbx",
+      "sha256": "e509bfe587118b3b0ce1ef6144ede7a76816027b8ca015a343dc5fd327106101",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "angle road 01.fbx"
+    },
+    {
+      "importedFile": "angle road 02.fbx",
+      "sha256": "42ee077544d6f51a06c3d8228010414e41189172213aaf750ed1129127c8a226",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "angle road 02.fbx"
+    },
+    {
+      "importedFile": "book.fbx",
+      "sha256": "907baa7e4e27fc10247b15cc510a06412ede951202ce87e2ed5b400da9695335",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "book.fbx"
+    },
+    {
+      "importedFile": "corner.fbx",
+      "sha256": "9909eaa874d51d40e72f9a876d07d6df8fb121667412f6d3725be914e942809d",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "corner.fbx"
+    },
+    {
+      "importedFile": "crime.fbx",
+      "sha256": "01d46a64a3442f7c3fb9d1c84e7782c5874255f5bce81ab2267de19433dab67b",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "New/Bailing.fbx"
+    },
+    {
+      "importedFile": "cross road plus 1.fbx",
+      "sha256": "d7ac7a0d4f80f98c6b64f73144991f00aad76bc0c815065bec775bb91ce5626d",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "cross road plus 1.fbx"
+    },
+    {
+      "importedFile": "no road.fbx",
+      "sha256": "1cc112379ceae25c5be1c95ccabce97ba425256e9d41a395d4d7ff3253c0bee4",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "no road.fbx"
+    },
+    {
+      "importedFile": "police.fbx",
+      "sha256": "c58ad07551820608df25d91bca62faeffbb45b23a3659b16b71b99ec9db01be5",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "New/Police.fbx"
+    },
+    {
+      "importedFile": "straight road plus.fbx",
+      "sha256": "bbbd2c49f77939d5aada89a8ce02d75ab3a4dca2091ad7c98d72f81b9f09df2f",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "straight road plus.fbx"
+    },
+    {
+      "importedFile": "straight.fbx",
+      "sha256": "c8f6131c17c6d6b50ee74110e3c8bdb48447b0102a2f7e58a42d3005ce2e3557",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "straight.fbx"
+    },
+    {
+      "importedFile": "student.fbx",
+      "sha256": "11634adbdb830af9a70b95ff1eba901cfc7d4dc3567b87d2890a1423c67d2bc7",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "New/Student.fbx"
+    },
+    {
+      "importedFile": "T road.fbx",
+      "sha256": "b6d753ad373dbde5cdbd3b2bc8123608bc2e725c98ce4fff4bf2d1962e67b3d5",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "T road.fbx"
+    },
+    {
+      "importedFile": "wall1.fbx",
+      "sha256": "70e528d2f9abc20762b8ae0e476aa20b01771e4e2564d5b316e14c69f6d34d23",
+      "source": "User supplied Model/Model",
+      "licenseStatus": "pending-user-confirmation",
+      "repair": "Generated local unlit materials, orthographic render, alpha crop to 256x256",
+      "originalFile": "wall1.fbx"
+    }
+  ]
+}

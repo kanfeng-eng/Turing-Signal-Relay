@@ -24,10 +24,11 @@ namespace TuringSignalRelay.Editor
                 throw new InvalidOperationException("Use Unity 6000.3.26f1; refusing a different editor.");
             if (developmentCopy) Debug.LogWarning("Development copy build; team baseline compatibility is not verified.");
             EditorSettings.serializationMode = SerializationMode.ForceText;
+            PlayerSettings.productName = "Turing Signal Relay";
             var options = new BuildPlayerOptions {
-                scenes = new[] { Scene }, target = target,
+                scenes = server ? new[] { Scene } : new[] { "Assets/Game/Scenes/Observer.unity", Scene }, target = target,
                 locationPathName = Path.GetFullPath(Path.Combine(Application.dataPath, "..", output)),
-                options = BuildOptions.Development
+                options = BuildOptions.None
             };
             options.subtarget = (int)(server ? StandaloneBuildSubtarget.Server : StandaloneBuildSubtarget.Player);
             var report = BuildPipeline.BuildPlayer(options);

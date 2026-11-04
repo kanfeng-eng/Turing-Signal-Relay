@@ -65,10 +65,10 @@ bootstrap分支已加入最小场景、构建菜单及headless演示入口，已
 | 1 | Linux Server构建模块、.NET10 SDK、Ubuntu构建验证环境 | 页面前端工具链、美术软件 |
 | 2 | Unity Test Framework（工程包统一引入），C#编辑器 | EF数据库、nsjail、Web平台运行环境 |
 | 3 | Unity Test Framework、规则fixture编辑环境 | C++编译器（除非本人要做完整AI联调）、运维环境 |
-| 4 | 工程统一的Tilemap/uGUI/TMP包；参与页面布局时安装.NET10 SDK | React/Vue/Node、数据库服务器、AI训练环境 |
+| 4 | 工程固定的uGUI 2.0.0包；参与页面布局时安装.NET10 SDK | React/Vue/Node、数据库服务器、AI训练环境 |
 | 5 | .NET10 SDK、Ubuntu24.04/GCC/CMake、nsjail验证环境；部署时systemd/Nginx | 3D建模软件、额外Unity联网框架 |
 
-1号统一引入Unity侧Newtonsoft Json等工程包，5号统一锁定服务端Identity/EF Core和C++ JSON依赖；其他成员拉取锁文件后恢复环境，不手工复制DLL。详细用途见[技术手册](IMPLEMENTATION_GUIDE.md)。
+当前Unity JSON读写使用JsonUtility，包清单固定uGUI 2.0.0与UnityWebRequest内置模块。5号统一锁定服务端Identity/EF Core和C++ JSON依赖。详细用途见[技术手册](IMPLEMENTATION_GUIDE.md)，已实现入口见[观战交接](OBSERVER.md)。
 
 ## 临时使用新版开发（基线保持不变）
 
