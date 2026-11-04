@@ -2,7 +2,7 @@
 
 第十九届图灵杯“强军·电波 2027”比赛系统。GitHub 仓库：[kanfeng-eng/Turing-Signal-Relay](https://github.com/kanfeng-eng/Turing-Signal-Relay)。
 
-**当前状态（2026-11-03，feat/1-bootstrap）：新增最小Unity工程源文件和tick演示，纯C#检查已通过；目标Unity导入、Play和构建尚未验证，服务端与正式玩法尚未实现。详细证据与环境阻碍见[1号进度](docs/team/1/PROGRESS.md)。本文其余模块路径仍是后续实现约定。**
+**当前状态（2026-11-04，feat/1-bootstrap）：团队基线保持6000.3.26f1；同一套源码已在6000.6.8f1独立副本完成导入、Editor Play、Windows/Linux Server构建和Windows 9000 tick回放验证。原版Editor仍受UPM故障阻碍，尚未证明原版完整运行；正式玩法与平台仍待实现。详见[1号进度](docs/team/1/PROGRESS.md)。**
 
 ## 1. 已确认的目标
 
@@ -21,7 +21,7 @@
 | 用途 | 选择 |
 | --- | --- |
 | 开发系统 | Windows 11 x64 为团队主验收环境；Windows 10 机器须先通过相同工程的打开和构建检查 |
-| Unity | Unity 6.3 LTS，统一锁定 `6000.3.26f1`，禁止个人升级 |
+| Unity | Unity 6.3 LTS，统一锁定 `6000.3.26f1`；获准的新版本开发仅在独立副本进行 |
 | 客户端 | Unity 2D，先用基础精灵和 UI，不以商业素材作为联调前提 |
 | 正式裁判 | 同工程构建 Linux Dedicated Server，共用 C# 规则核心 |
 | 服务器 | Ubuntu Server 24.04 LTS，x86_64；当前未部署验证 |

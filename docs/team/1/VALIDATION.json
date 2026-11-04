@@ -1,29 +1,56 @@
 {
-  "date": "2026-11-03",
+  "date": "2026-11-04",
   "stage": "bootstrap-partial",
-  "editorInstalled": "6000.3.26f1_de8167e7440c",
-  "linuxServerModuleInstalled": true,
+  "teamEditor": "6000.3.26f1",
+  "teamVersionFileUnchanged": true,
+  "developmentEditor": "6000.6.8f1",
+  "developmentMode": "isolated-fresh-copy",
   "pureLogicChecks": "passed",
-  "unityApiStaticCompilation": "passed",
+  "baselineUnityApiStaticCompilation": "passed",
+  "versionGuardRejectsNewEditorOnOriginal": "passed",
   "metadataGuids": 29,
-  "assemblyGraph": "passed",
   "assemblyCount": 7,
-  "localMarkdownLinksChecked": 41,
-  "unityImport": "not-run-policy-rejection",
-  "unityPlayMode": "not-run-policy-rejection",
-  "unityReplayChecks": "not-run-policy-rejection",
-  "windowsBuild": "not-run",
-  "linuxBuild": "not-run",
+  "assemblyGraph": "passed",
+  "localMarkdownLinksChecked": 44,
+  "baselineUnityImport": "blocked-UPM-HTTP500",
+  "baselineUnityPlayMode": "not-run",
+  "baselineWindowsBuild": "not-run",
+  "baselineLinuxBuild": "not-run",
+  "developmentUnityImport": "passed",
+  "developmentUnityReplayChecks": "passed",
+  "developmentWindowsBuild": "passed",
+  "developmentWindowsGuiControls": "passed",
+  "developmentWindowsHeadlessExecution": "passed-exit0-9000ticks",
+  "replaySnapshots": 9001,
+  "replaySha256": "b1bcb470f1a65ecf3c7f7e6840d2a2f2ded33c85f88e2ae7d3c4bb4488f6ab00",
+  "developmentLinuxServerBuild": "passed",
+  "developmentLinuxElfArchitecture": "x86_64",
   "ubuntuExecution": "not-run-no-target",
+  "allAssetsIdenticalInBothCopies": true,
+  "evidenceRuns": {
+    "windows": "development-6000.6.8f1-d0ea8490b83048a5b5fa9eaa4f7f63b0",
+    "linux": "development-6000.6.8f1-b2aea4480a8e4278a25c340f272a5b80"
+  },
   "sourceSha256": {
     "game/Assets/Game/Core/Models.cs": "ccdffdbf23160484e420be00d52df2e4de15eb6a2c942ec690607899533fe583",
     "game/Assets/Game/Core/TickClock.cs": "9e69551e44673098d9b6f3ca3eac464ffd7f6e23bee24a795c218907cea0851f",
-    "game/Assets/Game/Editor/BuildGame.cs": "accd3521f1a4ebdd1d1787c246ddcb001a31a4702dd26544d562728f629d5a45",
+    "game/Assets/Game/Editor/BuildGame.cs": "0a9508399ed4e896817107ee2f3c5f9e5d8ab05811894c5c230a35afaec444b6",
     "game/Assets/Game/Editor/SmokeChecks.cs": "67854bbeccdbc232b935dca85266984a9f4f928d2a777a4139c1733d979d5eeb",
     "game/Assets/Game/Integration/BootstrapController.cs": "b1492ab495940fe8f44d3490a8ab8adb69f8e963c2b5842822ee99dd66ef87f5",
     "game/Assets/Game/Integration/Headless/HeadlessEntry.cs": "0a0ad2a080631deecaa154f00ce3a020aa8bef58a261bcacb3f14a084551eee4",
     "game/Assets/Game/Integration/MatchEngine.cs": "6a743863d7d9056f1cc9ee28ad0e6bc60f13772bc1e57a82ae19bbd16d41a52d",
     "game/Assets/Game/Integration/Replay/BootstrapReplay.cs": "2b2a505fbf2cbc49372d3c1a1200426238bb41560edc06e91c701d6ad9776d91",
     "game/Assets/Game/Tests/Core/BootstrapChecks.cs": "5a1446e8c8fa3c2512760fae1a3ba93979314901f15b6ea473dccf90cc5f2785"
-  }
+  },
+  "deliveryArtifacts": {
+    "TuringSignalRelay-bootstrap-dev-6000.6.8f1-linux.tar.gz": {
+      "bytes": 60725049,
+      "sha256": "ea48f931c2596c41a38174939d6bd6cd575e4cb53976350cbafd3489721d7ef3"
+    },
+    "TuringSignalRelay-bootstrap-dev-6000.6.8f1-windows.zip": {
+      "bytes": 64305818,
+      "sha256": "dc2ef8929e7f2d878f936d187a2a291b3719afe3df0cfc1b8eba908d18f1e198"
+    }
+  },
+  "developmentUnityPlayMode": "passed-actual-editor-GUI"
 }

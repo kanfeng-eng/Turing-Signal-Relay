@@ -41,11 +41,11 @@ dotnet --info
 - 创建 Windows 客户端与 Linux Server Build Profiles；开始时优先验证 Mono 后端，不假设 Windows 可交叉生成所有 IL2CPP 目标。
 - Editor 编译、Windows Play、Linux Server 启动各留一份日志。Linux 的构建与运行由实际输出证明，不以 Hub 里存在模块为通过。
 - 5 人各自从 Git 拉取后独立打开一次，不拷贝任何人的 `Library`。
-- 若锁定补丁出现项目相关阻断，1 号先做最小复现，再提出团队统一补丁变更；禁止各自换版本。
+- 若锁定补丁出现阻断，先做最小复现。当前用户要求保留6000.3.26f1，仅允许6000.6.8f1在独立副本开发验证，不提交新版生成的工程设置和包锁。
 
 ## 目标运行入口
 
-bootstrap分支已加入最小场景、构建菜单及headless演示入口，尚未获准启动Unity执行验证；[1号进度](team/1/PROGRESS.md)记录了安装位置、现有验证命令和阻碍。下表中的正式对战/平台入口仍待后续模块实现。
+bootstrap分支已加入最小场景、构建菜单及headless演示入口，已在6000.6.8f1独立副本完成导入和构建验证，原版仍有UPM阻碍；[1号进度](team/1/PROGRESS.md)记录了安装位置、现有验证命令和阻碍。下表中的正式对战/平台入口仍待后续模块实现。
 
 | 场景 | 计划入口 | 落地负责人 |
 | --- | --- | --- |
@@ -69,3 +69,24 @@ bootstrap分支已加入最小场景、构建菜单及headless演示入口，尚
 | 5 | .NET10 SDK、Ubuntu24.04/GCC/CMake、nsjail验证环境；部署时systemd/Nginx | 3D建模软件、额外Unity联网框架 |
 
 1号统一引入Unity侧Newtonsoft Json等工程包，5号统一锁定服务端Identity/EF Core和C++ JSON依赖；其他成员拉取锁文件后恢复环境，不手工复制DLL。详细用途见[技术手册](IMPLEMENTATION_GUIDE.md)。
+
+## 临时使用新版开发（基线保持不变）
+
+不要用6000.6.8f1直接打开仓库的`game/`。在仓库根目录运行：
+
+```powershell
+./tools/run-unity-check.ps1 -EditorDirectory 'C:\Program Files\Unity\Hub\Editor\6000.6.8f1\Editor' -DevelopmentCopy -Action Windows
+./tools/run-unity-check.ps1 -EditorDirectory 'C:\Program Files\Unity\Hub\Editor\6000.6.8f1\Editor' -DevelopmentCopy -Action LinuxServer
+```
+
+每次命令新建`artifacts/development-6000.6.8f1-<唯一编号>/game`，只复制源码、已跟踪的Packages/ProjectSettings，在副本中改版本；日志和构建产物放在同级`artifacts/`。构建前先导入并执行Bootstrap检查，退出码和完成标志均通过才报告成功。Linux命令需先安装新版对应的Linux Dedicated Server模块。
+
+编辑器开发：打开命令输出的副本`game`路径。完成后只把需要的`.cs`等源码同步回原仓库，使用下次新副本重新验证；不回拷Library、Packages锁或ProjectSettings。新增资源需同时带`.meta`。提交前用原版API静态编译检查；新版验证不等于原版运行兼容性验收。
+
+原版实际检查入口（目前会受UPM故障阻碍）：
+
+```powershell
+./tools/run-unity-check.ps1 -EditorDirectory 'D:\kanfe\Unity\6000.3.26f1\Editor' -Action Check
+```
+
+不带`-DevelopmentCopy`时脚本拒绝其他版本；构建菜单默认同样拒绝其他版本。新版副本构建由脚本显式传入`-bootstrapDevelopmentCopy`，日志有开发验证警告。正式发布仍须用原版完成构建与运行检查。

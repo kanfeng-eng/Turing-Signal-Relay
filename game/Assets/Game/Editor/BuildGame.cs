@@ -18,8 +18,11 @@ namespace TuringSignalRelay.Editor
 
         private static void Build(BuildTarget target, string output, bool server)
         {
-            if (Application.unityVersion != "6000.3.26f1")
+            bool developmentCopy = Array.IndexOf(Environment.GetCommandLineArgs(), "-bootstrapDevelopmentCopy") >= 0;
+            if (Application.unityVersion != "6000.3.26f1" &&
+                !(developmentCopy && Application.unityVersion == "6000.6.8f1"))
                 throw new InvalidOperationException("Use Unity 6000.3.26f1; refusing a different editor.");
+            if (developmentCopy) Debug.LogWarning("Development copy build; team baseline compatibility is not verified.");
             EditorSettings.serializationMode = SerializationMode.ForceText;
             var options = new BuildPlayerOptions {
                 scenes = new[] { Scene }, target = target,
