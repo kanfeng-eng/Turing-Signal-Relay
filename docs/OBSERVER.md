@@ -36,6 +36,10 @@ Windows构建入口仍为tools/run-unity-check.ps1的Windows动作。启动生�
 
 旧帧和重复帧会丢弃。切换地址或令牌后需重新连接，连接代次用于拒绝前一次请求。Hold display只暂停取帧显示，Return to live恢复轮询。断流时保留最后一帧并显示连接诊断。
 
+暂停/恢复会切换请求代次并取消在途请求，加载离线回放也会取消在线请求。请求释放时清除句柄，防止退出时再次操作已释放对象。快照请求拒绝自动重定向，地址须填写最终端点。该行为使用UnityWebRequest.redirectLimit设置。[Unity API说明](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Networking.UnityWebRequest-redirectLimit.html)
+
+展示实体id须为非负数，-1保留给未选中/无事件焦点。durationTicks须为正数，tick须在0到durationTicks范围内。Bootstrap导入保留配置中的时长与频率。
+
 5号需要确认此草案并接入经过授权的真实快照。当前真实接口和账号尚待提供。
 
 ## 旧素材
@@ -76,3 +80,13 @@ Ubuntu实际检查已覆盖Linux完整9000 tick、重复运行哈希一致、参
 脚本核对13项源文件，保留已有.meta，并在目标模型内容不同的时候报错。随后在独立副本中用启用图形设备的Editor调用TuringSignalRelay.Editor.LegacyArt.Prepare。贴图使用Single模式，256×256，256 pixels/unit。
 
 原生UI实际窗口已成功启动并显示中文界面。此前Windows防火墙弹窗消失后恢复了游戏内检查，系统安全权限操作由用户处理。构建脚本输出普通Player构建并设置产品名Turing Signal Relay。
+
+## 真实HTTP回归
+
+先按ENVIRONMENT.md创建6000.6.8f1独立副本并完成Check，再运行以下Windows命令，将路径替换为本次副本。日志路径须为新文件。
+
+```powershell
+python tools/check-observer-network.py --editor 'C:\Program Files\Unity\Hub\Editor\6000.6.8f1\Editor\Unity.exe' --project '<独立副本>\game' --log '<独立副本>\artifacts\observer-network.log'
+```
+
+脚本在127.0.0.1临时端口提供只读测试快照，在Editor内驱动生产Poll迭代器和真实UnityWebRequest。覆盖重复/旧帧、畸形JSON、HTTP503后恢复、暂停/恢复取消、地址/令牌切换、302拒绝、401、5秒超时、离线回放切换及迭代器释放。测试结束后关闭端口，日志与请求统计保存在指定输出位置。该端点用于网络回归，正式5号服务仍需联调。

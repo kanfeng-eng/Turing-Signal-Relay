@@ -67,6 +67,19 @@ namespace TuringSignalRelay.Editor
             catch (ArgumentException) { rejected = true; }
             if (!rejected || live.Current.tick != 102)
                 throw new Exception("Invalid live data changed buffer.");
+            foreach (string field in new[] { "duration", "tick", "entity-id" })
+            {
+                badFrame = JsonUtility.FromJson<ObserverFrame>(JsonUtility.ToJson(player.Frames[0]));
+                if (field == "duration") badFrame.durationTicks = 0;
+                if (field == "tick") badFrame.tick = badFrame.durationTicks + 1;
+                if (field == "entity-id") badFrame.entities[0].id = -1;
+                rejected = false;
+                try { live.Accept(badFrame); }
+                catch (ArgumentException) { rejected = true; }
+                if (!rejected || live.Current.tick != 102)
+                    throw new Exception("Invalid " + field + " changed live data.");
+            }
+            int fullReplayFrames = 0;
             string replayPath = Path.Combine(Path.GetTempPath(), "observer-full-" + Guid.NewGuid() + ".jsonl");
             try
             {
@@ -82,6 +95,20 @@ namespace TuringSignalRelay.Editor
                 player.Seek(9000);
                 if (player.Frames.Count != 9001 || player.Current.tick != 9000 || player.Current.scoreHalfPoints[0] != 0)
                     throw new Exception("Full-duration replay failed.");
+                fullReplayFrames = player.Frames.Count;
+                File.Delete(replayPath);
+                config = new MatchConfig { durationTicks = 3, ticksPerSecond = 20 };
+                engine = new MatchEngine(config);
+                using (var writer = new BootstrapReplayWriter(replayPath, config))
+                {
+                    writer.Write(engine.GetSnapshot());
+                    while (!engine.Clock.Completed)
+                        engine.Step(writer.Write);
+                }
+                player.LoadBootstrap(replayPath);
+                player.Seek(3);
+                if (player.Current.durationTicks != 3 || player.TicksPerSecond != 20)
+                    throw new Exception("Configured replay timing was lost.");
             }
             finally { File.Delete(replayPath); }
             var uiRoot = new GameObject("Observer UI checks");
@@ -128,7 +155,7 @@ namespace TuringSignalRelay.Editor
                     throw new Exception("Missing sprite " + name);
                 count++;
             }
-            Debug.Log("OBSERVER_CHECKS_PASSED frames=" + player.Frames.Count + " sprites=" + count);
+            Debug.Log("OBSERVER_CHECKS_PASSED frames=" + fullReplayFrames + " sprites=" + count);
         }
     }
 }

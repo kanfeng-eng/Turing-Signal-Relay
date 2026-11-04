@@ -122,7 +122,12 @@ namespace TuringSignalRelay
         public void TogglePlayback()
         {
             if (IsLive)
+            {
                 Hold = !Hold;
+                generation++;
+                if (pendingRequest != null)
+                    pendingRequest.Abort();
+            }
             else
                 Playback.Playing = !Playback.Playing;
         }
@@ -136,6 +141,8 @@ namespace TuringSignalRelay
                     Playback.Load(File.ReadAllText(path));
                 IsLive = false;
                 generation++;
+                if (pendingRequest != null)
+                    pendingRequest.Abort();
                 Status = "Replay loaded";
                 Error = "";
             }
@@ -190,26 +197,30 @@ namespace TuringSignalRelay
                     using (var request = UnityWebRequest.Get(endpoint))
                     {
                         pendingRequest = request;
-                        request.timeout = 5;
-                        if (!string.IsNullOrWhiteSpace(token))
-                            request.SetRequestHeader("Authorization", "Bearer " + token);
-                        yield return request.SendWebRequest();
-                        if (IsLive && !Hold && requestedGeneration == generation)
+                        try
                         {
-                            if (request.result != UnityWebRequest.Result.Success)
-                                Status = "Disconnected: " + request.error;
-                            else
+                            request.timeout = 5;
+                            request.redirectLimit = 0;
+                            if (!string.IsNullOrWhiteSpace(token))
+                                request.SetRequestHeader("Authorization", "Bearer " + token);
+                            yield return request.SendWebRequest();
+                            if (IsLive && !Hold && requestedGeneration == generation)
                             {
-                                try
+                                if (request.result != UnityWebRequest.Result.Success)
+                                    Status = "Disconnected: " + request.error;
+                                else
                                 {
-                                    Status = LiveBuffer.AcceptJson(request.downloadHandler.text) ? "Live / " + LiveBuffer.Status + " / tick " + LiveBuffer.Current.tick : "Waiting for newer frame";
+                                    try
+                                    {
+                                        Status = LiveBuffer.AcceptJson(request.downloadHandler.text) ? "Live / " + LiveBuffer.Status + " / tick " + LiveBuffer.Current.tick : "Waiting for newer frame";
+                                    }
+                                    catch (Exception exception) { Status = "Invalid live frame: " + exception.Message; }
                                 }
-                                catch (Exception exception) { Status = "Invalid live frame: " + exception.Message; }
                             }
                         }
+                        finally { pendingRequest = null; }
                     }
                 }
-                pendingRequest = null;
                 yield return new WaitForSecondsRealtime(.5f);
             }
         }

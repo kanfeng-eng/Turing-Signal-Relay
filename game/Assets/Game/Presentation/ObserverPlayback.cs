@@ -54,20 +54,21 @@ namespace TuringSignalRelay
             var pending = new List<ObserverFrame>();
             var emptyTerrain = new int[96 * 96];
             var hidden = new int[96 * 96];
+            BootstrapReplayHeader header;
+            using (var reader = File.OpenText(path))
+                header = JsonUtility.FromJson<BootstrapReplayHeader>(reader.ReadLine());
             foreach (var snapshot in BootstrapReplayReader.ReadSnapshots(path))
                 pending.Add(new ObserverFrame
                 {
                     protocolVersion = 1,
                     type = "observer-frame",
                     tick = snapshot.tick,
+                    durationTicks = header.config.durationTicks,
                     scoreHalfPoints = snapshot.scoreHalfPoints,
                     terrain = emptyTerrain,
                     visibleToMask = hidden,
                     rulesVersion = snapshot.rulesVersion
                 });
-            BootstrapReplayHeader header;
-            using (var reader = File.OpenText(path))
-                header = JsonUtility.FromJson<BootstrapReplayHeader>(reader.ReadLine());
             Frames.Clear();
             Frames.AddRange(pending);
             TicksPerSecond = header.config.ticksPerSecond;

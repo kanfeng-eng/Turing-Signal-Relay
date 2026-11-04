@@ -36,7 +36,7 @@ namespace TuringSignalRelay
 
         public void Validate()
         {
-            if (protocolVersion != 1 || type != "observer-frame" || tick < 0 || width <= 0 || height <= 0 ||
+            if (protocolVersion != 1 || type != "observer-frame" || tick < 0 || durationTicks <= 0 || tick > durationTicks || width <= 0 || height <= 0 ||
                 width > 96 || height > 96 || scoreHalfPoints == null || scoreHalfPoints.Length != 2 ||
                 terrain == null || visibleToMask == null || terrain.Length != width * height ||
                 visibleToMask.Length != terrain.Length || entities == null || links == null ||
@@ -50,7 +50,7 @@ namespace TuringSignalRelay
                 throw new ArgumentException("Invalid visibility mask.");
             var ids = new System.Collections.Generic.HashSet<int>();
             foreach (var entity in entities)
-                if (entity == null || !ids.Add(entity.id) || entity.side < 0 || entity.side > 1 || entity.kind < 0 || entity.kind > 4 ||
+                if (entity == null || entity.id < 0 || !ids.Add(entity.id) || entity.side < 0 || entity.side > 1 || entity.kind < 0 || entity.kind > 4 ||
                     float.IsNaN(entity.x) || float.IsNaN(entity.y) || entity.x < 0 || entity.y < 0 ||
                     entity.x >= width || entity.y >= height || entity.visibleToMask < 0 || entity.visibleToMask > 3)
                     throw new ArgumentException("Invalid observer entity.");
