@@ -8,10 +8,10 @@
   "pureLogicChecks": "passed",
   "baselineUnityApiStaticCompilation": "passed",
   "versionGuardRejectsNewEditorOnOriginal": "passed",
-  "metadataGuids": 29,
+  "metadataGuids": 30,
   "assemblyCount": 7,
   "assemblyGraph": "passed",
-  "localMarkdownLinksChecked": 44,
+  "localMarkdownLinksChecked": 50,
   "baselineUnityImport": "blocked-UPM-HTTP500",
   "baselineUnityPlayMode": "not-run",
   "baselineWindowsBuild": "not-run",
@@ -19,38 +19,96 @@
   "developmentUnityImport": "passed",
   "developmentUnityReplayChecks": "passed",
   "developmentWindowsBuild": "passed",
-  "developmentWindowsGuiControls": "passed",
-  "developmentWindowsHeadlessExecution": "passed-exit0-9000ticks",
+  "developmentWindowsGuiControls": "passed-previous-run-controller-unchanged",
+  "developmentWindowsHeadlessExecution": "passed-10-real-process-cases",
   "replaySnapshots": 9001,
-  "replaySha256": "b1bcb470f1a65ecf3c7f7e6840d2a2f2ded33c85f88e2ae7d3c4bb4488f6ab00",
+  "replaySha256": "a0f09b3a83a2386a121366c279df46b14241bf652af028c98c46f5491d6ace3d",
   "developmentLinuxServerBuild": "passed",
   "developmentLinuxElfArchitecture": "x86_64",
   "ubuntuExecution": "not-run-no-target",
   "allAssetsIdenticalInBothCopies": true,
   "evidenceRuns": {
-    "windows": "development-6000.6.8f1-d0ea8490b83048a5b5fa9eaa4f7f63b0",
-    "linux": "development-6000.6.8f1-b2aea4480a8e4278a25c340f272a5b80"
+    "windows": "development-6000.6.8f1-bce1b4bebfe348ffb36953e0654202e7",
+    "linux": "development-6000.6.8f1-646bd7816f10423aa9a67d0af04ddfdf"
   },
   "sourceSha256": {
+    "game/Assets/Game/Core/BootstrapStateHash.cs": "2628fff67b4c30a1889be42bb403e3c5c38276459a5a28d1d5b3a006e699a370",
     "game/Assets/Game/Core/Models.cs": "ccdffdbf23160484e420be00d52df2e4de15eb6a2c942ec690607899533fe583",
     "game/Assets/Game/Core/TickClock.cs": "9e69551e44673098d9b6f3ca3eac464ffd7f6e23bee24a795c218907cea0851f",
     "game/Assets/Game/Editor/BuildGame.cs": "0a9508399ed4e896817107ee2f3c5f9e5d8ab05811894c5c230a35afaec444b6",
-    "game/Assets/Game/Editor/SmokeChecks.cs": "67854bbeccdbc232b935dca85266984a9f4f928d2a777a4139c1733d979d5eeb",
+    "game/Assets/Game/Editor/SmokeChecks.cs": "9912882acb1a5d0ef5e9f212333e4677d887b92b9775874973a7fefca7a7aef6",
     "game/Assets/Game/Integration/BootstrapController.cs": "b1492ab495940fe8f44d3490a8ab8adb69f8e963c2b5842822ee99dd66ef87f5",
-    "game/Assets/Game/Integration/Headless/HeadlessEntry.cs": "0a0ad2a080631deecaa154f00ce3a020aa8bef58a261bcacb3f14a084551eee4",
+    "game/Assets/Game/Integration/Headless/HeadlessEntry.cs": "06c003787bbe8fad83234f330d0b8dd61320945d7fbecd2444fe85a367e57236",
     "game/Assets/Game/Integration/MatchEngine.cs": "6a743863d7d9056f1cc9ee28ad0e6bc60f13772bc1e57a82ae19bbd16d41a52d",
-    "game/Assets/Game/Integration/Replay/BootstrapReplay.cs": "2b2a505fbf2cbc49372d3c1a1200426238bb41560edc06e91c701d6ad9776d91",
-    "game/Assets/Game/Tests/Core/BootstrapChecks.cs": "5a1446e8c8fa3c2512760fae1a3ba93979314901f15b6ea473dccf90cc5f2785"
+    "game/Assets/Game/Integration/Replay/BootstrapReplay.cs": "7c1e8a3cd8a2f3ea404bf87bb5fe5666a7ec6d1c2d623b55ac1698cbfce1eb20",
+    "game/Assets/Game/Tests/Core/BootstrapChecks.cs": "c7c80b2f854f6558e6ab908ce22644a5b8165906f64fdc5c8ae60665f5acd6f3"
   },
   "deliveryArtifacts": {
-    "TuringSignalRelay-bootstrap-dev-6000.6.8f1-linux.tar.gz": {
-      "bytes": 60725049,
-      "sha256": "ea48f931c2596c41a38174939d6bd6cd575e4cb53976350cbafd3489721d7ef3"
+    "artifacts/delivery/bootstrap-v2/TuringSignalRelay-bootstrap-v2-dev-linux.tar.gz": {
+      "bytes": 60742164,
+      "sha256": "13a2b6fe9080d10ea0e6a09b7727fb5a2a900c98250b59bb2589a8d313ce5e82"
     },
-    "TuringSignalRelay-bootstrap-dev-6000.6.8f1-windows.zip": {
-      "bytes": 64305818,
-      "sha256": "dc2ef8929e7f2d878f936d187a2a291b3719afe3df0cfc1b8eba908d18f1e198"
+    "artifacts/delivery/bootstrap-v2/TuringSignalRelay-bootstrap-v2-dev-windows.zip": {
+      "bytes": 64313787,
+      "sha256": "c1c26c83498a8bf66f5404dbbe3be310432113ae7942e73364a27a54a5d6f37e"
     }
   },
-  "developmentUnityPlayMode": "passed-actual-editor-GUI"
+  "developmentUnityPlayMode": "passed-previous-run-controller-and-scene-unchanged",
+  "bootstrapReplayVersionWritten": 2,
+  "legacyReplayVersionReadable": 1,
+  "canonicalStateHashReference": "1f539e37dc317a243ea5055e0e9c7b8584f7213f1e20e30669139c43bb20335f",
+  "replayNegativeChecks": [
+    "changed-score",
+    "changed-header-seed",
+    "duplicate-tick",
+    "truncated-replay",
+    "malformed-json",
+    "unknown-version"
+  ],
+  "headlessCases": {
+    "default": {
+      "exitCode": 0,
+      "completionMarker": true
+    },
+    "repeat": {
+      "exitCode": 0,
+      "completionMarker": true
+    },
+    "configured": {
+      "exitCode": 0,
+      "completionMarker": true
+    },
+    "invalid-config": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "missing-value": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "option-as-value": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "duplicate-option": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "unknown-option": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "missing-replay": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "refuse-overwrite": {
+      "exitCode": 1,
+      "completionMarker": false
+    }
+  },
+  "bootstrapFinalStateHash": "47683abf831ae7c667b7b3f7f657355ba55fc8da133145ba98bccc4f9b073423",
+  "headlessIndependentVerification": "passed-python-stdlib-every-frame-and-result",
+  "sameInputRepeatedStateHash": "passed",
+  "priorGuiEvidenceRun": "development-6000.6.8f1-d0ea8490b83048a5b5fa9eaa4f7f63b0"
 }

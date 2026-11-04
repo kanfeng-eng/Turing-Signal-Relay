@@ -2,7 +2,7 @@
 
 第十九届图灵杯“强军·电波 2027”比赛系统。GitHub 仓库：[kanfeng-eng/Turing-Signal-Relay](https://github.com/kanfeng-eng/Turing-Signal-Relay)。
 
-**当前状态（2026-11-04，feat/1-bootstrap）：团队基线保持6000.3.26f1；同一套源码已在6000.6.8f1独立副本完成导入、Editor Play、Windows/Linux Server构建和Windows 9000 tick回放验证。原版Editor仍受UPM故障阻碍，尚未证明原版完整运行；正式玩法与平台仍待实现。详见[1号进度](docs/team/1/PROGRESS.md)。**
+**当前状态（2026-11-04，feat/1-bootstrap）：团队基线保持6000.3.26f1；同一套源码已在6000.6.8f1独立副本完成导入、Editor Play、Windows/Linux Server构建和Windows 9000 tick回放验证，现补充稳定哈希、配置输入与结构化结果。原版Editor仍受UPM故障阻碍，尚未证明原版完整运行；正式玩法与平台仍待实现。详见[1号进度](docs/team/1/PROGRESS.md)。**
 
 ## 1. 已确认的目标
 
@@ -33,6 +33,8 @@
 不增加人类玩家联网对战框架。服务端是权威裁判，客户端仅显示快照；客户端和服务器不各写一套规则。
 
 官方核实依据（2026-11-03）：[Unity 补丁版本](https://unity.com/releases/editor/whats-new/6000.3.26f1)、[Unity 系统要求](https://docs.unity3d.com/6000.3/Documentation/Manual/system-requirements.html)、[Linux Server 构建方式](https://docs.unity3d.com/6000.3/Documentation/Manual/dedicated-server-build.html)、[.NET 支持周期](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)。补丁选择是可复现基线，不声称是最新补丁；实际构建验证前不宣称兼容通过。
+
+实际文件入口和4/5号对接方式见[Bootstrap交接](docs/BOOTSTRAP.md)。
 
 ## 3. 按编号开始工作
 

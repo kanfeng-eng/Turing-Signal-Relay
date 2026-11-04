@@ -5,3 +5,5 @@
 - protocolVersion=1是开发草案编号，尚未冻结或发布正式SDK。
 
 1号只提供基础共享数据，5号在SDK首个PR中补跨语言fixture测试；2号确认可见性字段，3号确认资源/报文及失败原因。不得把全图状态直接当选手Observation。
+
+- bootstrap-config.json：1号独立演示配置，3 tick、seed=7；运行入口和回放/结果格式见[Bootstrap交接](../../docs/BOOTSTRAP.md)。不构成正式比赛清单。

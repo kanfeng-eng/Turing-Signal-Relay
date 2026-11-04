@@ -52,6 +52,24 @@ namespace TuringSignalRelay.Tests
             try { new TickClock(new MatchConfig { ticksPerSecond = 0 }); }
             catch (ArgumentException) { badConfig = true; }
             Check(badConfig, "Reject invalid tick configuration.");
+            config = new MatchConfig { durationTicks = 3, seed = 7 };
+            engine = new MatchEngine(config);
+            string hash = BootstrapStateHash.Compute(config, engine.GetSnapshot());
+            Check(hash == "1f539e37dc317a243ea5055e0e9c7b8584f7213f1e20e30669139c43bb20335f",
+                "Hash bytes must match the independent little-endian reference vector.");
+            Check(hash.Length == 64 && hash == BootstrapStateHash.Compute(config, engine.GetSnapshot()),
+                "State hash must be reproducible SHA256.");
+            engine.Step();
+            Check(hash != BootstrapStateHash.Compute(config, engine.GetSnapshot()), "Tick must affect hash.");
+            var second = new MatchEngine(config);
+            second.Step();
+            Check(BootstrapStateHash.Compute(config, engine.GetSnapshot()) == BootstrapStateHash.Compute(config, second.GetSnapshot()),
+                "Identical runs must hash identically.");
+            second.State.scoreHalfPoints[1] = 1;
+            Check(BootstrapStateHash.Compute(config, engine.GetSnapshot()) != BootstrapStateHash.Compute(config, second.GetSnapshot()),
+                "Scores must affect hash.");
+            config.seed++;
+            Check(hash != BootstrapStateHash.Compute(config, new MatchEngine(config).GetSnapshot()), "Seed must affect hash.");
         }
     }
 }

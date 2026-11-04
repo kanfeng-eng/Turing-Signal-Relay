@@ -9,6 +9,7 @@ New-Item -ItemType Directory -Force -Path $taskOutput | Out-Null
 $taskExe = Join-Path $taskOutput 'BootstrapChecks.exe'
 $taskSources = @(
     'game/Assets/Game/Core/Models.cs',
+    'game/Assets/Game/Core/BootstrapStateHash.cs',
     'game/Assets/Game/Core/TickClock.cs',
     'game/Assets/Game/Integration/MatchEngine.cs',
     'game/Assets/Game/Tests/Core/BootstrapChecks.cs',
