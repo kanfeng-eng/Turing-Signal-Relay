@@ -24,6 +24,7 @@ namespace TuringSignalRelay
         public int tick;
         public int durationTicks = 9000;
         public int width = 96, height = 96;
+        public bool staticTerrainKnown;
         public int[] terrain = new int[0];
         public int[] visibleToMask = new int[0];
         public int[] scoreHalfPoints = new int[2];
@@ -68,7 +69,7 @@ namespace TuringSignalRelay
                 throw new ArgumentException("Invalid visibility mask.");
             var ids = new System.Collections.Generic.HashSet<int>();
             foreach (var entity in entities)
-                if (entity == null || entity.id < 0 || !ids.Add(entity.id) || entity.side < 0 || entity.side > 1 || entity.kind < 0 || entity.kind > 4 ||
+                if (entity == null || entity.id < 0 || !ids.Add(entity.id) || entity.side < -1 || entity.side > 1 || entity.kind < 0 || entity.kind > 4 ||
                     float.IsNaN(entity.x) || float.IsNaN(entity.y) || entity.x < 0 || entity.y < 0 ||
                     entity.x >= width || entity.y >= height || entity.visibleToMask < 0 || entity.visibleToMask > 3)
                     throw new ArgumentException("Invalid observer entity.");

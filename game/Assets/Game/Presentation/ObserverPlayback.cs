@@ -29,6 +29,11 @@ namespace TuringSignalRelay
             var pending = new List<ObserverFrame>();
             int rate = 10;
             var data = JsonUtility.FromJson<ObserverRecording>(text);
+            if (data != null && data.type == "relay-replay")
+            {
+                LoadRelay(text);
+                return;
+            }
             if (data == null || data.type != "observer-recording" || data.replayVersion != 1 ||
                 data.ticksPerSecond <= 0 || data.frames == null || data.frames.Length == 0 || data.frames.Length > 9001)
                 throw new InvalidDataException("Unsupported observer recording.");
@@ -75,6 +80,22 @@ namespace TuringSignalRelay
             TicksPerSecond = header.config.ticksPerSecond;
             Seek(0);
             Playing = false;
+        }
+        public void LoadRelay(string text)
+        {
+            var recording = JsonUtility.FromJson<RelayRecording>(text);
+            if (recording == null || recording.config == null || recording.map == null)
+                throw new InvalidDataException("Missing relay replay configuration or map.");
+            var builder = new ObserverSnapshotBuilder(recording.config, recording.map);
+            var pending = new List<ObserverFrame>();
+            RelayReplay.Verify(recording, engine => {
+                var frame = builder.Create(engine.GetSnapshot());
+                frame.Validate();
+                frame.ReuseUnchangedMap(pending.Count == 0 ? null : pending[pending.Count - 1]);
+                pending.Add(frame);
+            });
+            Frames.Clear(); Frames.AddRange(pending);
+            TicksPerSecond = 10; Seek(0); Playing = false;
         }
         public void Seek(int index)
         {

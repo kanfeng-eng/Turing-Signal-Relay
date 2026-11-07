@@ -59,6 +59,7 @@ namespace TuringSignalRelay.Editor
                 if (BootstrapReplayReader.ReadFinal(path).tick != 3)
                     throw new Exception("Legacy v1 replay is no longer readable.");
                 ObserverChecks.Run();
+                RelayStageChecks.Run();
                 Debug.Log("BOOTSTRAP_CHECKS_PASSED");
             }
             finally { File.Delete(path); }

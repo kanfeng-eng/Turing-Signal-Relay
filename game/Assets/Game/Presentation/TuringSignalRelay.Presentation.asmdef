@@ -3,6 +3,7 @@
   "references": [
     "TuringSignalRelay.Core",
     "TuringSignalRelay.Integration",
-    "UnityEngine.UI"
+    "UnityEngine.UI",
+    "TuringSignalRelay.World"
   ]
 }

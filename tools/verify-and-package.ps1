@@ -48,6 +48,7 @@ try {
     Invoke-Checked $Python $taskSourceArguments
     & "$PSScriptRoot\verify-bootstrap.ps1" -Compiler $Compiler
     & "$PSScriptRoot\verify-world.ps1" -Compiler $Compiler
+    & "$PSScriptRoot\verify-relay.ps1" -Dotnet $taskDotnet -OutputDirectory (Join-Path $OutputDirectory 'relay-stages123')
     foreach ($taskService in @('Platform','Worker','Worker.Checks')) {
         Invoke-Checked $taskDotnet @('publish',"server/$taskService/$taskService.csproj",'-c','Release','-o',(Join-Path $OutputDirectory "server\$taskService"),'--nologo')
     }

@@ -26,6 +26,7 @@ namespace TuringSignalRelay
         private static void Run()
         {
             string[] args = Environment.GetCommandLineArgs();
+            if (Array.Exists(args, value => value.StartsWith("--relay-", StringComparison.Ordinal))) return;
             if (!Array.Exists(args, value => value.StartsWith("--bootstrap-", StringComparison.Ordinal))) return;
             try
             {

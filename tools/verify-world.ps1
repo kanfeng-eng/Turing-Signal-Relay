@@ -4,6 +4,7 @@ $taskRoot = Split-Path -Parent $PSScriptRoot
 $taskOutput = Join-Path $taskRoot 'artifacts\checks'
 New-Item -ItemType Directory -Force -Path $taskOutput | Out-Null
 $taskSources = @(
+    'game/Assets/Game/Core/GridPrimitives.cs',
     'game/Assets/Game/World/GridPathfinder.cs',
     'game/Assets/Game/Presentation/ObserverEventLog.cs',
     'tools/WorldCheckMain.cs'

@@ -41,6 +41,13 @@ if ($DevelopmentCopy -or $PublicSource) {
             Copy-Item -LiteralPath (Join-Path $taskRoot $taskFile) -Destination $taskDestination
         }
     }
+    $taskFixtureFiles = & git -C $taskRoot ls-files --cached --others --exclude-standard -- fixtures
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot enumerate scenario fixtures.' }
+    foreach ($taskFile in $taskFixtureFiles) {
+        $taskDestination = Join-Path $taskCopy $taskFile
+        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $taskDestination) | Out-Null
+        Copy-Item -LiteralPath (Join-Path $taskRoot $taskFile) -Destination $taskDestination
+    }
     if ($DevelopmentCopy) {
         Set-Content -LiteralPath (Join-Path $taskProjectCopy 'ProjectSettings\ProjectVersion.txt') `
             -Value 'm_EditorVersion: 6000.6.8f1' -Encoding ASCII

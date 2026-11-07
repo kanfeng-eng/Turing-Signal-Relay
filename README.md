@@ -2,7 +2,7 @@
 
 第十九届图灵杯“强军·电波 2027”比赛系统。GitHub 仓库：[kanfeng-eng/Turing-Signal-Relay](https://github.com/kanfeng-eng/Turing-Signal-Relay)。
 
-**当前状态（2026-11-07）。用户个人承担全部五部分。R01—R18 已全部批准 A，规则版本 signal-relay-1.0，见[规则批准记录](docs/RULE_DECISIONS.md)。当前实现包含 Bootstrap 裁判、原生观战、回放和基础调度，正式玩法与提交平台后台正在推进。Unity 基线 6000.3.26f1，6000.6.8f1 在独立副本验证。**
+**当前状态（2026-11-07）。用户个人承担五部分。路线①正式数据、②地图移动、③平报计分已接通，52项逻辑检查及9000 tick脚本场景通过，.NET、Unity Editor、Windows Player结果一致。使用协议2与movement-plain-report-v1功能集，完整规则及C++双AI继续推进。复现见[路线①②③说明](docs/STAGES_1_3.md)。Unity基线6000.3.26f1，实际验证使用6000.6.8f1独立副本。**
 
 ## 1. 已确认的目标
 

@@ -1,6 +1,8 @@
 {
   "name": "TuringSignalRelay.Integration",
   "references": [
-    "TuringSignalRelay.Core"
+    "TuringSignalRelay.Core",
+    "TuringSignalRelay.World",
+    "TuringSignalRelay.Rules"
   ]
 }

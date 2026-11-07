@@ -73,6 +73,7 @@ namespace TuringSignalRelay
             }
             var frame = controller.Frame;
             int hash = (controller.Side * 101 + frame.width) * 101 + frame.height;
+            hash = hash * 2 + (frame.staticTerrainKnown ? 1 : 0);
             for (int i = 0; i < frame.terrain.Length; i++)
                 hash = unchecked(hash * 31 + frame.terrain[i] * 7 + frame.visibleToMask[i]);
             if (terrainTexture == null || hash != terrainHash)
@@ -84,7 +85,7 @@ namespace TuringSignalRelay
                 Color[] palette = { new Color(.16f, .29f, .24f), new Color(.55f, .52f, .39f), new Color(.16f, .38f, .55f), new Color(.37f, .4f, .39f) };
                 var pixels = new Color[frame.terrain.Length];
                 for (int i = 0; i < pixels.Length; i++)
-                    pixels[i] = controller.Side >= 0 && (frame.visibleToMask[i] & (1 << controller.Side)) == 0 ? new Color(.05f, .08f, .11f) : palette[frame.terrain[i]];
+                    pixels[i] = !frame.staticTerrainKnown && controller.Side >= 0 && (frame.visibleToMask[i] & (1 << controller.Side)) == 0 ? new Color(.05f, .08f, .11f) : palette[frame.terrain[i]];
                 terrainTexture.SetPixels(pixels);
                 terrainTexture.Apply();
                 ground.texture = terrainTexture;
@@ -153,10 +154,10 @@ namespace TuringSignalRelay
                 view.gameObject.SetActive(true);
                 view.anchoredPosition = Position(entity, frame) * scale;
                 view.sizeDelta = Vector2.one * (Mini ? 5 : Math.Max(18, scale * 2.7f));
-                view.GetComponent<Image>().color = entity.side == 0 ? new Color(.88f, .4f, .35f) : new Color(.36f, .7f, .91f);
+                view.GetComponent<Image>().color = entity.side < 0 ? new Color(.7f, .72f, .65f) : entity.side == 0 ? new Color(.88f, .4f, .35f) : new Color(.36f, .7f, .91f);
                 var labelText = view.GetComponentInChildren<Text>();
                 labelText.enabled = !Mini;
-                labelText.text = (entity.side == 0 ? "R" : "B") + KindLabels[entity.kind] +
+                labelText.text = (entity.side < 0 ? "·" : entity.side == 0 ? "R" : "B") + KindLabels[entity.kind] +
                     (zoom >= 2 || entity.id == Selected ? entity.id.ToString() : "") + (entity.suppressed ? " !" : "");
             }
             while (links.Count < frame.links.Length)
@@ -188,7 +189,7 @@ namespace TuringSignalRelay
         }
         private static Vector2 Position(ObserverEntity entity, ObserverFrame frame)
         {
-            return new Vector2(entity.x - frame.width / 2f, entity.y - frame.height / 2f);
+            return new Vector2(entity.x + .5f - frame.width / 2f, entity.y + .5f - frame.height / 2f);
         }
         public void ResetCamera()
         {

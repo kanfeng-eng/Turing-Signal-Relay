@@ -23,10 +23,16 @@
 | 5 C++ JSON | [nlohmann/json](https://github.com/nlohmann/json/tree/b54267d2a74c085ff2b05b01e369ecb7dd70cec6)，MIT | 候选，尚未接入 SDK，需要验证编译、帧长和解析异常 |
 | 5 Linux 隔离 | [google/nsjail](https://github.com/google/nsjail/tree/d8415bc8eea43cdd413daba25af63127019a1189)，Apache-2.0 | 候选，尚未作为正式沙箱验收，需要目标 Ubuntu 的 namespaces、cgroups、seccomp 与资源计量验证 |
 
-后续 1、3、5 号模块进入具体实现前继续针对当前任务检索。当前 C# 格网寻路只完成路径查询、地形边耗时和覆盖距离，跨河调度、占用推进及正式比赛组合仍需接入。
+后续功能继续按具体任务检索。本轮已接入移动、占用、跨河队列与平报分账，代码复用现有整数A*、tick约定、规范摘要和观战播放器。
 
 ## 当前验证入口
 
 运行 tools/verify-world.ps1，验证整数地形耗时、加权最短路径、旋转对应、阻挡、不可达、完整 96×96 查询、覆盖边界和旧日志回归。
 
 运行 tools/run-unity-check.ps1 的 Check 动作，验证实际导入、现有 Bootstrap 与观战界面，包括迁入圆环的闭合网格。Unity 原基线的 UPM 问题仍按独立诊断记录跟踪。
+
+## 路线①②③的补充检查
+
+- [Unity ECSGalaxySample](https://github.com/Unity-Technologies/ECSGalaxySample/tree/36909aa9eb41784fe0a3d02d1a20f75bd400771e)的确定性说明采用固定步长和可控随机源，样例需要ECS运行时。本轮复用已有纯C#结构，不引入样例依赖或复制其源码。
+- [microsoft/RulesEngine](https://github.com/microsoft/RulesEngine/tree/2310a6167170d5c51fc726fbc120f484dcb00395)为MIT许可业务规则工作流库，README介绍外部JSON与表达式求值。本轮平报是固定整数时效公式和tick状态转换，直接在现有Core/Rules边界实现，无需增加规则表达式运行时。
+- 两岸坐标、地图布局和脚本由本轮按批准约束编排，源文件为fixtures/world/map-v1.json和Integration/RelayScenario.cs。旧反诈GameManager的Time.time计分与NPC意识值没有迁入新平报规则。

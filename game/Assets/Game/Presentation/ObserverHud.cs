@@ -18,6 +18,8 @@ namespace TuringSignalRelay
         private Button step;
         private Font font;
         private ObserverFrame graphedFrame;
+        private bool updatingTimeline;
+        private int timelineSourceVersion = -1;
         private readonly Color panelColor = new Color(.10f, .20f, .27f);
         private readonly Color textColor = new Color(.88f, .94f, .96f);
 
@@ -66,7 +68,11 @@ namespace TuringSignalRelay
             timeline.handleRect = handle.rectTransform;
             timeline.targetGraphic = handle;
             timeline.wholeNumbers = true;
-            timeline.onValueChanged.AddListener(value => { if (!controller.IsLive) controller.Playback.Seek((int)value); });
+            UpdateTimeline();
+            timeline.onValueChanged.AddListener(value => {
+                if (!controller.IsLive && !updatingTimeline && timelineSourceVersion == controller.SourceVersion)
+                    controller.Playback.Seek((int)value);
+            });
             status = Label(root, "", 16, 119, 1200, 28, 12);
             StretchHorizontal(status.rectTransform, 16, 16);
             var mapArea = Rect(root, "Map", 16, 150, 900, 630);
@@ -238,8 +244,7 @@ namespace TuringSignalRelay
             connectLabel.text = controller.IsLive ? "断开连接" : "连接观战";
             step.interactable = !controller.IsLive;
             timeline.interactable = !controller.IsLive;
-            timeline.maxValue = controller.Playback.Frames.Count - 1;
-            timeline.SetValueWithoutNotify(controller.Playback.Index);
+            UpdateTimeline();
             selection.text = "点击单位查看详情，可切换跟随模式";
             foreach (var entity in frame.entities)
             if (entity.id == map.Selected && frame.Visible(entity, controller.Side))
@@ -253,6 +258,18 @@ namespace TuringSignalRelay
                 graph.SetVerticesDirty();
                 graphedFrame = frame;
             }
+        }
+        private void UpdateTimeline()
+        {
+            int index = controller.Playback.Index;
+            updatingTimeline = true;
+            try
+            {
+                timeline.maxValue = System.Math.Max(0, controller.Playback.Frames.Count - 1);
+                timeline.SetValueWithoutNotify(index);
+                timelineSourceVersion = controller.SourceVersion;
+            }
+            finally { updatingTimeline = false; }
         }
     }
 }

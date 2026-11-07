@@ -3,25 +3,17 @@ using System.Collections.Generic;
 
 namespace TuringSignalRelay
 {
-    public enum UnitRole { Communicator, Engineer, Transporter }
-    public enum TerrainKind { Grass, Road, River, Mountain }
-
-    public struct GridPosition : IEquatable<GridPosition>
-    {
-        public readonly int X, Y;
-        public GridPosition(int x, int y) { X = x; Y = y; }
-        public bool Equals(GridPosition other) { return X == other.X && Y == other.Y; }
-        public override bool Equals(object other) { return other is GridPosition && Equals((GridPosition)other); }
-        public override int GetHashCode() { return X * 101 + Y; }
-    }
-
     public sealed class GridMap
     {
         public int Width { get; private set; }
         public int Height { get; private set; }
         private readonly TerrainKind[] terrain;
+        internal readonly CrossingDefinition[] Crossings;
 
         public GridMap(int width, int height, TerrainKind[] cells)
+            : this(width, height, cells, new CrossingDefinition[0]) { }
+
+        public GridMap(int width, int height, TerrainKind[] cells, CrossingDefinition[] crossings)
         {
             if (width < 1 || height < 1 || width > 96 || height > 96 || cells == null || cells.Length != width * height)
                 throw new ArgumentException("Invalid grid dimensions.");
@@ -31,6 +23,8 @@ namespace TuringSignalRelay
             Width = width;
             Height = height;
             terrain = (TerrainKind[])cells.Clone();
+            if (crossings == null) throw new ArgumentNullException("crossings");
+            Crossings = Array.ConvertAll(crossings, value => value.Copy());
         }
 
         public bool Contains(GridPosition p) { return p.X >= 0 && p.Y >= 0 && p.X < Width && p.Y < Height; }
@@ -121,13 +115,31 @@ namespace TuringSignalRelay
                     return true;
                 }
                 var position = new GridPosition(current.Index % map.Width, current.Index / map.Width);
-                for (int direction = 0; direction < 4; direction++)
+                for (int direction = 0; direction < 4 + map.Crossings.Length; direction++)
                 {
-                    var next = new GridPosition(position.X + dx[direction], position.Y + dy[direction]);
+                    GridPosition next;
+                    int edgeCost;
+                    if (direction < 4)
+                    {
+                        next = new GridPosition(position.X + dx[direction], position.Y + dy[direction]);
+                        if (!map.Contains(next) || map.At(next) == TerrainKind.River) continue;
+                        edgeCost = EnterTicks(map.At(next), role);
+                    }
+                    else
+                    {
+                        var crossing = map.Crossings[direction - 4];
+                        if (!crossing.enabled) continue;
+                        var from = new GridPosition(crossing.fromX, crossing.fromY);
+                        var to = new GridPosition(crossing.toX, crossing.toY);
+                        if (position.Equals(from)) next = to;
+                        else if (position.Equals(to)) next = from;
+                        else continue;
+                        edgeCost = CrossingTicks(crossing.kind, role);
+                    }
                     if (!map.Contains(next) || map.At(next) == TerrainKind.River) continue;
                     int index = next.Y * map.Width + next.X;
                     if (blocked != null && blocked.Contains(index)) continue;
-                    int cost = current.Cost + EnterTicks(map.At(next), role);
+                    int cost = current.Cost + edgeCost;
                     if (cost >= costs[index]) continue;
                     costs[index] = cost;
                     previous[index] = current.Index;
@@ -135,6 +147,14 @@ namespace TuringSignalRelay
                 }
             }
             return false;
+        }
+
+        public static int CrossingTicks(CrossingKind kind, UnitRole role)
+        {
+            if (kind < CrossingKind.RopeBridge || kind > CrossingKind.BuiltBridge)
+                throw new ArgumentOutOfRangeException("kind");
+            int ticks = kind == CrossingKind.Ferry ? 30 : 20;
+            return role == UnitRole.Transporter ? ticks * 2 : ticks;
         }
 
         private static int Distance(GridPosition a, GridPosition b)

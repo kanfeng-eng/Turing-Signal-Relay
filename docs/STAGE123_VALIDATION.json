@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-07",
+  "scope": "route-1-data-route-2-movement-route-3-plain-report",
+  "featureSet": "movement-plain-report-v1",
+  "protocolVersion": 2,
+  "rulesVersion": "signal-relay-1.0",
+  "approvedRulesHash": "d40030db80eeda806c921adcce8f4f963481df53ec93fcc734f8993aa7966318",
+  "mapHash": "f077dbe5e3c3d6913b2537d35f0967e1d2e128f68a0e121ae2ff2e9f3ae49359",
+  "stateHash": "0e79c061531bb5d5ca0f3ca6dfda012d3d040270332e55280c35412030252ac2",
+  "ticks": 9000,
+  "scoresHalfPoints": [
+    190,
+    190
+  ],
+  "ledgerEntries": 32,
+  "generatedReports": 60,
+  "logicAssertions": 52,
+  "verified": [
+    "dotnet-logic-checks",
+    "authoritative-protocol-fixtures",
+    "dotnet-full-scenario-and-replay",
+    "legacy-world-regressions",
+    "legacy-bootstrap-regressions",
+    "unity-editor-full-scenario",
+    "unity-normal-observer-load-9001-frames",
+    "tampered-replay-retains-existing-playback",
+    "unity-windows-player-build",
+    "unity-windows-player-full-scenario",
+    "unity-replay-reverified-by-dotnet",
+    "baseline-api-static-compile"
+  ],
+  "teamEditor": "6000.3.26f1",
+  "developmentEditor": "6000.6.8f1",
+  "baselineEditorImport": "blocked-UPM",
+  "linuxAndUbuntuThisRound": "not-run",
+  "drivers": "trusted-deterministic-script-using-filtered-observations",
+  "cppAiIntegration": "next-stage",
+  "artifacts": {
+    "dotnet": "artifacts/relay-stage123-release-check",
+    "player": "artifacts/relay-stage123-player",
+    "unityLog": "artifacts/relay-stage123-unity-final.log",
+    "buildLog": "artifacts/relay-stage123-windows-build.log"
+  }
+}
