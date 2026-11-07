@@ -2,11 +2,11 @@
 
 第十九届图灵杯“强军·电波 2027”比赛系统。GitHub 仓库：[kanfeng-eng/Turing-Signal-Relay](https://github.com/kanfeng-eng/Turing-Signal-Relay)。
 
-**当前状态（2026-11-04，feat/1-bootstrap）：1号与4号由同一人接手。已加入原生uGUI观战、回放控制、旧素材本地修复和四个Razor页面。Linux裁判与基础调度已在Ubuntu实测，Windows/Ubuntu状态哈希一致。团队Editor基线6000.3.26f1，本机使用6000.6.8f1独立副本验证。正式玩法、AI和平台后台仍需2/3/5号接入。详见[观战交接](docs/OBSERVER.md)和[联合进度](docs/team/4/PROGRESS.md)。**
+**当前状态（2026-11-07）。用户个人承担全部五部分。R01—R18 已全部批准 A，规则版本 signal-relay-1.0，见[规则批准记录](docs/RULE_DECISIONS.md)。当前实现包含 Bootstrap 裁判、原生观战、回放和基础调度，正式玩法与提交平台后台正在推进。Unity 基线 6000.3.26f1，6000.6.8f1 在独立副本验证。**
 
 ## 1. 已确认的目标
 
-- 五人通过 GitHub 协作，成员编号固定为 1、2、3、4、5。
+- 由用户个人完成全部开发，保留 1、2、3、4、5 作为模块编号。
 - C# + Unity，2D 俯视；不使用 Phaser。
 - 正式比赛游戏、本地 C++17 AI 对战、实时观战、离线回放。
 - Ubuntu 上的服务器评测、源码提交管理、编译和运行沙箱。
@@ -16,7 +16,7 @@
 
 ## 2. 技术基线
 
-以下是本次制定的工程方案；规则争议另见[规则台账](docs/RULES.md)，不视为用户已确认的赛事规则。
+以下为工程技术方案，已批准的玩法语义见[规则台账](docs/RULES.md)。
 
 | 用途 | 选择 |
 | --- | --- |
@@ -35,6 +35,8 @@
 官方核实依据（2026-11-03）：[Unity 补丁版本](https://unity.com/releases/editor/whats-new/6000.3.26f1)、[Unity 系统要求](https://docs.unity3d.com/6000.3/Documentation/Manual/system-requirements.html)、[Linux Server 构建方式](https://docs.unity3d.com/6000.3/Documentation/Manual/dedicated-server-build.html)、[.NET 支持周期](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)。补丁选择是可复现基线，不声称是最新补丁；实际构建验证前不宣称兼容通过。
 
 实际文件入口和4/5号对接方式见[Bootstrap交接](docs/BOOTSTRAP.md)。
+
+一键验证、完整回放压力测试、调度器回归和Ubuntu复验见[独立开发与验收](docs/INDEPENDENT_ACCEPTANCE.md)。旧工程迁移和GitHub复用检查见[复用记录](docs/REUSE.md)。
 
 ## 3. 按编号开始工作
 
@@ -86,7 +88,7 @@ git switch -c feat/1-bootstrap
 
 ## 5. 约定的目标目录
 
-以下是目标结构；当前分支已创建game最小基础，server/sdk/deploy及其余玩法仍待实现。
+以下是目标结构；当前分支已有 Unity 基础、观战和 server 雏形，SDK、部署与完整玩法仍在推进。
 
 ```text
 README.md / CONTRIBUTING.md

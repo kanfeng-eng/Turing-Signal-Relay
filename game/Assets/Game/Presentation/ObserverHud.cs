@@ -11,6 +11,8 @@ namespace TuringSignalRelay
         private ObserverMap map;
         private ObserverGraph graph;
         private Text data, status, playLabel, connectLabel, selection;
+        private Text eventLogText;
+        private readonly ObserverEventLog eventLog = new ObserverEventLog(8);
         private InputField path, url, token;
         private Slider timeline;
         private Button step;
@@ -28,8 +30,8 @@ namespace TuringSignalRelay
             canvasObject.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
             var scaler = canvasObject.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1280, 800);
-            scaler.matchWidthOrHeight = .5f;
+            scaler.referenceResolution = new Vector2(960, 600);
+            scaler.matchWidthOrHeight = 0;
             RectTransform root = (RectTransform)canvasObject.transform;
             root.gameObject.AddComponent<Image>().color = new Color(.055f, .105f, .15f);
             if (FindFirstObjectByType<EventSystem>() == null)
@@ -65,7 +67,8 @@ namespace TuringSignalRelay
             timeline.targetGraphic = handle;
             timeline.wholeNumbers = true;
             timeline.onValueChanged.AddListener(value => { if (!controller.IsLive) controller.Playback.Seek((int)value); });
-            status = Label(root, "", 16, 119, 1200, 23, 12);
+            status = Label(root, "", 16, 119, 1200, 28, 12);
+            StretchHorizontal(status.rectTransform, 16, 16);
             var mapArea = Rect(root, "Map", 16, 150, 900, 630);
             mapArea.anchorMin = new Vector2(0, 0);
             mapArea.anchorMax = new Vector2(1, 1);
@@ -88,10 +91,10 @@ namespace TuringSignalRelay
             viewport.offsetMax = new Vector2(-12, -12);
             viewport.gameObject.AddComponent<Image>().color = panelColor;
             viewport.gameObject.AddComponent<RectMask2D>();
-            var content = Rect(viewport, "Content", 0, 0, 300, 920);
+            var content = Rect(viewport, "Content", 0, 0, 300, 1130);
             content.anchorMin = new Vector2(0, 1);
             content.anchorMax = new Vector2(1, 1);
-            content.sizeDelta = new Vector2(0, 920);
+            content.sizeDelta = new Vector2(0, 1130);
             var scroll = sidebar.gameObject.AddComponent<ScrollRect>();
             scroll.viewport = viewport;
             scroll.content = content;
@@ -112,7 +115,7 @@ namespace TuringSignalRelay
             url.onEndEdit.AddListener(_ => controller.ConnectionSettings(url.text, token.text));
             token.onEndEdit.AddListener(_ => controller.ConnectionSettings(url.text, token.text));
             connectLabel = Button(content, "Connect", 0, 531, 298, () => { controller.ConnectionSettings(url.text, token.text); controller.ToggleConnection(); }).GetComponentInChildren<Text>();
-            Label(content, "R / B sides   |   C courier / E engineer / T transporter\nScroll map to zoom; drag to pan. Panel also scrolls.", 0, 580, 300, 62, 12);
+            Label(content, "R红方 / B蓝方   C通信员 / E工兵 / T运输员\nM报文 / S建筑。滚轮缩放，拖动平移。侧栏可滚动。", 0, 580, 300, 62, 12);
             Label(content, "Score history", 0, 650, 300, 22, 13);
             graph = Rect(content, "Score history", 0, 677, 298, 70).gameObject.AddComponent<ObserverGraph>();
             graph.raycastTarget = false;
@@ -123,6 +126,8 @@ namespace TuringSignalRelay
             minimap.Mini = true;
             minimap.MainMap = map;
             minimap.Initialize(controller, font);
+            Label(content, "事件记录（回放跳回时重置）", 0, 930, 300, 22, 13);
+            eventLogText = Label(content, "", 0, 960, 300, 160, 12);
         }
         private static void StretchHorizontal(RectTransform rect, float left, float right)
         {
@@ -150,6 +155,7 @@ namespace TuringSignalRelay
             text.raycastTarget = false;
             text.horizontalOverflow = HorizontalWrapMode.Wrap;
             text.verticalOverflow = VerticalWrapMode.Truncate;
+            text.supportRichText = false;
             return text;
         }
         private static string Caption(string value)
@@ -222,24 +228,26 @@ namespace TuringSignalRelay
                 return;
             var frame = controller.Frame;
             int ticksPerSecond = controller.IsLive ? 10 : controller.Playback.TicksPerSecond;
-            data.text = "Tick " + frame.tick + "  /  " + ticksPerSecond + "Hz\n" +
-                "RED  " + frame.scoreHalfPoints[0] / 2f + "     BLUE  " + frame.scoreHalfPoints[1] / 2f + "\n" +
-                "Remaining  " + Math.Max(0, ((controller.IsLive ? frame.durationTicks : controller.Playback.Frames.Count - 1) - frame.tick) / (float)ticksPerSecond).ToString("0.0") + "s\n" +
-                "Weather  " + frame.weather + "\nHub  " + Mathf.RoundToInt(frame.hubProgress * 100) + "%\n" +
-                "Event  " + frame.eventText + "\nNext  " + (frame.nextEventTick < 0 ? "--" : Math.Max(0, (frame.nextEventTick - frame.tick) / (float)ticksPerSecond) + "s");
-            status.text = controller.Status + "  /  " + frame.rulesVersion + "   " + controller.Error;
+            data.text = "帧 " + frame.tick + "  /  " + ticksPerSecond + "Hz\n" +
+                "红方  " + frame.scoreHalfPoints[0] / 2f + "     蓝方  " + frame.scoreHalfPoints[1] / 2f + "\n" +
+                "剩余  " + Math.Max(0, ((controller.IsLive ? frame.durationTicks : controller.Playback.Frames.Count - 1) - frame.tick) / (float)ticksPerSecond).ToString("0.0") + "秒\n" +
+                "天气  " + frame.weather + "\n枢纽进度  " + Mathf.RoundToInt(frame.hubProgress * 100) + "%\n" +
+                "事件  " + frame.eventText + "\n下次事件  " + (frame.nextEventTick < 0 ? "--" : Math.Max(0, (frame.nextEventTick - frame.tick) / (float)ticksPerSecond) + "秒");
+            status.text = "状态  " + controller.Status + "  /  " + frame.rulesVersion + "   " + controller.Error;
             playLabel.text = controller.IsLive ? (controller.Hold ? "回到实时" : "暂停显示") : (controller.Playback.Playing ? "暂停" : "播放");
             connectLabel.text = controller.IsLive ? "断开连接" : "连接观战";
             step.interactable = !controller.IsLive;
             timeline.interactable = !controller.IsLive;
             timeline.maxValue = controller.Playback.Frames.Count - 1;
             timeline.SetValueWithoutNotify(controller.Playback.Index);
-            selection.text = "Select entity / follow controls";
+            selection.text = "点击单位查看详情，可切换跟随模式";
             foreach (var entity in frame.entities)
             if (entity.id == map.Selected && frame.Visible(entity, controller.Side))
-                selection.text = entity.label + "\n" + entity.x.ToString("0.0") + ", " + entity.y.ToString("0.0") + (entity.suppressed ? "  Suppressed" : "");
+                selection.text = "编号 " + entity.id + "  " + entity.label + "\n" + entity.x.ToString("0.0") + ", " + entity.y.ToString("0.0") + (entity.suppressed ? "  受压制" : "");
             if (frame != graphedFrame)
             {
+                eventLog.Accept(controller.SourceVersion, frame.tick, frame.eventText);
+                eventLogText.text = eventLog.Text;
                 graph.Frames = controller.IsLive ? controller.LiveBuffer.History : controller.Playback.Frames;
                 graph.Last = controller.IsLive ? graph.Frames.Count - 1 : controller.Playback.Index;
                 graph.SetVerticesDirty();

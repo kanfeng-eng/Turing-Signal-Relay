@@ -1,0 +1,27 @@
+{
+  "rulesVersion": "signal-relay-1.0",
+  "approvedOn": "2026-11-07",
+  "approval": "User selected A for R01 through R18",
+  "specification": "docs/RULE_DECISIONS.md",
+  "specificationSha256": "d40030db80eeda806c921adcce8f4f963481df53ec93fcc734f8993aa7966318",
+  "decisions": {
+    "R01": "A",
+    "R02": "A",
+    "R03": "A",
+    "R04": "A",
+    "R05": "A",
+    "R06": "A",
+    "R07": "A",
+    "R08": "A",
+    "R09": "A",
+    "R10": "A",
+    "R11": "A",
+    "R12": "A",
+    "R13": "A",
+    "R14": "A",
+    "R15": "A",
+    "R16": "A",
+    "R17": "A",
+    "R18": "A"
+  }
+}

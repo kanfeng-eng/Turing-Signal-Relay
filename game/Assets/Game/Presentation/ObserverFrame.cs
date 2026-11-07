@@ -34,6 +34,24 @@ namespace TuringSignalRelay
         public int eventFocusId = -1;
         public int nextEventTick = -1;
 
+        internal void ReuseUnchangedMap(ObserverFrame previous)
+        {
+            if (previous == null || previous.width != width || previous.height != height)
+                return;
+            terrain = ReuseArray(terrain, previous.terrain);
+            visibleToMask = ReuseArray(visibleToMask, previous.visibleToMask);
+        }
+
+        private static int[] ReuseArray(int[] current, int[] previous)
+        {
+            if (current.Length != previous.Length)
+                return current;
+            for (int i = 0; i < current.Length; i++)
+                if (current[i] != previous[i])
+                    return current;
+            return previous;
+        }
+
         public void Validate()
         {
             if (protocolVersion != 1 || type != "observer-frame" || tick < 0 || durationTicks <= 0 || tick > durationTicks || width <= 0 || height <= 0 ||

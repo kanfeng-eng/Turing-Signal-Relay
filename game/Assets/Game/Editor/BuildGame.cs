@@ -16,6 +16,13 @@ namespace TuringSignalRelay.Editor
         [MenuItem("Turing Signal Relay/Build Linux Server Bootstrap")]
         public static void LinuxServer() { Build(BuildTarget.StandaloneLinux64, "../artifacts/linux/TuringSignalRelay", true); }
 
+        public static void Delivery()
+        {
+            Windows();
+            LinuxServer();
+            Debug.Log("DELIVERY_BUILD_COMPLETED");
+        }
+
         private static void Build(BuildTarget target, string output, bool server)
         {
             bool developmentCopy = Array.IndexOf(Environment.GetCommandLineArgs(), "-bootstrapDevelopmentCopy") >= 0;
@@ -25,6 +32,10 @@ namespace TuringSignalRelay.Editor
             if (developmentCopy) Debug.LogWarning("Development copy build; team baseline compatibility is not verified.");
             EditorSettings.serializationMode = SerializationMode.ForceText;
             PlayerSettings.productName = "Turing Signal Relay";
+            PlayerSettings.defaultScreenWidth = 1280;
+            PlayerSettings.defaultScreenHeight = 800;
+            PlayerSettings.resizableWindow = true;
+            PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
             var options = new BuildPlayerOptions {
                 scenes = server ? new[] { Scene } : new[] { "Assets/Game/Scenes/Observer.unity", Scene }, target = target,
                 locationPathName = Path.GetFullPath(Path.Combine(Application.dataPath, "..", output)),

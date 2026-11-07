@@ -36,11 +36,12 @@ __pycache__/
 Thumbs.db
 .DS_Store
 
-# User-supplied legacy art awaiting source/license confirmation
+# Full legacy source models stay local; selected owner-confirmed sprites are versioned
 /Model/
 /game/Assets/Game/Art/LegacyModels/
 /game/Assets/Game/Art/LegacyModels.meta
 /game/Assets/Game/Art/LegacyMaterials/
 /game/Assets/Game/Art/LegacyMaterials.meta
-/game/Assets/Game/Resources/LegacySprites/
-/game/Assets/Game/Resources/LegacySprites.meta
+
+# Full legacy checkout stays local; selected reusable modules are migrated into game
+/anti_fraud _new/

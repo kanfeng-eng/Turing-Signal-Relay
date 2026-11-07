@@ -46,7 +46,7 @@ Windows构建入口仍为tools/run-unity-check.ps1的Windows动作。启动生�
 
 本地选用了13个模型，重新配置中性材质，正交渲染并裁剪到256×256透明贴图。原始来源与摘要在Art/LegacyManifest.json。New/Police、New/Bailing和New/Student用于人物贴图，替换了根目录中辨识度不足的方块组合。
 
-用户暂未提供素材许可记录。目前这些模型、材质和生成贴图保留在本地工作区，并通过.gitignore管理。公开源码在缺少贴图时使用基础标记，功能检查会记录可用贴图数量。
+用户已于 2026-11-07 确认旧代码和素材均为其所有。选定的 13 张派生精灵及导入配置纳入源码，原始模型与修复材质保留在本地，功能检查记录可用贴图数量。
 
 重新生成需要本地LegacyModels目录，执行Editor.LegacyArt.Prepare，图形渲染应使用启用图形设备的Editor批处理。该方法同时生成ObserverRoot.prefab、Observer场景和Bootstrap接线。验证版本使用6000.6.8f1，副本及操作见ENVIRONMENT.md。
 

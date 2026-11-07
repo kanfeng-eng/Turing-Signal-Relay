@@ -71,6 +71,7 @@ namespace TuringSignalRelay
         }
         private string endpoint = "", token = "";
         private int generation;
+        public int SourceVersion { get; private set; }
         private UnityWebRequest pendingRequest;
         private readonly ObserverFrame waiting = new ObserverFrame
         {
@@ -95,7 +96,9 @@ namespace TuringSignalRelay
                 enabled = false;
                 return;
             }
-            Screen.SetResolution(Math.Min(2560, Display.main.systemWidth - 100), Math.Min(1600, Display.main.systemHeight - 160), false);
+            string[] arguments = Environment.GetCommandLineArgs();
+            if (Array.IndexOf(arguments, "-screen-width") < 0 && Array.IndexOf(arguments, "-screen-height") < 0 && Array.IndexOf(arguments, "-screen-fullscreen") < 0)
+                Screen.SetResolution(Math.Min(2560, Display.main.systemWidth - 100), Math.Min(1600, Display.main.systemHeight - 160), false);
             LoadDemo();
             gameObject.AddComponent<ObserverHud>().Initialize(this);
             StartCoroutine(Poll());
@@ -107,6 +110,7 @@ namespace TuringSignalRelay
             using (var gzip = new GZipStream(input, CompressionMode.Decompress))
             using (var reader = new StreamReader(gzip))
                 Playback.Load(reader.ReadToEnd());
+            SourceVersion++;
         }
         private void Update()
         {
@@ -145,6 +149,7 @@ namespace TuringSignalRelay
                     pendingRequest.Abort();
                 Status = "Replay loaded";
                 Error = "";
+                SourceVersion++;
             }
             catch (Exception exception) { Playback.Playing = false; Error = "Load failed: " + exception.Message; }
         }
@@ -162,6 +167,7 @@ namespace TuringSignalRelay
                 generation++;
                 LiveBuffer.Reset();
                 Status = "Connection changed. Press Connect.";
+                SourceVersion++;
             }
         }
         public void ToggleConnection()
@@ -173,6 +179,7 @@ namespace TuringSignalRelay
             {
                 IsLive = false;
                 Status = "Disconnected";
+                SourceVersion++;
                 return;
             }
             Uri uri;
@@ -182,6 +189,7 @@ namespace TuringSignalRelay
                 return;
             }
             IsLive = true;
+            SourceVersion++;
             Hold = false;
             LiveBuffer.Reset();
             Status = "Connecting";

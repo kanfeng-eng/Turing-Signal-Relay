@@ -38,6 +38,7 @@ namespace TuringSignalRelay
                 if (frame == null)
                     throw new InvalidDataException("Missing observer frame.");
                 frame.Validate();
+                frame.ReuseUnchangedMap(pending.Count == 0 ? null : pending[pending.Count - 1]);
                 pending.Add(frame);
             }
             for (int i = 0; i < pending.Count; i++)

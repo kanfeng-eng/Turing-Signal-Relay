@@ -1,7 +1,9 @@
 param(
     [Parameter(Mandatory=$true)][string]$EditorDirectory,
-    [ValidateSet('Check','Windows','LinuxServer')][string]$Action = 'Check',
-    [switch]$DevelopmentCopy
+    [ValidateSet('Check','Windows','LinuxServer','Delivery','ObserverAcceptance')][string]$Action = 'Check',
+    [switch]$DevelopmentCopy,
+    [switch]$PublicSource,
+    [string]$ResultFile
 )
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
@@ -10,14 +12,26 @@ $taskEditor = Join-Path $EditorDirectory 'Unity.exe'
 $taskVersion = (Get-Content (Join-Path $taskProject 'ProjectSettings\ProjectVersion.txt') |
     Select-String '^m_EditorVersion: (.+)$').Matches.Groups[1].Value
 $taskActualVersion = (Get-Item -LiteralPath $taskEditor).VersionInfo.ProductVersion.Split('_')[0]
+if ($ResultFile -and (Test-Path -LiteralPath $ResultFile)) { throw 'Use a new result file.' }
 $taskArtifacts = Join-Path $taskRoot 'artifacts'
-if ($DevelopmentCopy) {
-    if ($taskActualVersion -ne '6000.6.8f1') { throw 'Development copy requires Unity 6000.6.8f1.' }
+if ($DevelopmentCopy -or $PublicSource) {
+    if ($DevelopmentCopy -and $taskActualVersion -ne '6000.6.8f1') { throw 'Development copy requires Unity 6000.6.8f1.' }
+    if (!$DevelopmentCopy -and $taskActualVersion -ne $taskVersion) { throw 'Public source copy requires the team editor or -DevelopmentCopy.' }
     # Each run gets a fresh copy, avoiding stale source and never upgrading the team project.
-    $taskCopy = Join-Path $taskArtifacts ('development-6000.6.8f1-' + [guid]::NewGuid().ToString('N'))
+    $taskCopy = Join-Path $taskArtifacts ('development-' + $taskActualVersion + '-' + [guid]::NewGuid().ToString('N'))
     $taskProjectCopy = Join-Path $taskCopy 'game'
     New-Item -ItemType Directory -Force -Path $taskProjectCopy | Out-Null
-    Copy-Item -LiteralPath (Join-Path $taskProject 'Assets') -Destination $taskProjectCopy -Recurse
+    if ($PublicSource) {
+        $taskAssetFiles = & git -C $taskRoot -c core.quotepath=false ls-files --cached --others --exclude-standard -- game/Assets
+        if ($LASTEXITCODE -ne 0) { throw 'Cannot enumerate public source assets.' }
+        foreach ($taskFile in $taskAssetFiles) {
+            $taskDestination = Join-Path $taskCopy $taskFile
+            New-Item -ItemType Directory -Force -Path (Split-Path -Parent $taskDestination) | Out-Null
+            Copy-Item -LiteralPath (Join-Path $taskRoot $taskFile) -Destination $taskDestination
+        }
+    } else {
+        Copy-Item -LiteralPath (Join-Path $taskProject 'Assets') -Destination $taskProjectCopy -Recurse
+    }
     foreach ($taskFolder in @('Packages','ProjectSettings')) {
         $taskDestination = Join-Path $taskProjectCopy $taskFolder
         New-Item -ItemType Directory -Force -Path $taskDestination | Out-Null
@@ -27,8 +41,10 @@ if ($DevelopmentCopy) {
             Copy-Item -LiteralPath (Join-Path $taskRoot $taskFile) -Destination $taskDestination
         }
     }
-    Set-Content -LiteralPath (Join-Path $taskProjectCopy 'ProjectSettings\ProjectVersion.txt') `
-        -Value 'm_EditorVersion: 6000.6.8f1' -Encoding ASCII
+    if ($DevelopmentCopy) {
+        Set-Content -LiteralPath (Join-Path $taskProjectCopy 'ProjectSettings\ProjectVersion.txt') `
+            -Value 'm_EditorVersion: 6000.6.8f1' -Encoding ASCII
+    }
     $taskProject = $taskProjectCopy
     $taskArtifacts = Join-Path $taskCopy 'artifacts'
 } elseif ($taskActualVersion -ne $taskVersion) {
@@ -38,11 +54,15 @@ $taskMethods = @{
     Check = 'TuringSignalRelay.Editor.SmokeChecks.Run'
     Windows = 'TuringSignalRelay.Editor.BuildGame.Windows'
     LinuxServer = 'TuringSignalRelay.Editor.BuildGame.LinuxServer'
+    Delivery = 'TuringSignalRelay.Editor.BuildGame.Delivery'
+    ObserverAcceptance = 'TuringSignalRelay.Editor.ObserverAcceptanceChecks.Run'
 }
 $taskMarkers = @{
     Check = 'BOOTSTRAP_CHECKS_PASSED'
     Windows = 'BOOTSTRAP_BUILD_COMPLETED StandaloneWindows64'
     LinuxServer = 'BOOTSTRAP_BUILD_COMPLETED StandaloneLinux64'
+    Delivery = 'DELIVERY_BUILD_COMPLETED'
+    ObserverAcceptance = 'OBSERVER_ACCEPTANCE_CHECKS_PASSED'
 }
 New-Item -ItemType Directory -Force -Path $taskArtifacts | Out-Null
 $taskLog = Join-Path $taskArtifacts ("unity-" + $Action.ToLowerInvariant() + '.log')
@@ -69,3 +89,8 @@ if (!(Select-String -LiteralPath $taskLog -SimpleMatch $taskMarkers[$Action] -Qu
     throw "Unity exited without the required completion marker. Inspect $taskLog"
 }
 Write-Output "PASS: Unity $Action; exit 0 and completion marker verified. Log: $taskLog"
+if ($ResultFile) {
+    New-Item -ItemType Directory -Force -Path (Split-Path -Parent ([IO.Path]::GetFullPath($ResultFile))) | Out-Null
+    [ordered]@{ status='passed'; project=$taskProject; artifacts=$taskArtifacts; editorVersion=$taskActualVersion; action=$Action; log=$taskLog; publicSource=[bool]$PublicSource } |
+        ConvertTo-Json | Set-Content -LiteralPath $ResultFile -Encoding utf8
+}

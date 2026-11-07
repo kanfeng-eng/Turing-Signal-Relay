@@ -38,6 +38,7 @@ namespace TuringSignalRelay
             frame.Validate();
             if (Current != null && frame.tick <= Current.tick)
                 return false;
+            frame.ReuseUnchangedMap(Current);
             Current = frame;
             Status = "frame received";
             History.Add(frame);

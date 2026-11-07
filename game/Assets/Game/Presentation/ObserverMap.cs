@@ -10,6 +10,7 @@ namespace TuringSignalRelay
     {
         private ObserverController controller;
         private RectTransform viewport, world;
+        private RectTransform rangeRing;
         private RawImage ground;
         private Texture2D terrainTexture;
         private int terrainHash;
@@ -24,6 +25,8 @@ namespace TuringSignalRelay
         private int eventTick = -1;
         private Font font;
         private readonly Sprite[] sprites = new Sprite[5];
+        private int sourceVersion = -1;
+        private static readonly string[] KindLabels = { "C", "E", "T", "M", "S" };
 
         public void Initialize(ObserverController source, Font labelFont)
         {
@@ -37,6 +40,12 @@ namespace TuringSignalRelay
             world.anchorMin = world.anchorMax = world.pivot = new Vector2(.5f, .5f);
             ground = NewRect("Terrain", world).gameObject.AddComponent<RawImage>();
             ground.raycastTarget = false;
+            rangeRing = NewRect("Selected vision", world);
+            rangeRing.anchorMin = rangeRing.anchorMax = rangeRing.pivot = new Vector2(.5f, .5f);
+            var ring = rangeRing.gameObject.AddComponent<ObserverRangeRing>();
+            ring.raycastTarget = false;
+            ring.color = new Color(.9f, .85f, .4f, .8f);
+            rangeRing.gameObject.SetActive(false);
         }
         private static RectTransform NewRect(string name, Transform parent)
         {
@@ -48,6 +57,20 @@ namespace TuringSignalRelay
         {
             if (controller == null || controller.Playback.Frames.Count == 0)
                 return;
+            if (sourceVersion != controller.SourceVersion)
+            {
+                foreach (var pair in units)
+                    Release(pair.Value.gameObject);
+                units.Clear();
+                foreach (var line in links)
+                    Release(line.gameObject);
+                links.Clear();
+                Selected = -1;
+                FollowEvents = false;
+                eventTick = -1;
+                ResetCamera();
+                sourceVersion = controller.SourceVersion;
+            }
             var frame = controller.Frame;
             int hash = (controller.Side * 101 + frame.width) * 101 + frame.height;
             for (int i = 0; i < frame.terrain.Length; i++)
@@ -55,7 +78,7 @@ namespace TuringSignalRelay
             if (terrainTexture == null || hash != terrainHash)
             {
                 if (terrainTexture != null)
-                    Destroy(terrainTexture);
+                    Release(terrainTexture);
                 terrainTexture = new Texture2D(frame.width, frame.height, TextureFormat.RGBA32, false);
                 terrainTexture.filterMode = FilterMode.Point;
                 Color[] palette = { new Color(.16f, .29f, .24f), new Color(.55f, .52f, .39f), new Color(.16f, .38f, .55f), new Color(.37f, .4f, .39f) };
@@ -81,6 +104,15 @@ namespace TuringSignalRelay
             world.anchoredPosition = Mini ? Vector2.zero : pan;
             ground.rectTransform.anchorMin = ground.rectTransform.anchorMax = ground.rectTransform.pivot = new Vector2(.5f, .5f);
             ground.rectTransform.sizeDelta = new Vector2(frame.width, frame.height) * scale;
+            rangeRing.gameObject.SetActive(false);
+            foreach (var entity in frame.entities)
+                if (!Mini && entity.id == Selected && entity.kind <= 2 && frame.Visible(entity, controller.Side))
+                {
+                    int radius = entity.kind == 0 ? 5 : entity.kind == 1 ? 4 : 3;
+                    rangeRing.gameObject.SetActive(true);
+                    rangeRing.anchoredPosition = Position(entity, frame) * scale;
+                    rangeRing.sizeDelta = Vector2.one * radius * 2 * scale;
+                }
             foreach (var pair in units)
                 pair.Value.gameObject.SetActive(false);
             foreach (var entity in frame.entities)
@@ -120,11 +152,12 @@ namespace TuringSignalRelay
                 currentIcon.enabled = currentIcon.sprite != null;
                 view.gameObject.SetActive(true);
                 view.anchoredPosition = Position(entity, frame) * scale;
-                view.sizeDelta = Vector2.one * (Mini ? 5 : Math.Max(24, scale * 2.7f));
+                view.sizeDelta = Vector2.one * (Mini ? 5 : Math.Max(18, scale * 2.7f));
                 view.GetComponent<Image>().color = entity.side == 0 ? new Color(.88f, .4f, .35f) : new Color(.36f, .7f, .91f);
                 var labelText = view.GetComponentInChildren<Text>();
                 labelText.enabled = !Mini;
-                labelText.text = (entity.side == 0 ? "R/" : "B/") + new[] { "C", "E", "T", "M", "S" }[Mathf.Clamp(entity.kind, 0, 4)] + entity.id + (entity.suppressed ? " !" : "");
+                labelText.text = (entity.side == 0 ? "R" : "B") + KindLabels[entity.kind] +
+                    (zoom >= 2 || entity.id == Selected ? entity.id.ToString() : "") + (entity.suppressed ? " !" : "");
             }
             while (links.Count < frame.links.Length)
             {
@@ -163,6 +196,16 @@ namespace TuringSignalRelay
             pan = Vector2.zero;
             Follow = false;
         }
+        private static void Release(UnityEngine.Object value)
+        {
+            var gameObject = value as GameObject;
+            if (gameObject != null)
+                gameObject.SetActive(false);
+            if (Application.isPlaying)
+                Destroy(value);
+            else
+                DestroyImmediate(value);
+        }
         public void OnScroll(PointerEventData e)
         {
             if (!Mini)
@@ -182,6 +225,7 @@ namespace TuringSignalRelay
         {
             Vector2 local;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(viewport, e.position, e.pressEventCamera, out local);
+            local -= viewport.rect.center;
             if (Mini && MainMap != null)
             {
                 MainMap.Follow = false;
@@ -204,7 +248,7 @@ namespace TuringSignalRelay
         private void OnDestroy()
         {
             if (terrainTexture != null)
-                Destroy(terrainTexture);
+                Release(terrainTexture);
         }
     }
 }

@@ -118,6 +118,24 @@ namespace TuringSignalRelay.Editor
                 controller.enabled = false;
                 controller.LoadDemo();
                 uiRoot.AddComponent<ObserverHud>().Initialize(controller);
+                var rings = uiRoot.GetComponentsInChildren<ObserverRangeRing>(true);
+                if (rings.Length != 2 || rings[0].raycastTarget || rings[1].raycastTarget)
+                    throw new Exception("Migrated range rings missing or intercept input.");
+                var mesh = new Mesh();
+                try
+                {
+                    rings[0].rectTransform.sizeDelta = new Vector2(100, 100);
+                    using (var vertices = new UnityEngine.UI.VertexHelper())
+                    {
+                        typeof(ObserverRangeRing).GetMethod("OnPopulateMesh", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.DeclaredOnly)
+                            .Invoke(rings[0], new object[] { vertices });
+                        vertices.FillMesh(mesh);
+                    }
+                    if (mesh.vertexCount != 144 || mesh.triangles.Length != 216 ||
+                        (mesh.vertices[0] - mesh.vertices[143]).sqrMagnitude > .0001f)
+                        throw new Exception("Migrated circle is not a closed 36-segment ring.");
+                }
+                finally { UnityEngine.Object.DestroyImmediate(mesh); }
                 var buttons = uiRoot.GetComponentsInChildren<UnityEngine.UI.Button>(true);
                 if (buttons.Length != 14)
                     throw new Exception("Observer controls missing.");
@@ -137,8 +155,7 @@ namespace TuringSignalRelay.Editor
                 if (controller.Playback.Index != 100)
                     throw new Exception("Timeline binding failed.");
                 Canvas.ForceUpdateCanvases();
-                foreach (var map in uiRoot.GetComponentsInChildren<ObserverMap>())
-                    map.SendMessage("LateUpdate");
+                ObserverInteractionChecks.Render(uiRoot);
                 var terrainViews = uiRoot.GetComponentsInChildren<UnityEngine.UI.RawImage>();
                 if (terrainViews.Length != 2 || terrainViews[0].texture == null || terrainViews[1].texture == null)
                     throw new Exception("Native map rendering was not initialized.");

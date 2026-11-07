@@ -1,5 +1,7 @@
 # 1号与4号联合进度
 
+2026-11-07 更新。用户现承担全部五个模块，R01—R18 全选 A 已批准。当前统一进度见[单人开发进度](../../SOLO_PROGRESS.md)，下方保留此前阶段的验收记录。
+
 更新于2026-11-04，分支`feat/1-bootstrap`，见[草稿PR #1](https://github.com/kanfeng-eng/Turing-Signal-Relay/pull/1)。用户同时承担1号和4号。
 
 ## 当前交付

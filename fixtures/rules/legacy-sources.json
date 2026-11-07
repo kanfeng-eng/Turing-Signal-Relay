@@ -1,0 +1,13 @@
+{
+  "ownershipConfirmedOn": "2026-11-07",
+  "files": [
+    {
+      "source": "anti_fraud _new/Anti-fraud/Assets/Scripts/Internal/Ring.cs",
+      "sha256": "4ba904753ad14e79f90e2d2b1cb550cdcbeff09b966bfee41e7c1490d84e6b46"
+    },
+    {
+      "source": "anti_fraud _new/Anti-fraud/Assets/DebugUIManager.cs",
+      "sha256": "e68eb3b170934625fb9073388539f5286ed0c83ec20ffbaea6dc8eb74cb548cf"
+    }
+  ]
+}
