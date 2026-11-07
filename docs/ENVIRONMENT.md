@@ -78,7 +78,7 @@ bootstrap分支已加入最小场景、构建菜单及headless演示入口，已
 
 当前Unity JSON读写使用JsonUtility，包清单固定uGUI 2.0.0与UnityWebRequest内置模块。5号统一锁定服务端Identity/EF Core和C++ JSON依赖。详细用途见[技术手册](IMPLEMENTATION_GUIDE.md)，已实现入口见[观战交接](OBSERVER.md)。
 
-## 临时使用新版开发（基线保持不变）
+## 历史临时副本方案（原6.3基线阶段）
 
 不要用6000.6.8f1直接打开仓库的`game/`。在仓库根目录运行：
 

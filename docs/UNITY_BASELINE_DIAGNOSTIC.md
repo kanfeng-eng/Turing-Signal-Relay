@@ -1,5 +1,7 @@
 # Unity 6000.3.26f1环境诊断
 
+本页保留原6.3工具链诊断。2026-11-07用户取消原版限制，当前工程和发布统一使用6000.6.8f1，其实际导入与Windows/Linux构建已通过。当前发布状态见[公网记录](PUBLIC_RELEASE.json)。
+
 检查日期为2026-11-04。团队ProjectVersion保持6000.3.26f1。
 
 2026-11-07阶段7再次创建全新空工程，使用-enablePackageManagerTraces及独立Editor/UPM日志复验，Editor退出1，project:list-packages及project:update-dependencies返回500。详细日志仍未给出可确认的根因。证据位于artifacts/stage7/baseline-trace，结果见[阶段7记录](STAGE7_VALIDATION.json)。当前构建继续使用获准的6000.6.8f1独立副本。

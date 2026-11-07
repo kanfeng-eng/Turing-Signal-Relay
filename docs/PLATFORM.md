@@ -1,6 +1,6 @@
 # 5号模块使用与开发
 
-平台采用ASP.NET Core Identity、EF Core 10和SQLite，账号由裁判创建。独立Worker执行隔离编译与双局比赛，网页请求保存任务后立即返回。Ubuntu服务监听127.0.0.1的5188端口，通过SSH隧道访问。
+平台采用ASP.NET Core Identity、EF Core 10和SQLite，账号由裁判创建。独立Worker执行隔离编译与双局比赛，网页请求保存任务后立即返回。Ubuntu应用监听127.0.0.1:5188，Nginx提供公网http://111.231.101.147/Login入口，SSH隧道入口继续可用。HTTP登录信息和令牌明文传输，使用项目专用密码。当前发布与摘要见[公网记录](PUBLIC_RELEASE.json)。
 
 2026-11-07用户已确认正式裁判宿主采用.NET10，直接引用Unity工程同一份纯C#规则源码。当前平台实现已部署，正常双局、故障判负、重启恢复、并发限额与备份恢复均已通过实测，摘要见[平台验收记录](PLATFORM_VALIDATION.json)。接手入口见[交接提示词](HANDOFF_CHATGPT_DESKTOP_COMMANDER.md)。
 
