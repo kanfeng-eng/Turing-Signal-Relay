@@ -3,6 +3,14 @@
   color:#243447;
   background:#eef3f7;
   line-height:1.6}
+.login-panel{max-width:480px}
+.validation-summary-valid,.field-validation-valid{display:none}
+.match-id{font-family:Consolas,monospace;overflow-wrap:anywhere}
+.download{color:#166875;text-decoration:underline;text-underline-offset:3px}
+.validation-summary-errors{padding:12px;border-left:4px solid #b23541;background:#fff0f1;color:#842631}
+textarea{width:100%;font-family:Consolas,monospace}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:320px;overflow:auto}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #207d80;outline-offset:3px}
   *{
     box-sizing:border-box}
     body{

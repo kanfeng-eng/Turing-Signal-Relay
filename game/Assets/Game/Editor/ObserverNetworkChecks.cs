@@ -11,6 +11,66 @@ namespace TuringSignalRelay.Editor
     // Drives the production polling iterator while the Editor pumps real HTTP operations.
     public static class ObserverNetworkChecks
     {
+        [Serializable]
+        private sealed class PlatformCase
+        {
+            public string endpoint;
+            public string token;
+            public int tick;
+            public string status;
+        }
+        [Serializable]
+        private sealed class PlatformCases
+        {
+            public PlatformCase[] cases;
+        }
+
+        public static async void RunPlatform()
+        {
+            GameObject root = null;
+            IEnumerator polling = null;
+            int exit = 1;
+            try
+            {
+                string[] args = Environment.GetCommandLineArgs();
+                int index = Array.IndexOf(args, "-observerPlatformConfig");
+                if (index < 0 || index + 1 >= args.Length)
+                    throw new ArgumentException("Missing private platform check configuration.");
+                var config = JsonUtility.FromJson<PlatformCases>(System.IO.File.ReadAllText(args[index + 1]));
+                Require(config != null && config.cases != null && config.cases.Length > 0, "Missing platform cases.");
+                root = new GameObject("Observer platform checks");
+                var controller = root.AddComponent<ObserverController>();
+                controller.enabled = false;
+                controller.LoadDemo();
+                polling = (IEnumerator)typeof(ObserverController).GetMethod("Poll", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(controller, null);
+                foreach (var item in config.cases)
+                {
+                    var endpoint = new Uri(item.endpoint);
+                    Require(endpoint.IsLoopback && endpoint.Scheme == "http", "Use the local SSH tunnel for platform checks.");
+                    controller.ConnectionSettings(item.endpoint, "invalid-platform-check-token");
+                    controller.ToggleConnection();
+                    await PollOnce(polling);
+                    Require(controller.LiveBuffer.Current == null && controller.Status.Contains("401"), "Invalid token was accepted.");
+                    controller.ConnectionSettings(item.endpoint, item.token);
+                    controller.ToggleConnection();
+                    await PollOnce(polling);
+                    Require(controller.LiveBuffer.Current != null && controller.LiveBuffer.Current.tick == item.tick &&
+                        controller.LiveBuffer.Status == item.status, "Authorized platform snapshot was rejected.");
+                    await PollOnce(polling);
+                    Require(controller.LiveBuffer.History.Count == 1, "Duplicate platform snapshot entered history.");
+                }
+                Debug.Log("OBSERVER_PLATFORM_CHECKS_PASSED cases=" + config.cases.Length);
+                exit = 0;
+            }
+            catch (Exception error) { Debug.LogException(error); }
+            finally
+            {
+                if (polling != null) ((IDisposable)polling).Dispose();
+                if (root != null) UnityEngine.Object.DestroyImmediate(root);
+                EditorApplication.Exit(exit);
+            }
+        }
+
         public static async void Run()
         {
             GameObject root = null;

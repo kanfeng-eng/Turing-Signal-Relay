@@ -41,13 +41,14 @@ namespace TuringSignalRelay
     public static class RelayAiSession
     {
         public static async Task<RelayAiGame> RunAsync(RelayConfig config, RelayMapData map, string[] paths, IRelayAiJson json,
-            bool strictCpu, CancellationToken cancellation, Action<int> progress = null)
+            bool strictCpu, CancellationToken cancellation, Action<int> progress = null, Func<int, AiProcessBridge> bridgeFactory = null, Action<RelayMatchEngine> capture = null)
         {
             if (paths == null || paths.Length != 2 || json == null) throw new ArgumentException("Two programs and a codec are required.");
             var engine = new RelayMatchEngine(config, map);
             var game = new RelayAiGame { cpuBudgetEnforced = strictCpu, recording = new RelayRecording {
                 config = engine.Config, map = engine.MapData, mapHash = engine.MapHash, initialStateHash = engine.StateHash() } };
             var frames = new List<RelayRecordedTick>();
+            if (capture != null) capture(engine);
             var bridges = new AiProcessBridge[2];
             try
             {
@@ -56,7 +57,7 @@ namespace TuringSignalRelay
                     cancellation.ThrowIfCancellationRequested();
                     try
                     {
-                        bridges[side] = new AiProcessBridge(paths[side]);
+                        bridges[side] = bridgeFactory == null ? new AiProcessBridge(paths[side]) : bridgeFactory(side);
                         if (strictCpu && !bridges[side].PreciseCpuAvailable) throw new PlatformNotSupportedException("Precise CPU accounting unavailable.");
                         string readyText = await bridges[side].ExchangeAsync(json.Initialization(new RelayAiInit { side = side, config = config, map = map }),
                             -1, null, 2000, false, cancellation);
@@ -80,6 +81,7 @@ namespace TuringSignalRelay
                     var batches = new List<RelayCommandBatch>();
                     foreach (var reply in replies) if (reply != null) batches.Add(reply);
                     frames.Add(new RelayRecordedTick { tick = engine.Tick, batches = batches.ToArray(), stateHash = engine.StateHash() });
+                    if (capture != null && engine.Tick % 10 == 0) capture(engine);
                     if (progress != null && engine.Tick % 1000 == 0) progress(engine.Tick);
                 }
                 game.recording.frames = frames.ToArray();

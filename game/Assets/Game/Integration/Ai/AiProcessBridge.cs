@@ -21,12 +21,16 @@ namespace TuringSignalRelay
         private readonly Task stderrPump;
         private readonly MemoryStream diagnostics = new MemoryStream();
         private bool disposed;
+        private readonly string resourceDirectory;
+        private readonly Action stopSandbox;
         public long ObservedPeakBytes { get; private set; }
         public double LastCpuMilliseconds { get; private set; }
         public bool PreciseCpuAvailable { get; private set; }
 
-        public AiProcessBridge(string executable)
+        public AiProcessBridge(string executable, string resourceDirectory = null, Action stopSandbox = null)
         {
+            this.resourceDirectory = resourceDirectory;
+            this.stopSandbox = stopSandbox;
             string path = Path.GetFullPath(executable);
             if (!File.Exists(path)) throw new FileNotFoundException("AI executable missing.", path);
             process = new Process { StartInfo = new ProcessStartInfo(path) {
@@ -34,7 +38,7 @@ namespace TuringSignalRelay
                 RedirectStandardOutput = true, RedirectStandardError = true, WorkingDirectory = Path.GetDirectoryName(path)
             } };
             if (!process.Start()) throw new IOException("AI process did not start.");
-            PreciseCpuAvailable = File.Exists("/proc/" + process.Id + "/schedstat");
+            PreciseCpuAvailable = resourceDirectory != null ? File.Exists(Path.Combine(resourceDirectory, "cpu.stat")) : File.Exists("/proc/" + process.Id + "/schedstat");
             stderrPump = DrainDiagnostics();
         }
 
@@ -64,6 +68,7 @@ namespace TuringSignalRelay
                 LastCpuMilliseconds = Math.Max(0, CpuMilliseconds() - cpu);
                 process.Refresh();
                 ObservedPeakBytes = Math.Max(ObservedPeakBytes, Math.Max(process.WorkingSet64, process.PeakWorkingSet64));
+                if (resourceDirectory != null) ObservedPeakBytes = long.Parse(File.ReadAllText(Path.Combine(resourceDirectory, "memory.peak")).Trim(), CultureInfo.InvariantCulture);
                 if (ObservedPeakBytes > 256L * 1024 * 1024) throw new InvalidDataException("AI observed memory limit exceeded.");
                 if (requireCpuBudget && LastCpuMilliseconds > 10) return null;
                 return reply;
@@ -108,6 +113,12 @@ namespace TuringSignalRelay
 
         private double CpuMilliseconds()
         {
+            if (resourceDirectory != null)
+            {
+                foreach (string line in File.ReadAllLines(Path.Combine(resourceDirectory, "cpu.stat")))
+                    if (line.StartsWith("usage_usec ", StringComparison.Ordinal)) return long.Parse(line.Substring(11), CultureInfo.InvariantCulture) / 1000.0;
+                throw new InvalidDataException("Sandbox CPU accounting is unavailable.");
+            }
             if (PreciseCpuAvailable)
             {
                 string value = File.ReadAllText("/proc/" + process.Id + "/schedstat").Split(' ')[0];
@@ -134,14 +145,20 @@ namespace TuringSignalRelay
         public void Complete()
         {
             process.StandardInput.Close();
-            if (!process.WaitForExit(1000)) process.Kill();
+            if (!process.WaitForExit(1000)) StopProcess();
+        }
+
+        private void StopProcess()
+        {
+            if (stopSandbox != null) stopSandbox();
+            else process.Kill();
         }
 
         public void Dispose()
         {
             if (disposed) return;
             disposed = true;
-            try { if (!process.HasExited) process.Kill(); }
+            try { if (!process.HasExited) StopProcess(); }
             catch (InvalidOperationException) { }
             process.WaitForExit(3000);
             try { stderrPump.Wait(3000); } catch (AggregateException) { }

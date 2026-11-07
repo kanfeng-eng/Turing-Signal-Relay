@@ -4,9 +4,10 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../../game/Assets/Game/Core/Models.cs" Link="Shared/Models.cs" />
-    <Compile Include="../../game/Assets/Game/Core/BootstrapStateHash.cs" Link="Shared/BootstrapStateHash.cs" />
+    <ProjectReference Include="../Evaluation/Evaluation.csproj" />
   </ItemGroup>
 </Project>

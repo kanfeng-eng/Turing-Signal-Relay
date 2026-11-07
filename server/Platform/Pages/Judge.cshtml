@@ -1,22 +1,29 @@
 @page
-@model DemoPageModel
+@model JudgeModel
 @{ ViewData["Title"] = "裁判台"; }
 <h1>裁判台</h1>
 <p>安排双局换边比赛</p>
+<div asp-validation-summary="All" role="alert"></div>
 <article>
-<form class="judge">
-<label for="red">红方提交</label>
-<select id="red">
-<option>DEMO-003 · 示例队伍 A</option>
-</select>
-<label for="blue">蓝方提交</label>
-<select id="blue">
-<option>DEMO-004 · 示例队伍 B</option>
-</select>
-<label for="seed">随机种子</label>
-<input id="seed" type="number" value="7">
-<label for="rules">规则版本</label>
-<input id="rules" value="待冻结" readonly>
-<button disabled>发起双局比赛</button>
+<form method="post" asp-page-handler="Match" class="judge">
+<input asp-for="RequestKey" type="hidden">
+<label asp-for="FirstId">队伍 A 的提交</label>
+<select asp-for="FirstId" required><option value="">请选择</option>@foreach (var item in Model.Ready) { <option value="@item.Id">@Model.Teams[item.TeamId] · @item.Id · @item.Note</option> }</select>
+<label asp-for="SecondId">队伍 B 的提交</label>
+<select asp-for="SecondId" required><option value="">请选择</option>@foreach (var item in Model.Ready) { <option value="@item.Id">@Model.Teams[item.TeamId] · @item.Id · @item.Note</option> }</select>
+<label asp-for="Seed">随机种子</label><input asp-for="Seed" type="number" required>
+<p>首局A红B蓝，次局交换阵营。使用已批准的完整规则。</p>
+<button type="submit">发起双局比赛</button>
+</form>
+</article>
+<article>
+<h2>创建队伍账号</h2>
+<p>队伍名称相同的账号共享本队提交和比赛记录。</p>
+<form method="post" asp-page-handler="Account">
+<label asp-for="TeamName">队伍名称</label><input asp-for="TeamName" maxlength="80" required>
+<label asp-for="Username">用户名</label><input asp-for="Username" minlength="3" maxlength="64" autocomplete="off" required>
+<label asp-for="Password">初始密码</label><input asp-for="Password" type="password" minlength="12" maxlength="256" autocomplete="new-password" required>
+<p>密码至少12字符，包含大小写字母、数字和符号。</p>
+<button type="submit">创建选手账号</button>
 </form>
 </article>

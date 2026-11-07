@@ -40,7 +40,7 @@ Windows构建入口仍为tools/run-unity-check.ps1的Windows动作。启动生�
 
 展示实体id须为非负数，-1保留给未选中/无事件焦点。durationTicks须为正数，tick须在0到durationTicks范围内。Bootstrap导入保留配置中的时长与频率。
 
-5号需要确认此草案并接入经过授权的真实快照。当前真实接口和账号尚待提供。
+5号已接入经过授权的真实快照，接口和账号使用方式见[平台说明](PLATFORM.md)。本轮Unity独立副本使用生产Poll迭代器与真实UnityWebRequest，通过正常双局、文件违规与CPU超时终局四项快照检查，同时拒绝无效令牌和重复帧。
 
 ## 旧素材
 
@@ -52,14 +52,14 @@ Windows构建入口仍为tools/run-unity-check.ps1的Windows动作。启动生�
 
 ## 平台页面
 
-server/Platform是.NET10 Razor Pages演示项目，包含提交AI、提交历史、裁判台、比赛结果四页。各页显示演示数据，操作按钮等待5号后台接入。布局具有文件输入标签、表格标题、窄屏排版与键盘焦点样式。
+server/Platform采用.NET10 Razor Pages，包含登录、提交AI、提交历史、裁判台、比赛结果和退出。页面已接入Identity、数据库与正式Worker，按队伍及裁判权限显示真实记录。布局具有文件输入标签、表格标题、窄屏排版与键盘焦点样式。具体运行命令与流程见[平台说明](PLATFORM.md)。
 
 ```powershell
 dotnet build server/Platform/Platform.csproj
 dotnet run --no-build --project server/Platform/Platform.csproj --urls http://127.0.0.1:5184
 ```
 
-本机SDK安装在D:\kanfe\dotnet10，调用其dotnet.exe可运行以上命令。编译通过。Windows本地预览启动曾被自动审批以blocked by policy拒绝。Ubuntu四页和CSS均已通过HTTP200检查；导出这些实际响应的HTML并内联原CSS后，使用现有Edge在1280/375宽度检查了页面布局、演示提示、禁用操作和文档横向溢出。后台在线流程等待5号服务接入。
+本机SDK安装在D:\kanfe\dotnet10，调用其dotnet.exe可运行以上命令。演示页面时期曾在1280/375宽度检查布局，本轮真实后台流程与Unity联调证据见[平台验收记录](PLATFORM_VALIDATION.json)。
 
 ## 验证记录
 
@@ -89,4 +89,6 @@ Ubuntu实际检查已覆盖Linux完整9000 tick、重复运行哈希一致、参
 python tools/check-observer-network.py --editor 'C:\Program Files\Unity\Hub\Editor\6000.6.8f1\Editor\Unity.exe' --project '<独立副本>\game' --log '<独立副本>\artifacts\observer-network.log'
 ```
 
-脚本在127.0.0.1临时端口提供只读测试快照，在Editor内驱动生产Poll迭代器和真实UnityWebRequest。覆盖重复/旧帧、畸形JSON、HTTP503后恢复、暂停/恢复取消、地址/令牌切换、302拒绝、401、5秒超时、离线回放切换及迭代器释放。测试结束后关闭端口，日志与请求统计保存在指定输出位置。该端点用于网络回归，正式5号服务仍需联调。
+脚本在127.0.0.1临时端口提供只读测试快照，在Editor内驱动生产Poll迭代器和真实UnityWebRequest。覆盖重复/旧帧、畸形JSON、HTTP503后恢复、暂停/恢复取消、地址/令牌切换、302拒绝、401、5秒超时、离线回放切换及迭代器释放。测试结束后关闭端口，日志与请求统计保存在指定输出位置。
+
+真实平台另使用TuringSignalRelay.Editor.ObserverNetworkChecks.RunPlatform，参数-observerPlatformConfig指向本机私有JSON。文件含cases数组，每项提供endpoint、token、tick和status。通过SSH隧道请求正式接口，令牌保留在私有文件中。本轮四项终局快照验证通过，原Unity工程基线保持不变。

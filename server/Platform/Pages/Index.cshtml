@@ -1,21 +1,23 @@
 @page
-@model DemoPageModel
+@model WorkspaceModel
 @{ ViewData["Title"] = "提交 AI"; }
 <section class="intro">
 <p class="eyebrow">队伍工作台</p>
 <h1>让你的 AI 接力。</h1>
-<p>上传 C++17 源文件，查看编译与评测进度。</p>
+<p>@Model.TeamName · 上传 C++17 源文件，查看编译与评测进度。</p>
 </section>
 <section class="grid">
 <article>
 <h2>提交新版本</h2>
-<form>
+<form method="post" enctype="multipart/form-data">
+<div asp-validation-summary="All" role="alert"></div>
 <label for="source">AI 源文件</label>
-<input id="source" name="source" type="file" accept=".cpp" aria-describedby="source-help">
-<p id="source-help">选择 ai.cpp。上传限制由评测服务提供。</p>
+<input id="source" name="Source" type="file" accept=".cpp" required aria-describedby="source-help">
+<p id="source-help">选择UTF-8编码的 ai.cpp，最多256 KiB。仅提交源码即可。</p>
 <label for="note">版本说明</label>
-<input id="note" name="note" maxlength="200" placeholder="例如 优化跨河运输路线">
-<button disabled>提交 AI</button>
+<input id="note" name="Note" maxlength="200" placeholder="例如 优化跨河运输路线">
+@if (!User.IsInRole("Judge")) { <button type="submit">提交 AI</button> }
+else { <p>请到裁判台创建选手账号，使用选手账号提交参赛代码。</p> }
 </form>
 </article>
 <aside>
@@ -26,6 +28,6 @@
 <li>进入评测队列</li>
 <li>查看结果与回放</li>
 </ol>
-<p>当前页面使用演示状态，选择的文件保留在浏览器中。</p>
+<p>编译完成后，裁判可安排双局换边比赛。当前进度请查看提交历史。</p>
 </aside>
 </section>

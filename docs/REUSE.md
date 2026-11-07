@@ -21,7 +21,7 @@
 | 2 地图寻路 | [roy-t/AStar](https://github.com/roy-t/AStar/tree/3d57efaa83c8cd217e4973fd4738c57e2f694bd2)，MIT | 已读 Velocity.cs，使用 float 速度。新规则要求逐边整数 tick 与旋转对应的稳定同价路径，当前新增小型纯 C# 格网 A*，不引入此依赖或复制其源码 |
 | 4 二维显示 | [Unity-Technologies/2d-extras](https://github.com/Unity-Technologies/2d-extras/tree/8de698ac55b7ed01ec95a43e714c6358505b8110) | 现有运行时 uGUI 地图已经支持快照、迷雾和点击。当前范围圆与日志复用自有旧代码，后续地图编辑工具如需引入此仓库，须核对具体文件许可 |
 | 5 C++ JSON | [nlohmann/json v3.12.0](https://github.com/nlohmann/json/tree/55f93686c01528224f448c19128836e7df245f72)，MIT | 已纳入单头文件、许可与SOURCE摘要，MSVC和Ubuntu GCC实际编译、双局及畸形/超限测试通过 |
-| 5 Linux 隔离 | [google/nsjail](https://github.com/google/nsjail/tree/d8415bc8eea43cdd413daba25af63127019a1189)，Apache-2.0 | 候选，尚未作为正式沙箱验收，需要目标 Ubuntu 的 namespaces、cgroups、seccomp 与资源计量验证 |
+| 5 Linux 隔离 | [google/nsjail](https://github.com/google/nsjail/tree/d8415bc8eea43cdd413daba25af63127019a1189)，Apache-2.0 | 已在Ubuntu构建并接入，编译/运行分离策略、cgroup计量和14项沙箱检查通过 |
 
 后续功能继续按具体任务检索。本轮已接入移动、占用、跨河队列与平报分账，代码复用现有整数A*、tick约定、规范摘要和观战播放器。
 
@@ -46,3 +46,13 @@
 Unity后台DTO序列化查阅[ToJson](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/JsonUtility.ToJson.html)和[FromJson](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/JsonUtility.FromJson.html)官方说明，只传递线程独占的普通Serializable数据，不访问Unity对象。
 
 Ubuntu原机无现代g++，本轮从[xPack GNU GCC v15.2.0-1](https://github.com/xpack-dev-tools/gcc-xpack/releases/tag/v15.2.0-1)下载官方Linux x64工具链至用户家目录，未变更系统软件。分发包SHA256为f6dcc3815299a23b2b4372223c4ca5f1b5a0543ed097d57eb67e0753b7c484e0，工具链不纳入仓库。
+
+## 5号正式平台与沙箱的采用记录
+
+用户授权项目专用运行环境后，正式沙箱使用Ubuntu系统GCC13.3.0，C++17/O2/static及固定SDK。前述xPack版本保留为此前可信程序验证记录。具体编译器版本、源码/二进制/SDK摘要和策略摘要随编译记录保存。
+
+nsjail源码固定为d8415bc8eea43cdd413daba25af63127019a1189，Kafel固定为76d0f41bf3eb5c4008713d64b9767b461a9129a3，两者均采用Apache-2.0。构建脚本下载上游归档并校验SHA256，保留上游LICENSE及实际主机依赖清单。项目的Python受限helper、两份策略和资源回收逻辑在deploy/sandbox内维护。构建与验收入口见[部署手册](../deploy/README.md)。
+
+ASP.NET Core Identity及EF Core SQLite采用官方NuGet 10.0.14包。包内nuspec标记MIT许可，来源固定到dotnet/dotnet的0427b9abbead3fa64c6655eb4290c537397131fa提交。各.NET工程保留packages.lock.json中的版本与内容摘要，复用账号哈希、角色、Data Protection、事务与迁移能力。比赛规则仍直接引用本项目纯C#源码。[官方源码](https://github.com/dotnet/dotnet/tree/0427b9abbead3fa64c6655eb4290c537397131fa)
+
+nsjail与Kafel原始归档摘要分别为b051697310426332b2b60706ce99c0009dd8f77413fe637e35b8bedbe12281fb和b9a99b91af7abc84664803709072ee7f6a787dd3f39686484503154d93ef8f33，校验值写入deploy/sandbox/build-nsjail.sh。14项沙箱和完整平台实测摘要见[验收记录](PLATFORM_VALIDATION.json)。

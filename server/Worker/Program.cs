@@ -1,6 +1,12 @@
 using System.Text.Json;
 using TuringSignalRelay.Worker;
 
+if (args.Length == 1 && args[0] == "serve")
+{
+    await EvaluationWorker.RunAsync();
+    return 0;
+}
+
 if (args.Length != 3)
 {
     Console.Error.WriteLine("Usage: Worker <trusted judge executable> <new output directory> <timeout seconds>");

@@ -1,0 +1,267 @@
+{
+  "verifiedOn": "2026-11-07T17:31:05+08:00",
+  "scope": "module-5-production-platform-on-existing-target-ubuntu",
+  "status": "passed",
+  "baseCommit": "896da1ca045e896137ddc1687b743f1305230a55",
+  "branch": "feat/1-bootstrap",
+  "featureSet": "relay-full-v1",
+  "protocolVersion": 2,
+  "judgeHost": ".NET10 linking the same pure C# rules sources as Unity; user-approved",
+  "teamEditor": "6000.3.26f1",
+  "validationEditor": "6000.6.8f1",
+  "baselineApiCompile": "passed",
+  "baselineUpmImport": "unresolved",
+  "build": {
+    "platform": "passed",
+    "worker": "passed",
+    "lockedRestoreDefaultAndLinuxX64": "passed",
+    "packageAuditEvaluation": "no-vulnerable-packages-reported"
+  },
+  "deployment": {
+    "release": "/opt/tsr/releases/20261107T092720Z",
+    "platformService": "active",
+    "workerService": "active",
+    "healthHttpStatus": 200,
+    "sha256": {
+      "Platform.dll": "0bab379eabb80fb5da7d40ee11858e45cd541c310185372ab9db1b5b5b46607a",
+      "Evaluation.dll": "d4bdc9fe61cc8f353277385cf1ea2f0c67372e15bec264b7b9c9e676bf3fb8fa",
+      "Worker.dll": "9bc05a98f157a66df664585aed5a3999823e7a224fbaa3571c59d3a3341b21ae"
+    }
+  },
+  "platformHttp": {
+    "authentication": "passed",
+    "csrf": "passed",
+    "ownership": "passed",
+    "uploadBounds": "passed",
+    "escapedNotes": "passed",
+    "submissionIds": [
+      "2394b3876c474fb2a71c6439a750bb0f",
+      "4d24cb26c968462191c82b7e9e5da7de"
+    ],
+    "matches": [
+      {
+        "id": "e2cf24810adf4faa9de8bceb4f2acf39",
+        "status": "completed",
+        "hashes": [
+          "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+          "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870"
+        ]
+      }
+    ],
+    "compilerFailure": "passed",
+    "idempotentMatchCreation": "passed",
+    "authorizedSnapshotsAndArtifacts": "passed",
+    "status": "passed"
+  },
+  "operations": {
+    "status": "passed",
+    "cases": [
+      {
+        "case": "file-access-forfeit",
+        "id": "1f480576f56f4217ba651d5efe5a4802",
+        "status": "passed",
+        "reason": "EndOfStreamException: AI stdout closed.",
+        "tick": 1
+      },
+      {
+        "case": "three-cpu-timeouts",
+        "id": "d07d0a47e8914c469594e996bc8acb0b",
+        "status": "passed",
+        "reason": "Three computation timeouts.",
+        "tick": 2
+      },
+      {
+        "case": "worker-restart-recovery",
+        "id": "472861d31c624f13a5d36d5442191eac",
+        "status": "passed",
+        "attempts": 2,
+        "hashes": [
+          "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+          "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870"
+        ]
+      }
+    ]
+  },
+  "concurrentQueue": {
+    "status": "passed",
+    "sameRequestIdempotency": "passed",
+    "conflictingRequestRejected": "passed",
+    "concurrentUploads": 6,
+    "accepted": 5,
+    "rejected": 1,
+    "queuedCount": 5
+  },
+  "sandbox": {
+    "status": "passed",
+    "cases": [
+      {
+        "case": "legal-static-program",
+        "status": "passed",
+        "exitCode": 0
+      },
+      {
+        "case": "compiler-host-file",
+        "status": "denied",
+        "exitCode": 1
+      },
+      {
+        "case": "test-fixture-compilation",
+        "status": "passed",
+        "memoryPeakBytes": 298078208
+      },
+      {
+        "case": "host-file",
+        "status": "denied",
+        "exitCode": 159,
+        "memoryPeakBytes": 434176
+      },
+      {
+        "case": "network",
+        "status": "denied",
+        "exitCode": 159,
+        "memoryPeakBytes": 356352
+      },
+      {
+        "case": "fork",
+        "status": "denied",
+        "exitCode": 159,
+        "memoryPeakBytes": 438272
+      },
+      {
+        "case": "thread",
+        "status": "denied",
+        "exitCode": 159,
+        "memoryPeakBytes": 618496
+      },
+      {
+        "case": "infinite-loop",
+        "status": "denied",
+        "exitCode": -9,
+        "memoryPeakBytes": 360448
+      },
+      {
+        "case": "memory",
+        "status": "denied",
+        "exitCode": 159,
+        "memoryPeakBytes": 598016
+      },
+      {
+        "case": "stdout-flood",
+        "status": "denied",
+        "exitCode": -9,
+        "memoryPeakBytes": 372736
+      },
+      {
+        "case": "cpu-budget-sample",
+        "status": "denied",
+        "exitCode": -9,
+        "memoryPeakBytes": 368640
+      },
+      {
+        "case": "compile-memory-budget",
+        "status": "denied"
+      },
+      {
+        "case": "compile-time-budget",
+        "status": "denied",
+        "seconds": 30.09147595241666
+      },
+      {
+        "case": "compile-cancellation-cleanup",
+        "status": "passed"
+      }
+    ],
+    "allRuntimeGroupsRemoved": true,
+    "isolation": "nsjail-namespaces-seccomp-cgroupv2-static-elf"
+  },
+  "restore": {
+    "status": "passed",
+    "databaseIntegrity": "ok",
+    "counts": {
+      "AspNetUsers": 7,
+      "Teams": 6,
+      "Submissions": 5,
+      "Matches": 1,
+      "Artifacts": 3
+    },
+    "oldSchemaMigration": "passed",
+    "judgeLogin": "passed",
+    "artifactDownloads": 3,
+    "sourceDownloads": 5
+  },
+  "deploymentCycle": {
+    "status": "passed",
+    "scope": "same-build-release-switch-and-rollback",
+    "originalRelease": "/opt/tsr/releases/20261107T075313Z",
+    "testedRelease": "/opt/tsr/releases/20261107T092146Z",
+    "finalRelease": "/opt/tsr/releases/20261107T075313Z",
+    "databaseCountsPreserved": {
+      "AspNetUsers": 12,
+      "Teams": 11,
+      "Submissions": 15,
+      "Matches": 5,
+      "Artifacts": 15
+    },
+    "newBackup": "/var/lib/tsr/backups/stage5-deploy-cycle",
+    "healthAfterUpdateAndRollback": "passed"
+  },
+  "unityPlatform": {
+    "status": "passed",
+    "productionPollingIterator": true,
+    "realUnityWebRequest": true,
+    "cases": 4,
+    "normalFinalTicks": [
+      9000,
+      9000
+    ],
+    "forfeitFinalTicks": [
+      1,
+      2
+    ],
+    "invalidTokensRejected": true,
+    "duplicateFramesRejected": true
+  },
+  "unityNetworkRegression": {
+    "status": "passed",
+    "requests": {
+      "/sequence": 7,
+      "/slow": 1,
+      "/fresh": 1,
+      "/redirect": 1,
+      "/unauthorized": 1,
+      "/timeout": 1,
+      "/slow-replay": 1
+    },
+    "authorizationErrors": [],
+    "redirectRequests": 0,
+    "unityLog": "observer-network-final.log"
+  },
+  "regression": {
+    "legacyWorkerCases": 24,
+    "fullRuleAssertions": 65,
+    "scriptedTicks": 9000,
+    "scriptedStateHash": "73a0868230a8c7d0b06b70bcd3dc086eba2846287bc0e440cbdf5ff892b1e4e4",
+    "trustedBridgeCases": 9
+  },
+  "evidenceFiles": [
+    "artifacts/stage5/http-delivery/CHECKS.json",
+    "artifacts/stage5/operations-delivery/CHECKS.json",
+    "artifacts/stage5/queue-delivery/CHECKS.json",
+    "artifacts/stage5/sandbox-budget-checks.json",
+    "artifacts/stage5/restore-stage5-checks.json",
+    "artifacts/stage5/deploy-cycle-stage5-checks.json",
+    "artifacts/stage5/observer-platform-delivery.log",
+    "artifacts/stage5/observer-network-final.json",
+    "artifacts/stage5/final-worker-checks/CHECKS.json",
+    "artifacts/stage5/final-full-check/relay.result.json"
+  ],
+  "remainingReleaseGates": [
+    "Unity 6000.3.26f1 normal UPM import and build",
+    "Clean Ubuntu host installation from scratch"
+  ],
+  "notes": [
+    "Deployment cycle exercised a new release directory using the same build, then rolled back. Final release was subsequently updated to the locked-restore fix and revalidated.",
+    "Restore checks use an independent data directory and a temporary loopback-only service. Production retains its original data directory.",
+    "Private credentials and spectator tokens remain under ignored artifacts; evidence summaries contain no passwords."
+  ]
+}

@@ -1,41 +1,31 @@
 @page
-@model DemoPageModel
+@model ResultsModel
 @{ ViewData["Title"] = "比赛结果"; }
 <h1>比赛结果</h1>
-<p>DEMO-MATCH · 演示分数</p>
+@if (Model.Selected is { } match) {
+<p class="match-id">@match.Id · @ResultsModel.StatusLabel(match.Status)</p>
+<p>@match.Diagnostic</p>
+@if (Model.Series is { } series) {
 <section class="scores">
-<article>
-<span>示例队伍 A</span>
-<strong>@Model.TeamATotal</strong>
-<small>两局合计</small>
-</article>
-<article>
-<span>示例队伍 B</span>
-<strong>@Model.TeamBTotal</strong>
-<small>两局合计</small>
-</article>
+<article><span>@Model.Teams[match.TeamAId]</span><strong>@(series.totalScoreHalfPoints[0] / 2m)</strong><small>两局合计</small></article>
+<article><span>@Model.Teams[match.TeamBId]</span><strong>@(series.totalScoreHalfPoints[1] / 2m)</strong><small>两局合计</small></article>
 </section>
+<p>@(series.winnerTeam < 0 ? "本场无获胜队伍" : "获胜队伍 " + Model.Teams[series.winnerTeam == 0 ? match.TeamAId : match.TeamBId]) · @series.decision</p>
 <div class="table-wrap">
-<table>
-<caption>双局换边明细</caption>
-<thead>
-<tr>
-<th>局次</th>
-<th>红方</th>
-<th>蓝方</th>
-<th>状态</th>
-</tr>
-</thead>
-<tbody>@foreach (var game in Model.Games) {<tr>
-<td>第 @game.Number 局</td>
-<td>@game.RedTeam · @(game.RedScoreHalfPoints / 2m)</td>
-<td>@game.BlueTeam · @(game.BlueScoreHalfPoints / 2m)</td>
-<td>@game.Status</td>
-</tr>}</tbody>
-</table>
+<table><caption>双局换边明细</caption><thead><tr><th>局次</th><th>红方得分</th><th>蓝方得分</th><th>状态</th></tr></thead><tbody>
+@for (int number = 0; number < series.games.Length; number++) { var game = series.games[number]; <tr><td>第 @(number + 1) 局</td><td>@(game.result.finalSnapshot.scoreHalfPoints[0] / 2m)</td><td>@(game.result.finalSnapshot.scoreHalfPoints[1] / 2m)</td><td>@(game.forfeit ? "选手故障" : "正常结束") @Model.FaultReasons[number]</td></tr> }
+</tbody></table>
 </div>
-<article>
-<h2>得分与运行诊断</h2>
-<p>分项账本、异常原因和授权回放链接由评测服务提供。</p>
-<button disabled>下载回放</button>
+<p><a class="download" href="/api/matches/@match.Id/artifacts/result">下载结果与分账</a> · <a class="download" href="/api/matches/@match.Id/artifacts/replay-1">第一局回放</a> · <a class="download" href="/api/matches/@match.Id/artifacts/replay-2">第二局回放</a></p>
+<p>@for (int number = 1; number <= 2; number++) { int ownSide = Model.ViewerTeamId == match.TeamAId ? number - 1 : 2 - number; <a class="download" href="/api/matches/@match.Id/logs/@number/@ownSide">第 @number 局运行日志</a><span> </span> }</p>
+}
+<article><h2>连接 Unity 观战</h2><p>生成一小时有效的本场只读令牌，在Unity观战界面填入地址与令牌。第二局在地址后添加 ?game=2。</p>
+<p class="match-id">@(Request.Scheme + "://" + Request.Host + "/api/matches/" + match.Id + "/snapshot")</p>
+<form method="post" asp-page-handler="Token" asp-route-id="@match.Id"><button type="submit">生成观战令牌</button></form>
+@if (Model.SpectatorToken.Length > 0) { <label for="spectator-token">观战令牌</label><textarea id="spectator-token" readonly rows="4">@Model.SpectatorToken</textarea> }
 </article>
+}
+<div class="table-wrap"><table><caption>最近100场有权查看的比赛</caption><thead><tr><th>比赛</th><th>双方队伍</th><th>状态</th><th>创建时间（北京时间）</th></tr></thead><tbody>
+@foreach (var item in Model.Matches) { <tr><td><a class="download" asp-page="/Results" asp-route-id="@item.Id">@item.Id</a></td><td>@Model.Teams[item.TeamAId] / @Model.Teams[item.TeamBId]</td><td>@ResultsModel.StatusLabel(item.Status)</td><td>@item.CreatedUtc.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss")</td></tr> }
+</tbody></table></div>
+@if (Model.Matches.Count == 0) { <p>还没有比赛。提交编译完成后，由裁判安排对局。</p> }
