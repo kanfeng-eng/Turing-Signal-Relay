@@ -2,6 +2,20 @@
 
 第十九届图灵杯“强军·电波 2027”比赛系统，使用C#规则核心、Unity 2D观战客户端和C++17选手AI。仓库地址为[kanfeng-eng/Turing-Signal-Relay](https://github.com/kanfeng-eng/Turing-Signal-Relay)。
 
+## 首次使用
+
+| 你要做什么 | 阅读与运行入口 |
+| --- | --- |
+| 看一场完整比赛 | [如何玩这个游戏的使用报告](docs/如何玩这个游戏的使用报告.md)，从Windows包加载examples中的两局回放 |
+| 写AI参加比赛 | [C++ SDK](sdk/cpp/README.md)，用裁判分配的账号提交UTF-8的ai.cpp |
+| 理解架构和实现 | [完成这个游戏的技术报告](docs/完成这个游戏的技术报告.md) |
+| 构建与部署 | [发布说明](docs/RELEASE.md)和[Ubuntu部署手册](deploy/README.md) |
+| 接手继续开发 | [ChatGPT与Desktop Commander Remote交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md) |
+
+将TuringSignalRelay-windows.zip完整解压到一个新目录，运行TuringSignalRelay.exe。在右侧输入examples/game-1.replay.json的完整路径并点击“打开回放”，再点击“播放”。另一局为game-2.replay.json。客户端提供单步、倍速、时间轴、阵营视角、镜头拖动、缩放及单位跟随。
+
+选手通过AI程序控制单位，观战客户端用于查看状态与回放。正式比赛由裁判安排两支不同队伍的就绪提交，第二局自动换边。账号、上传、在线观战与故障处理的逐步操作见使用报告。
+
 ## 当前状态
 
 更新于2026-11-07。当前由用户个人承担全部五个模块。
@@ -52,6 +66,19 @@ Unity Linux Dedicated Server保留为原生构建与一致性验证入口。平�
 | 代码来源、素材和第三方复用 | [复用记录](docs/REUSE.md) |
 
 原编号仍用于定位职责，分别为1号集成裁判、2号地图移动、3号规则计分、4号显示回放、5号SDK与平台。原协作指南保留在[1号](docs/team/1/README.md)、[2号](docs/team/2/README.md)、[3号](docs/team/3/README.md)、[4号](docs/team/4/README.md)、[5号](docs/team/5/README.md)。这些指南中的早期任务规划结合本页当前状态阅读。
+
+## 从源码上手
+
+```powershell
+git clone --branch feat/1-bootstrap https://github.com/kanfeng-eng/Turing-Signal-Relay.git
+Set-Location Turing-Signal-Relay
+dotnet restore server/Platform/Platform.csproj --locked-mode
+dotnet restore server/Worker/Worker.csproj --locked-mode
+dotnet build server/Platform/Platform.csproj --no-restore
+dotnet build server/Worker/Worker.csproj --no-restore
+```
+
+Windows开发环境使用.NET10 SDK及C++17 x64工具链，Unity工程位于game。团队Editor版本写在game/ProjectSettings/ProjectVersion.txt。独立副本的导入、构建与版本边界见后文命令和[环境说明](docs/ENVIRONMENT.md)。新机器首先运行源码校验与可信样例检查，再连接正式评测服务。
 
 ## 本机快速验证
 
@@ -126,8 +153,8 @@ artifacts/              本机验证产物与私有运行资料
 | --- | --- |
 | 正式数据与移动平报 | 52项逻辑检查及9000tick，见[阶段记录](docs/STAGE123_VALIDATION.json) |
 | 完整规则与本地AI | 当前76项、52项旧逻辑与9项进程检查通过，双局各9000tick，见[⑤⑥记录](docs/STAGE56_VALIDATION.json)；原生对照保留于[此前记录](docs/STAGE45_VALIDATION.json) |
-| 旧Worker回归 | 24项通过，本轮位于`artifacts/stage5/legacy-worker-checks/CHECKS.json` |
-| 平台正常全流程 | 当前部署通过，位于`artifacts/stage5/http-delivery/CHECKS.json` |
+| 旧Worker回归 | Windows与Ubuntu各24项通过，记录见[阶段7](docs/STAGE7_VALIDATION.json) |
+| 平台正常全流程 | 当前部署通过，位于`artifacts/stage7/platform-deployed/CHECKS.json` |
 | Ubuntu沙箱 | 新一轮14项通过，驻留内存增长至约252.9 MiB后受限，本机报告为`artifacts/stage56/sandbox-checks.json` |
 | 数据迁移与备份 | 恢复到独立目录通过，7个账号、5份源码、3份产物及登录/下载核验成功 |
 | 故障与恢复 | 文件违规、三次CPU超时判负、最终快照、日志授权和重启后第二次尝试通过 |
@@ -136,6 +163,6 @@ artifacts/              本机验证产物与私有运行资料
 | Unity授权观战 | 独立副本连接正式接口的4项快照检查通过，含正常与故障终局 |
 | 发布与回滚 | 同一构建发布到新版本目录再回滚，服务健康与数据库计数一致 |
 
-当前部署与⑤⑥验证摘要见[最新验收](docs/STAGE56_VALIDATION.json)，此前账号、队列与备份恢复证据保留在[平台验收记录](docs/PLATFORM_VALIDATION.json)。接手操作、复验顺序及Unity基线门槛见[交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md)。
+当前部署与交付摘要见[阶段7记录](docs/STAGE7_VALIDATION.json)，⑤⑥细节见[完整玩法与沙箱验收](docs/STAGE56_VALIDATION.json)，此前账号、队列与备份恢复证据保留在[平台验收记录](docs/PLATFORM_VALIDATION.json)。接手操作、复验顺序及Unity基线门槛见[交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md)。
 
 原策划案与完整旧工程保留在本地，已迁入的自有代码和精灵有来源记录。贡献与分支约定见[CONTRIBUTING](CONTRIBUTING.md)。

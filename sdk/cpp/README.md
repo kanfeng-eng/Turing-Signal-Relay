@@ -14,7 +14,7 @@
 
 ## Ubuntu
 
-需要支持 C++17 的 g++，本次实际使用 GCC 15.2.0。输出目录必须不存在。
+需要支持C++17的g++，正式Ubuntu24.04环境使用GCC13.3.0；早期可信程序验证曾使用GCC15.2.0。输出目录必须不存在。
 
 ```bash
 bash sdk/cpp/build-linux.sh artifacts/my-ai
@@ -58,8 +58,8 @@ int main() {
 
 完整模式 featureSet 为 relay-full-v1。旧 movement-plain-report-v1 保留回归用途，不能据此判断完整玩法效果。资源和敌人受当前视野限制，自己的路径数组不暴露裁判基于隐藏桥状态计算的内部路径。静态地图、预设时间表公开，不能把未观察到的库存当成零。
 
-每方每帧10ms CPU、100ms墙钟兜底，初始化2秒。累计3次超时判整场负，其他协议/崩溃故障立即判负。内存256 MiB、stdout单行64 KiB、128动作、输入2 MiB，stderr全局最多保存1 MiB。Linux以 /proc/PID/schedstat 实测CPU，Windows开发模式只记录CPU且执行墙钟兜底。
+每方每帧10ms CPU、100ms墙钟兜底，初始化2秒。累计3次超时判整场负，其他协议/崩溃故障立即判负。内存256 MiB、stdout单行64 KiB、128动作、输入2 MiB，stderr全局最多保存1 MiB。正式沙箱读取cgroup v2的CPU统计，可信Linux原生入口使用/proc/PID/schedstat，Windows开发模式记录CPU并执行墙钟兜底。
 
-当前桥接器用于自有可信程序。正式提交的源码大小、隔离编译、禁止文件/网络/线程/子进程及强制内存隔离，由后续沙箱 Worker 完成。不要把当前本地运行命令用于未知来源程序。
+本地运行入口用于自有可信程序。正式提交已接入Ubuntu沙箱Worker，执行源码检查、隔离编译、文件/网络/线程/子进程限制及内存约束。上传与评测操作见[平台说明](../../docs/PLATFORM.md)，逐步体验见[使用报告](../../docs/如何玩这个游戏的使用报告.md)。
 
 JSON依赖为 nlohmann/json v3.12.0，MIT许可和固定提交见 third_party/nlohmann/SOURCE.json、LICENSE.MIT。
