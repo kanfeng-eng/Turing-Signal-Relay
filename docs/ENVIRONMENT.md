@@ -1,9 +1,17 @@
 # 环境准备
 
+## 当前发布版本
+
+2026-11-07用户取消原Unity版本限制，当前工程与发布统一使用6000.6.8f1，ProjectVersion.txt与构建检查已更新。使用此版本直接打开game，或运行PublicSource副本检查。下文原版6.3诊断保留为历史。
+
+```powershell
+./tools/run-unity-check.ps1 -EditorDirectory 'C:\Program Files\Unity\Hub\Editor\6000.6.8f1\Editor' -PublicSource -Action Check
+```
+
 ## 全员必装
 
 1. Git；编辑器可用 Visual Studio 或 Rider，启用 Unity/C# 支持。
-2. Unity Hub，Unity `6000.3.26f1`。从[官方版本页](https://unity.com/releases/editor/whats-new/6000.3.26f1)安装指定版本。
+2. Unity Hub，Unity `6000.6.8f1`。从[官方版本页](https://unity.com/releases/editor/whats-new/6000.6.8f1)安装指定版本。
 3. Hub 添加 `Linux Dedicated Server Build Support`。1、5 号必须完成 Linux 构建验证；其余成员至少能打开 Windows 工程。
 4. Windows 上需要本地运行 C++ AI 的成员安装提供 C++17 的编译器；正式参考编译器使用 Ubuntu 24.04 的 GCC，具体版本和镜像摘要由 5 号在 M0 锁定。
 

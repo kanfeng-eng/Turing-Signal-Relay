@@ -26,16 +26,16 @@ namespace TuringSignalRelay.Editor
         private static void Build(BuildTarget target, string output, bool server)
         {
             bool developmentCopy = Array.IndexOf(Environment.GetCommandLineArgs(), "-bootstrapDevelopmentCopy") >= 0;
-            if (Application.unityVersion != "6000.3.26f1" &&
-                !(developmentCopy && Application.unityVersion == "6000.6.8f1"))
-                throw new InvalidOperationException("Use Unity 6000.3.26f1; refusing a different editor.");
-            if (developmentCopy) Debug.LogWarning("Development copy build; team baseline compatibility is not verified.");
+            if (Application.unityVersion != "6000.6.8f1")
+                throw new InvalidOperationException("Use Unity 6000.6.8f1 for this release.");
+            if (developmentCopy) Debug.Log("Building an isolated copy of the release project.");
             EditorSettings.serializationMode = SerializationMode.ForceText;
             PlayerSettings.productName = "Turing Signal Relay";
             PlayerSettings.defaultScreenWidth = 1280;
             PlayerSettings.defaultScreenHeight = 800;
             PlayerSettings.resizableWindow = true;
             PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
+            PlayerSettings.insecureHttpOption = InsecureHttpOption.AlwaysAllowed;
             var options = new BuildPlayerOptions {
                 scenes = server ? new[] { Scene } : new[] { "Assets/Game/Scenes/Observer.unity", Scene }, target = target,
                 locationPathName = Path.GetFullPath(Path.Combine(Application.dataPath, "..", output)),

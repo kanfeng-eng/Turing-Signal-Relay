@@ -121,7 +121,17 @@ namespace TuringSignalRelay.Editor
                         Require(!field.textComponent.text.Contains("observer-test-token"), "Token was displayed as plain text.");
                     }
                 }
-                Debug.Log("OBSERVER_INTERACTION_CHECKS_PASSED sizes=5 selection drag zoom minimap follow visibility replay-reset token");
+                foreach (string address in new[] { "http://111.231.101.147/api/matches/example/snapshot", "https://example.com/snapshot" })
+                {
+                    controller.ConnectionSettings(address, "observer-test-token");
+                    controller.ToggleConnection();
+                    Require(controller.IsLive, "HTTP/HTTPS snapshot URL was rejected.");
+                    controller.ToggleConnection();
+                }
+                controller.ConnectionSettings("file:///tmp/snapshot.json", "");
+                controller.ToggleConnection();
+                Require(!controller.IsLive && controller.Error.Length > 0, "Non-HTTP snapshot URL was accepted.");
+                Debug.Log("OBSERVER_INTERACTION_CHECKS_PASSED sizes=5 selection drag zoom minimap follow visibility replay-reset token http-https");
             }
             finally
             {

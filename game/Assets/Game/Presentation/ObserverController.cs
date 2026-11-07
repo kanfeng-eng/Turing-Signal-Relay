@@ -183,9 +183,9 @@ namespace TuringSignalRelay
                 return;
             }
             Uri uri;
-            if (!Uri.TryCreate(endpoint, UriKind.Absolute, out uri) || !(uri.Scheme == "https" || uri.Scheme == "http" && uri.IsLoopback))
+            if (!Uri.TryCreate(endpoint, UriKind.Absolute, out uri) || !(uri.Scheme == "https" || uri.Scheme == "http"))
             {
-                Error = "Use HTTPS or a local test URL.";
+                Error = "Use an HTTP or HTTPS snapshot URL.";
                 return;
             }
             IsLive = true;

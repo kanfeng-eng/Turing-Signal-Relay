@@ -2,6 +2,14 @@
 
 目标为Ubuntu 24.04 x86_64、cgroup v2和.NET 10运行时。安装需要本项目的管理员授权，应用使用tsr-platform和tsr-worker两个专用账号。平台监听127.0.0.1的5188端口。
 
+## IP公网HTTP发布
+
+用户于2026-11-07选择IP的HTTP访问。deploy/nginx/tsr-http.conf将111.231.101.147的80端口转发至本机5188，/downloads/映射至/srv/tsr/downloads。该目录仅放已校验的公开交付文件。Nginx配置保留300 KiB请求上限，平台继续检查身份、CSRF、队伍归属与提交配额。
+
+在确认80端口空闲及默认站点为Ubuntu自带配置后，将本项目配置安装到/etc/nginx/sites-available/tsr-http，启用对应链接，移除sites-enabled/default链接，再运行nginx -t及systemctl enable --now nginx。云安全组需允许TCP80。验证公网Login、health、匿名API401、真实上传至双局及下载SHA256。
+
+浏览器入口为http://111.231.101.147/Login。HTTP登录与观战令牌以明文传输，使用项目专用密码。后续有域名和证书时，在本项目Nginx站点启用HTTPS，并同步配置ASP.NET Core的受信转发头及安全Cookie，重新检查登录和观战。
+
 ## 构建与首次安装
 
 在开发机发布平台和Worker，将发布目录、fixtures、sdk/cpp和deploy复制到服务器的新目录。依赖使用packages.lock.json锁定版本。
