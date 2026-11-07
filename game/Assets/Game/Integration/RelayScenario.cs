@@ -49,7 +49,7 @@ namespace TuringSignalRelay
                     new RelayCommand { unitId = courier.id, action = "moveTo", x = home.x, y = home.y };
             else
             {
-                var message = Array.Find(frame.messages, value => value.carrierId == -1 && value.deliveredTick < 0);
+                var message = Array.Find(frame.messages, value => value.kind == "plain" && !value.expired && value.carrierId == -1 && value.deliveredTick < 0);
                 var target = map.Reports(frame.side)[0];
                 int x = message == null ? target.x : message.x, y = message == null ? target.y : message.y;
                 if (courier.x == x && courier.y == y)
@@ -65,7 +65,8 @@ namespace TuringSignalRelay
         public static RelayResult Result(RelayMatchEngine engine)
         {
             if (!engine.Completed) throw new InvalidOperationException("Cannot finalize a running scenario.");
-            return new RelayResult { config = engine.Config, mapHash = engine.MapHash, stateHash = engine.StateHash(), finalSnapshot = engine.GetSnapshot() };
+            return new RelayResult { config = engine.Config, mapHash = engine.MapHash, stateHash = engine.StateHash(), finalSnapshot = engine.GetSnapshot(),
+                status = engine.Config.FullRules() ? "full-rules-completed" : "movement-plain-report-completed" };
         }
     }
 }

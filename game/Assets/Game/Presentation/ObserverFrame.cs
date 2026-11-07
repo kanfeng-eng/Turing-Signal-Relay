@@ -32,6 +32,7 @@ namespace TuringSignalRelay
         public ObserverLink[] links = new ObserverLink[0];
         public string weather = "Clear", eventText = "", rulesVersion = "observer-fixture";
         public float hubProgress;
+        public float[] hubProgressBySide = new float[2];
         public int eventFocusId = -1;
         public int nextEventTick = -1;
 

@@ -93,10 +93,17 @@ namespace TuringSignalRelay
         public bool SharedCell(int x, int y) { return Array.Exists(data.sites, value => value.x == x && value.y == y); }
         public CrossingDefinition Crossing(int x, int y, int toX, int toY)
         {
-            var crossing = Array.Find(data.crossings, value => value.enabled &&
+            var crossing = Array.Find(Grid.Crossings, value => value.enabled &&
                 ((value.fromX == x && value.fromY == y && value.toX == toX && value.toY == toY) ||
                 (value.toX == x && value.toY == y && value.fromX == toX && value.fromY == toY)));
             return crossing == null ? null : crossing.Copy();
+        }
+
+        public void SynchronizeBridges(System.Collections.Generic.List<RelayBuiltBridge> bridges)
+        {
+            foreach (var crossing in Grid.Crossings)
+                if (crossing.kind == CrossingKind.BuiltBridge)
+                    crossing.enabled = bridges.Exists(bridge => bridge.crossingId == crossing.id);
         }
 
         public static bool FerryOpen(int tick) { return tick >= 2400 && (tick - 2400) % 450 < 150; }

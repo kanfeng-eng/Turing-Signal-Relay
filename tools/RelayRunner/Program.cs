@@ -25,20 +25,50 @@ internal static class Program
     {
         try
         {
+            if (args.Length == 2 && args[0] == "bridge-check")
+            {
+                AiBridgeChecks.Run(Path.GetFullPath(args[1])).GetAwaiter().GetResult();
+                return 0;
+            }
+            if (args.Length >= 5 && args[0] == "series")
+            {
+                string seriesRoot = Path.GetFullPath(args[1]), seriesOutput = Path.GetFullPath(args[4]);
+                if (Directory.Exists(seriesOutput) || File.Exists(seriesOutput)) throw new IOException("Use a new series directory.");
+                Directory.CreateDirectory(seriesOutput);
+                bool strict = Array.IndexOf(args, "--strict-cpu") >= 0, full = Array.IndexOf(args, "--full-rules") >= 0;
+                var first = AiMatchRunner.Run(seriesRoot, Path.GetFullPath(args[2]), Path.GetFullPath(args[3]), Path.Combine(seriesOutput, "game-1"), strict, full);
+                var second = AiMatchRunner.Run(seriesRoot, Path.GetFullPath(args[3]), Path.GetFullPath(args[2]), Path.Combine(seriesOutput, "game-2"), strict, full);
+                System.Threading.Tasks.Task.WhenAll(first, second).GetAwaiter().GetResult();
+                first.Result.teamBySide = new[] { 0, 1 }; second.Result.teamBySide = new[] { 1, 0 };
+                var summary = RelaySeries.Aggregate(first.Result, second.Result);
+                Write(Path.Combine(seriesOutput, "series.result.json"), summary);
+                Console.WriteLine("CPP_AI_SERIES_" + summary.status.ToUpperInvariant() + " winner=" + summary.winnerTeam);
+                return 0;
+            }
+            if (args.Length >= 5 && args[0] == "ai")
+            {
+                AiMatchRunner.Run(Path.GetFullPath(args[1]), Path.GetFullPath(args[2]), Path.GetFullPath(args[3]), Path.GetFullPath(args[4]),
+                    Array.IndexOf(args, "--strict-cpu") >= 0, Array.IndexOf(args, "--full-rules") >= 0).GetAwaiter().GetResult();
+                return 0;
+            }
             if (args.Length == 3 && args[0] == "verify")
             {
-                var verifiedResult = RelayScenario.Result(RelayReplay.Verify(Read<RelayRecording>(args[1])));
+                var input = Read<RelayRecording>(args[1]);
+                var replayed = RelayReplay.Verify(input);
+                var verifiedResult = input.forfeit ? new RelayResult { status = "forfeit", config = replayed.Config, mapHash = replayed.MapHash,
+                    stateHash = replayed.StateHash(), finalSnapshot = replayed.GetSnapshot() } : RelayScenario.Result(replayed);
                 Write(args[2], verifiedResult);
                 Console.WriteLine("RELAY_REPLAY_VERIFIED " + verifiedResult.stateHash);
                 return 0;
             }
-            if (args.Length != 3 || (args[0] != "check" && args[0] != "demo"))
+            if (args.Length != 3 || (args[0] != "check" && args[0] != "demo" && args[0] != "full-check"))
                 throw new ArgumentException("Usage: RelayRunner check|demo ROOT NEW_OUTPUT_DIRECTORY, or verify REPLAY NEW_RESULT_FILE");
             string root = Path.GetFullPath(args[1]), output = Path.GetFullPath(args[2]);
             if (Directory.Exists(output) || File.Exists(output)) throw new IOException("Use a new output directory.");
-            var config = Read<RelayConfig>(Path.Combine(root, "fixtures/protocol/relay-config.json"));
+            var config = Read<RelayConfig>(Path.Combine(root, "fixtures/protocol/" + (args[0] == "full-check" ? "relay-full-config.json" : "relay-config.json")));
             var map = Read<RelayMapData>(Path.Combine(root, "fixtures/world/map-v1.json"));
             config.Validate();
+            if (args[0] == "full-check") FullChecks.Run(config, map);
             if (args[0] == "check")
             {
                 RelayChecks.Run(config, map);
@@ -64,7 +94,7 @@ internal static class Program
             var final = RelayReplay.Verify(Read<RelayRecording>(replayPath));
             var result = RelayScenario.Result(final);
             Write(Path.Combine(output, "relay.result.json"), result);
-            if (result.finalSnapshot.messages.Count != 60 || result.finalSnapshot.ledger.Count == 0 ||
+            if (result.finalSnapshot.messages.Count != (config.FullRules() ? 88 : 60) || result.finalSnapshot.ledger.Count == 0 ||
                 result.finalSnapshot.scoreHalfPoints[0] <= 0 || result.finalSnapshot.scoreHalfPoints[1] <= 0)
                 throw new Exception("Both scripted couriers must deliver reports in the full match.");
             Console.WriteLine("RELAY_SCENARIO_PASSED ticks=" + final.Tick + " scoresHalf=" +

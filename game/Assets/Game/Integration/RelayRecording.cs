@@ -19,6 +19,11 @@ namespace TuringSignalRelay
         public RelayMapData map;
         public string mapHash, initialStateHash;
         public RelayRecordedTick[] frames;
+        public string[] aiSourceHashes = new string[0], aiBinaryHashes = new string[0];
+        public string sdkSourceHash = "";
+        public bool forfeit;
+        public int faultSide = -1;
+        public string terminationReason = "";
     }
 
     public static class RelayReplay
@@ -26,7 +31,9 @@ namespace TuringSignalRelay
         public static RelayMatchEngine Verify(RelayRecording recording, Action<RelayMatchEngine> capture = null)
         {
             if (recording == null || recording.type != "relay-replay" || recording.replayVersion != 1 || recording.config == null ||
-                recording.frames == null || recording.frames.Length != recording.config.durationTicks)
+                recording.frames == null || recording.frames.Length > recording.config.durationTicks ||
+                (!recording.forfeit && recording.frames.Length != recording.config.durationTicks) ||
+                (recording.forfeit && (recording.faultSide < 0 || recording.faultSide > 2 || string.IsNullOrWhiteSpace(recording.terminationReason))))
                 throw new ArgumentException("Invalid or incomplete relay replay.");
             var engine = new RelayMatchEngine(recording.config, recording.map);
             if (engine.MapHash != recording.mapHash || engine.StateHash() != recording.initialStateHash)

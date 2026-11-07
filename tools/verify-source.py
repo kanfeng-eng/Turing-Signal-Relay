@@ -10,7 +10,7 @@ import subprocess
 def verify(root, include_local_art=False):
     names = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
                                     cwd=root).decode("utf-8").split("\0")
-    files = [name for name in names if name and (name.startswith(("game/Assets/", "game/Packages/", "game/ProjectSettings/", "server/", "tools/", "docs/", "fixtures/"))
+    files = [name for name in names if name and (name.startswith(("game/Assets/", "game/Packages/", "game/ProjectSettings/", "server/", "tools/", "docs/", "fixtures/", "sdk/"))
                                                or name in ("README.md", ".gitignore", ".gitattributes"))]
     if include_local_art:
         for folder in ["game/Assets/Game/Art/LegacyModels", "game/Assets/Game/Art/LegacyMaterials", "game/Assets/Game/Resources/LegacySprites"]:
@@ -25,6 +25,13 @@ def verify(root, include_local_art=False):
     assert approval["rulesVersion"] == "signal-relay-1.0"
     assert approval["decisions"] == {"R%02d" % number: "A" for number in range(1, 19)}
     assert hashlib.sha256(specification).hexdigest() == approval["specificationSha256"], "Approved specification changed without updating its record"
+    full_config = json.loads((root / "fixtures/protocol/relay-full-config.json").read_text(encoding="utf-8"))
+    supplement = (root / "fixtures/rules/addendum-v1.json").read_bytes().replace(b"\r\n", b"\n")
+    assert hashlib.sha256(supplement).hexdigest() == full_config["supplementalRulesHash"], "Rules supplement digest mismatch"
+    vendor = root / "sdk/cpp/third_party/nlohmann"
+    provenance = json.loads((vendor / "SOURCE.json").read_text(encoding="utf-8"))
+    for entry in provenance["files"]:
+        assert hashlib.sha256((vendor / entry["file"]).read_bytes()).hexdigest() == entry["sha256"], "Vendored JSON input changed"
     guids, assemblies = {}, {}
     for name in files:
         path = root / name
@@ -63,7 +70,7 @@ def verify(root, include_local_art=False):
             if target:
                 assert (root / name).parent.joinpath(target).exists(), "Broken link " + name + " -> " + target
                 links += 1
-    text_extensions = {".cs", ".csproj", ".json", ".md", ".ps1", ".py", ".asmdef", ".meta", ".unity", ".prefab", ".asset", ".css", ".cshtml", ".sh"}
+    text_extensions = {".cs", ".csproj", ".cpp", ".hpp", ".h", ".json", ".md", ".ps1", ".py", ".asmdef", ".meta", ".unity", ".prefab", ".asset", ".css", ".cshtml", ".sh"}
     manifest = []
     for name in sorted(files):
         data = (root / name).read_bytes()

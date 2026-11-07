@@ -16,7 +16,7 @@ namespace TuringSignalRelay
             {
                 foreach (string value in args)
                     if (value.StartsWith("--bootstrap-", StringComparison.Ordinal) ||
-                        (value.StartsWith("--relay-", StringComparison.Ordinal) && value != "--relay-config" && value != "--relay-map" && value != "--relay-replay" && value != "--relay-result"))
+                        (value.StartsWith("--relay-", StringComparison.Ordinal) && value != "--relay-config" && value != "--relay-map" && value != "--relay-replay" && value != "--relay-result" && value != "--relay-red-ai" && value != "--relay-blue-ai"))
                         throw new ArgumentException("Conflicting or unsupported headless option.");
                 var config = JsonUtility.FromJson<RelayConfig>(File.ReadAllText(Option(args, "--relay-config")));
                 var map = JsonUtility.FromJson<RelayMapData>(File.ReadAllText(Option(args, "--relay-map")));
@@ -24,6 +24,12 @@ namespace TuringSignalRelay
                 string result = Path.GetFullPath(Option(args, "--relay-result"));
                 if (File.Exists(replay) || File.Exists(result) || string.Equals(replay, result, StringComparison.OrdinalIgnoreCase))
                     throw new IOException("Use distinct new replay and result files.");
+                if (Array.IndexOf(args, "--relay-red-ai") >= 0 || Array.IndexOf(args, "--relay-blue-ai") >= 0)
+                {
+                    var programs = new[] { Path.GetFullPath(Option(args, "--relay-red-ai")), Path.GetFullPath(Option(args, "--relay-blue-ai")) };
+                    new GameObject("Relay C++ judge").AddComponent<RelayAiHeadlessHost>().Begin(config, map, programs, replay, result);
+                    return;
+                }
                 var recording = RelayScenario.Run(config, map);
                 var engine = RelayReplay.Verify(recording);
                 WriteNew(replay, JsonUtility.ToJson(recording));

@@ -94,6 +94,7 @@ namespace TuringSignalRelay
                 frame.ReuseUnchangedMap(pending.Count == 0 ? null : pending[pending.Count - 1]);
                 pending.Add(frame);
             });
+            if (recording.forfeit) pending[pending.Count - 1].eventText = "Forfeit side=" + recording.faultSide + " " + recording.terminationReason;
             Frames.Clear(); Frames.AddRange(pending);
             TicksPerSecond = 10; Seek(0); Playing = false;
         }

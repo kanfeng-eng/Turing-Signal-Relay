@@ -74,6 +74,7 @@ namespace TuringSignalRelay
                     writer.Write(result.side); writer.Write(result.unitId); writer.Write(result.action ?? ""); writer.Write(result.reason); writer.Write(result.accepted);
                 }
                 writer.Write(state.events.Length); foreach (string entry in state.events) writer.Write(entry);
+                if (config.FullRules()) { writer.Write(config.supplementalRulesHash); RelayFullStateHash.Write(writer, state); }
             });
         }
     }

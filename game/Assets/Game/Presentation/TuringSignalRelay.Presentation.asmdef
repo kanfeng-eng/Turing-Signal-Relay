@@ -4,6 +4,7 @@
     "TuringSignalRelay.Core",
     "TuringSignalRelay.Integration",
     "UnityEngine.UI",
-    "TuringSignalRelay.World"
+    "TuringSignalRelay.World",
+    "TuringSignalRelay.Rules"
   ]
 }

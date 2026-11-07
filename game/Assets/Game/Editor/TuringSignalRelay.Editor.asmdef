@@ -5,6 +5,7 @@
     "TuringSignalRelay.Integration",
     "TuringSignalRelay.Checks",
     "TuringSignalRelay.Presentation",
+    "TuringSignalRelay.Rules",
     "UnityEngine.UI"
   ],
   "includePlatforms": [

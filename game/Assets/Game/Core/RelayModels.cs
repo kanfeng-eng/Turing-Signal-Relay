@@ -11,18 +11,23 @@ namespace TuringSignalRelay
         public string rulesVersion = "signal-relay-1.0";
         public string featureSet = "movement-plain-report-v1";
         public string rulesHash;
+        public string supplementalRulesHash = "";
         public int seed;
         public int durationTicks = 9000;
         public void Validate()
         {
-            if (protocolVersion != 2 || rulesVersion != "signal-relay-1.0" || featureSet != "movement-plain-report-v1" ||
+            if (protocolVersion != 2 || rulesVersion != "signal-relay-1.0" || (featureSet != "movement-plain-report-v1" && featureSet != "relay-full-v1") ||
                 durationTicks < 1 || durationTicks > 9000 || rulesHash != ApprovedRulesHash)
                 throw new ArgumentException("Invalid relay configuration.");
+            if (FullRules() && supplementalRulesHash != "dd49f601362b03585fb677833f72382ee8ce69bcccf71ca0c89472bab583b2ed")
+                throw new ArgumentException("Approved material ownership supplement is required.");
+            if (FullRules() && durationTicks != 9000) throw new ArgumentException("Full-rule games require 9000 ticks.");
             foreach (char digit in rulesHash)
                 if (!(digit >= '0' && digit <= '9') && !(digit >= 'a' && digit <= 'f'))
                     throw new ArgumentException("Invalid approved rules digest.");
         }
         public RelayConfig Copy() { return (RelayConfig)MemberwiseClone(); }
+        public bool FullRules() { return featureSet == "relay-full-v1"; }
     }
 
     [Serializable]
@@ -84,6 +89,9 @@ namespace TuringSignalRelay
         public int pathIndex;
         public int actionMessageId = -1, actionTargetUnitId = -1;
         public int taskDuration;
+        public int materials, reservedMaterials, suppressedUntilTick, suppressReadyTick;
+        public bool stationActive;
+        public int decodeMessageId = -1, decodeStartedTick = -1;
         public List<int> messageIds = new List<int>();
         public RelayUnit Copy()
         {
@@ -100,6 +108,9 @@ namespace TuringSignalRelay
         public int id, side, x, y, createdTick;
         public int carrierId = -1, deliveredTick = -1;
         public string kind = "plain";
+        public int deadlineTicks = 600, sharedTaskId = -1, stationId = -1;
+        public bool decoded, expired;
+        public int secondX, secondY, progressStartedTick = -1;
         public RelayMessage Copy() { return (RelayMessage)MemberwiseClone(); }
     }
 
@@ -115,7 +126,39 @@ namespace TuringSignalRelay
     public sealed class RelayResource
     {
         public int id, side, x, y, amount;
+        public string kind = "depot";
+        public int availableTick;
         public RelayResource Copy() { return (RelayResource)MemberwiseClone(); }
+    }
+
+    [Serializable]
+    public sealed class RelayFixedStation
+    {
+        public int id, side, x, y, suppressedUntilTick;
+        public RelayFixedStation Copy() { return (RelayFixedStation)MemberwiseClone(); }
+    }
+
+    [Serializable]
+    public sealed class RelayBuiltBridge
+    {
+        public int crossingId, side, completedTick;
+        public RelayBuiltBridge Copy() { return (RelayBuiltBridge)MemberwiseClone(); }
+    }
+
+    [Serializable]
+    public sealed class RelayRadioNode
+    {
+        public int id, side, x, y, radius;
+        public string kind;
+        public bool active, connectedToHome;
+        public RelayRadioNode Copy() { return (RelayRadioNode)MemberwiseClone(); }
+    }
+
+    [Serializable]
+    public sealed class RelayRadioLink
+    {
+        public int from, to;
+        public RelayRadioLink Copy() { return (RelayRadioLink)MemberwiseClone(); }
     }
 
     [Serializable]
@@ -138,6 +181,14 @@ namespace TuringSignalRelay
         public List<RelayMessage> messages = new List<RelayMessage>();
         public List<RelayScoreEntry> ledger = new List<RelayScoreEntry>();
         public List<RelayResource> resources = new List<RelayResource>();
+        public List<RelayFixedStation> stations = new List<RelayFixedStation>();
+        public List<RelayBuiltBridge> bridges = new List<RelayBuiltBridge>();
+        public List<RelayRadioNode> nodes = new List<RelayRadioNode>();
+        public List<RelayRadioLink> links = new List<RelayRadioLink>();
+        public int[] hubMaterials = new int[2], compensationCount = new int[2];
+        public int weatherReduction;
+        public string weather = "clear";
+        public int eventFocusUnitId = -1, eventFocusMessageId = -1;
         public RelayCommandResult[] commandResults = new RelayCommandResult[0];
         public string[] events = new string[0];
         public RelayState Copy()
@@ -148,6 +199,11 @@ namespace TuringSignalRelay
             result.messages = messages.ConvertAll(value => value.Copy());
             result.ledger = ledger.ConvertAll(value => value.Copy());
             result.resources = resources.ConvertAll(value => value.Copy());
+            result.stations = stations.ConvertAll(value => value.Copy());
+            result.bridges = bridges.ConvertAll(value => value.Copy());
+            result.nodes = nodes.ConvertAll(value => value.Copy());
+            result.links = links.ConvertAll(value => value.Copy());
+            result.hubMaterials = (int[])hubMaterials.Clone(); result.compensationCount = (int[])compensationCount.Clone();
             result.commandResults = Array.ConvertAll(commandResults, value => new RelayCommandResult {
                 side = value.side, unitId = value.unitId, action = value.action, reason = value.reason, accepted = value.accepted });
             result.events = (string[])events.Clone();
@@ -168,5 +224,11 @@ namespace TuringSignalRelay
         public RelayUnit[] visibleEnemies;
         public RelayMessage[] messages;
         public RelayResource[] resources;
+        public RelayRadioNode[] nodes = new RelayRadioNode[0];
+        public RelayRadioLink[] links = new RelayRadioLink[0];
+        public RelayFixedStation[] stations = new RelayFixedStation[0];
+        public RelayBuiltBridge[] bridges = new RelayBuiltBridge[0];
+        public int[] hubMaterials = new int[2];
+        public string weather = "clear";
     }
 }
