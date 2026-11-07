@@ -1,0 +1,17 @@
+{
+  "protocolVersion": 2,
+  "type": "relay-commands",
+  "tick": 0,
+  "side": 0,
+  "actions": [
+    {
+      "unitId": 0,
+      "action": "moveTo",
+      "x": 16,
+      "y": 12,
+      "messageId": 0,
+      "targetUnitId": 0,
+      "ticks": 1
+    }
+  ]
+}

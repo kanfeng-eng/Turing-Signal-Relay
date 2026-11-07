@@ -1,0 +1,12 @@
+@page
+@model LoginModel
+@{ ViewData["Title"] = "登录"; }
+<section class="intro"><p class="eyebrow">图灵杯 · 比赛工作台</p><h1>登录电波接力</h1><p>使用裁判提供的队伍账号，提交你的 AI 并查看比赛结果。</p></section>
+<article class="login-panel">
+<form method="post">
+<div asp-validation-summary="All" role="alert"></div>
+<label asp-for="Username">用户名</label><input asp-for="Username" autocomplete="username" required>
+<label asp-for="Password">密码</label><input asp-for="Password" type="password" autocomplete="current-password" required>
+<button type="submit">登录工作台</button>
+</form>
+</article>

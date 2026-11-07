@@ -1,0 +1,325 @@
+{
+  "verifiedOn": "2026-11-07T21:17:39+08:00",
+  "scope": "stage8-release-acceptance",
+  "status": "partial",
+  "acceptanceDecision": "formal-release-deferred",
+  "availableEnvironmentChecks": "passed",
+  "formalReleaseApproved": false,
+  "branch": "feat/1-bootstrap",
+  "testedSourceCommit": "b0f6d7bcccd4b6146e105550ec6bdbc253746bed",
+  "packageSourceCommit": "01b22ce82fdb76185c7a36729878291cb798a588",
+  "packageSourceModified": false,
+  "changesSincePackageCommit": [
+    "README.md",
+    "docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md",
+    "docs/IMPLEMENTATION_ROADMAP.md",
+    "docs/PLATFORM.md",
+    "docs/RELEASE.md",
+    "docs/SOLO_PROGRESS.md",
+    "docs/STAGE7_VALIDATION.json",
+    "docs/UNITY_BASELINE_DIAGNOSTIC.md",
+    "docs/如何玩这个游戏的使用报告.md",
+    "docs/完成这个游戏的技术报告.md",
+    "sdk/cpp/README.md"
+  ],
+  "executableSourceChangedSincePackageCommit": false,
+  "teamEditor": "6000.3.26f1",
+  "buildEditor": "6000.6.8f1",
+  "featureSet": "relay-full-v1",
+  "protocolVersion": 2,
+  "rulesVersion": "signal-relay-1.0",
+  "documentation": {
+    "initialCommit": "b0f6d7bcccd4b6146e105550ec6bdbc253746bed",
+    "completedBeforeAcceptance": true,
+    "files": [
+      "README.md",
+      "docs/如何玩这个游戏的使用报告.md",
+      "docs/完成这个游戏的技术报告.md"
+    ],
+    "distribution": "current Git branch; original program archive documentation remains its build-time snapshot"
+  },
+  "packages": [
+    {
+      "name": "TuringSignalRelay-windows.zip",
+      "bytes": 38233021,
+      "sha256": "d5ef0ebea787e7e6e9c017626c7243def88ff21137acc14de9c20d5f60ae7a12"
+    },
+    {
+      "name": "TuringSignalRelay-linux.tar.gz",
+      "bytes": 31333504,
+      "sha256": "c9422ce1b39f65cbd7cc65b9f410fccebb9e55dcd34ed82d206c4feac27cc373"
+    },
+    {
+      "name": "TuringSignalRelay-server-linux.tar.gz",
+      "bytes": 6060051,
+      "sha256": "d136e14cf7d6eb6e6ad8c8de6add65738d5fc9d75f20c6ad524772e593d94abb"
+    },
+    {
+      "name": "TuringSignalRelay-sdk.zip",
+      "bytes": 157346,
+      "sha256": "a5544bbf1154509b98a2ff70e18b0698dc3e89d72b5df4d075d3def10857f592"
+    },
+    {
+      "name": "TuringSignalRelay-source.zip",
+      "bytes": 717273,
+      "sha256": "674755b523e3f679dddd5a540d6d9f6932f2f30203db54b5129f0a8ca7fd339b"
+    }
+  ],
+  "packageChecks": {
+    "status": "passed",
+    "windows": "PE-x86_64",
+    "linux": "ELF64-x86_64",
+    "buildInfoMatches": true,
+    "codeSourceMatches": true,
+    "formalServicePackages": "passed-linux-x64",
+    "sdkAndSourceArchives": "passed"
+  },
+  "freshChecks": {
+    "fullRules": {
+      "status": "passed",
+      "assertions": 76,
+      "ticks": 9000,
+      "stateHash": "73a0868230a8c7d0b06b70bcd3dc086eba2846287bc0e440cbdf5ff892b1e4e4"
+    },
+    "windowsWorker": {
+      "status": "passed",
+      "cases": [
+        "valid",
+        "legacy",
+        "empty",
+        "exit7",
+        "malformed-result",
+        "bad-type",
+        "bad-digest",
+        "bad-final-hash",
+        "header-config",
+        "replay-tamper",
+        "replay-duplicate",
+        "replay-truncated",
+        "replay-final-mismatch",
+        "replay-version",
+        "config-invalid",
+        "wrong-result-number",
+        "start-error",
+        "pre-cancel",
+        "timeout-tree",
+        "running-cancel-tree",
+        "after-exit-cancel",
+        "concurrent-owner",
+        "existing-output-preserved",
+        "invalid-timeout"
+      ]
+    },
+    "replayReexecution": [
+      {
+        "status": "passed",
+        "ticks": 9000,
+        "stateHash": "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+        "scoresHalfPoints": [
+          420,
+          440
+        ]
+      },
+      {
+        "status": "passed",
+        "ticks": 9000,
+        "stateHash": "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870",
+        "scoresHalfPoints": [
+          440,
+          420
+        ]
+      }
+    ],
+    "ubuntuImmutablePackages": {
+      "status": "passed",
+      "architecture": "x86_64",
+      "stateHash": "47683abf831ae7c667b7b3f7f657355ba55fc8da133145ba98bccc4f9b073423",
+      "headlessCaseCount": 10,
+      "workerCaseCount": 24,
+      "pairSucceeded": 2,
+      "platformHttp": {
+        "/": {
+          "status": 200,
+          "bytes": 1862
+        },
+        "/History": {
+          "status": 200,
+          "bytes": 1862
+        },
+        "/Judge": {
+          "status": 200,
+          "bytes": 1862
+        },
+        "/Results": {
+          "status": 200,
+          "bytes": 1862
+        },
+        "/css/site.css": {
+          "status": 200,
+          "bytes": 8232
+        }
+      },
+      "payloadSha256": "984088363bd77233a6f7aa0f9229a752cd4ffc5752d0a8c40442aed63012337c",
+      "fullGame": {
+        "status": "passed",
+        "ticks": 9000,
+        "stateHash": "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+        "scoresHalfPoints": [
+          420,
+          440
+        ]
+      },
+      "anonymousApiStatus": 401
+    },
+    "productionPlatform": {
+      "authentication": "passed",
+      "csrf": "passed",
+      "ownership": "passed",
+      "uploadBounds": "passed",
+      "escapedNotes": "passed",
+      "submissionIds": [
+        "bc8832a269c24135b44ffc8f9903873f",
+        "b65a65fd870e4ed49d98af0792f08037"
+      ],
+      "matches": [
+        {
+          "id": "2ba5e6490a4f4b7dbf802b95d59bd294",
+          "status": "completed",
+          "hashes": [
+            "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+            "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870"
+          ]
+        }
+      ],
+      "compilerFailure": "passed",
+      "idempotentMatchCreation": "passed",
+      "authorizedSnapshotsAndArtifacts": "passed",
+      "status": "passed"
+    },
+    "deployment": {
+      "verifiedAt": "2026-11-07T13:13:56.447154+00:00",
+      "services": {
+        "tsr-platform": "active",
+        "tsr-worker": "active",
+        "ssh": "active"
+      },
+      "releaseDirectory": "/opt/tsr/releases/20261107T125042Z",
+      "health": {
+        "status": "ok",
+        "service": "relay-contest"
+      },
+      "activeSandboxCgroups": [],
+      "kvmAvailable": false,
+      "sha256": {
+        "platform/Platform.dll": "ea920f0d562feacfeb3c3b3253d14517cd95263f3d7786ca911f5870af283d48",
+        "worker/Evaluation.dll": "a48a7d24341e92c745140b30aa2a498111fef031fb3ede5fc87733fd97d344ec",
+        "worker/Worker.dll": "ed9643df51777586eecb130e912a85ff0381ec84505a4ad8e26f6d02fa077f4c"
+      }
+    },
+    "sourceAndDocumentation": {
+      "status": "passed",
+      "metadataGuids": 90,
+      "assemblies": 7,
+      "localLinks": 177,
+      "report": "artifacts/stage8/final-source-check.json"
+    }
+  },
+  "carriedEvidence": [
+    {
+      "scope": "14 sandbox cases, 13 formal fault/recovery cases and prepared sandbox cleanup",
+      "record": "docs/STAGE56_VALIDATION.json",
+      "rerunInStage8": false
+    },
+    {
+      "scope": "Unity observer interactions and network cancellation on development copy",
+      "record": "docs/STAGE7_VALIDATION.json",
+      "rerunInStage8": false
+    },
+    {
+      "scope": "upload concurrency, database backup/restore, release update and rollback",
+      "record": "docs/PLATFORM_VALIDATION.json",
+      "rerunInStage8": false
+    },
+    {
+      "scope": "baseline editor failure with tracing on new empty project",
+      "record": "docs/STAGE7_VALIDATION.json#baselineFreshTrace",
+      "rerunInStage8": false
+    }
+  ],
+  "remainingReleaseGates": [
+    {
+      "item": "Unity 6000.3.26f1 UPM import and build",
+      "status": "unresolved-toolchain",
+      "evidence": "artifacts/stage7/baseline-trace"
+    },
+    {
+      "item": "Fresh Ubuntu host installation from scratch",
+      "status": "deferred-no-additional-host",
+      "userChoice": "Proceed with independently completable work"
+    }
+  ],
+  "baselineFreshTrace": {
+    "status": "unresolved",
+    "editorVersion": "6000.3.26f1",
+    "editorExitCode": 1,
+    "project": "new-empty-project",
+    "packageManagerRequestsStatus": 500,
+    "editorLog": "editor.log",
+    "upmLog": "upm.log",
+    "packageManagerTraceEnabled": true
+  },
+  "evidenceFiles": [
+    {
+      "path": "artifacts/stage8/full-rules-console.log",
+      "sha256": "ffe2cd55805334213e890dcedfe832f7653733d45eaafb58dc0129ad4a79103f"
+    },
+    {
+      "path": "artifacts/stage8/full-rules/relay.result.json",
+      "sha256": "56c736914e9235890675d0bd08bccd9f5f5fe2366813af068314d1dab8915eb6"
+    },
+    {
+      "path": "artifacts/stage8/full-rules-final/relay.result.json",
+      "sha256": "56c736914e9235890675d0bd08bccd9f5f5fe2366813af068314d1dab8915eb6"
+    },
+    {
+      "path": "artifacts/stage8/worker-checks/CHECKS.json",
+      "sha256": "f33295bf884db5b2da160dcf4e5e525022231a1f7f01a6eb44c85755616662ee"
+    },
+    {
+      "path": "artifacts/stage8/replay-1-verified.json",
+      "sha256": "489e4b93c260ed5fe69608e8d6a733018e3b4554f4e990ca27b0cce19de343b5"
+    },
+    {
+      "path": "artifacts/stage8/replay-2-verified.json",
+      "sha256": "beefbd829f11fedfed609260f6037e7e28ed00b8280ed7fee7fd77d1ed8bfdde"
+    },
+    {
+      "path": "artifacts/stage8/package-audit/UBUNTU.json",
+      "sha256": "736ba9bbbfb902d1867430243269e4d8c0ede7e3349f3f70007bb4ac61555360"
+    },
+    {
+      "path": "artifacts/stage8/package-audit/ubuntu-worker-checks.json",
+      "sha256": "6147f82d4671163e718e2c970facdcf18243ddcaa6117dc4f5e2f8f2395d8cbe"
+    },
+    {
+      "path": "artifacts/stage8/package-audit/ubuntu-headless-checks.json",
+      "sha256": "6a246c69f5de32f48f6672895f2718f5752b2b86bbe9425cdda84c74d158bcba"
+    },
+    {
+      "path": "artifacts/stage8/platform-http/CHECKS.json",
+      "sha256": "48941113777c663054b9f2b29d3d324502d46c50aee74a91368353003b310ed1"
+    },
+    {
+      "path": "artifacts/stage8/service-health.json",
+      "sha256": "ad31d897ab4037c7d584b9b25bbdd6f07bef69a9314dce4d9beb64bef2ff8fb3"
+    },
+    {
+      "path": "artifacts/stage7/release-final/package-checks.json",
+      "sha256": "6d1f0e429f0b07b89359652f5f315d7dee1cea9711b391d79b37fc5831ef6889"
+    },
+    {
+      "path": "artifacts/stage7/release-final/DELIVERY.json",
+      "sha256": "5b0cd712d4efad7fbd63274a6e85f665ddb04ca432dfdd6cf858b1bf214c15b3"
+    }
+  ]
+}

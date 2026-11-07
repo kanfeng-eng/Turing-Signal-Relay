@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>@ViewData["Title"] · 电波接力</title>
+<link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+<header>
+<a class="brand" asp-page="/Index">电波接力 <small>TURING SIGNAL RELAY</small>
+</a>
+<nav aria-label="主导航">
+<a asp-page="/Index">提交 AI</a>
+<a asp-page="/History">提交历史</a>
+@if (User.IsInRole("Judge")) { <a asp-page="/Judge">裁判台</a> }
+<a asp-page="/Results">比赛结果</a>
+@if (User.Identity?.IsAuthenticated == true) { <a asp-page="/Logout">@User.Identity.Name · 退出</a> }
+</nav>
+</header>
+<main>
+@if (TempData["Message"] is string message) { <p class="notice" role="status">@message</p> }
+@RenderBody()</main>
+<footer>图灵杯 · C++17 AI 竞赛平台</footer>
+</body>
+</html>

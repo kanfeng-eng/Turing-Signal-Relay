@@ -1,0 +1,7 @@
+{
+  "name": "TuringSignalRelay.Rules",
+  "references": [
+    "TuringSignalRelay.Core"
+  ],
+  "noEngineReferences": true
+}

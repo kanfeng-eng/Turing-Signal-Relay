@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="RelayChecks.cs" />
+    <Compile Include="AiMatchRunner.cs" />
+    <Compile Include="FullChecks.cs" />
+    <Compile Include="AiBridgeChecks.cs" />
+    <Compile Include="../../game/Assets/Game/Core/*.cs" Link="Core/%(Filename)%(Extension)" />
+    <Compile Include="../../game/Assets/Game/World/*.cs" Link="World/%(Filename)%(Extension)" />
+    <Compile Include="../../game/Assets/Game/Rules/*.cs" Link="Rules/%(Filename)%(Extension)" />
+    <Compile Include="../../game/Assets/Game/Integration/Relay*.cs" Link="Integration/%(Filename)%(Extension)" />
+    <Compile Include="../../game/Assets/Game/Integration/Ai/*.cs" Link="Ai/%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

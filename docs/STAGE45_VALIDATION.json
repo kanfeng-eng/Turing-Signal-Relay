@@ -1,0 +1,246 @@
+{
+  "verifiedOn": "2026-11-07",
+  "scope": "roadmap-4-cpp-loop-and-5-full-gameplay",
+  "baseCommit": "45e8d894bea133461bc38e9737b47226bfe0c6d2",
+  "featureSet": "relay-full-v1",
+  "protocolVersion": 2,
+  "teamEditor": "6000.3.26f1",
+  "validationEditor": "6000.6.8f1",
+  "baselineApiCompile": "passed",
+  "baselineUpmImport": "unresolved",
+  "sourceCopyPolicy": "isolated-development-public-source",
+  "localChecks": {
+    "status": "passed",
+    "fullRuleAssertions": 65,
+    "bridgeCases": 9,
+    "pairedGames": 2,
+    "participantFaultCases": 2,
+    "cpuBudgetEnforced": false
+  },
+  "scriptedFullGame": {
+    "status": "full-rules-completed",
+    "tick": 9000,
+    "scoresHalf": [
+      420,
+      420
+    ],
+    "stateHash": "73a0868230a8c7d0b06b70bcd3dc086eba2846287bc0e440cbdf5ff892b1e4e4"
+  },
+  "scriptedLegacyGame": {
+    "status": "movement-plain-report-completed",
+    "tick": 9000,
+    "scoresHalf": [
+      190,
+      190
+    ],
+    "stateHash": "0e79c061531bb5d5ca0f3ca6dfda012d3d040270332e55280c35412030252ac2"
+  },
+  "windowsCppGames": [
+    {
+      "type": "cpp-ai-match",
+      "completed": true,
+      "forfeit": false,
+      "faultSide": -1,
+      "failures": [
+        null,
+        null
+      ],
+      "cpuBudgetEnforced": false,
+      "wallMilliseconds": 100,
+      "cpuMilliseconds": 10,
+      "timeouts": [
+        0,
+        0
+      ],
+      "observedPeakWorkingSetBytes": [
+        5070848,
+        5046272
+      ],
+      "stateHash": "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+      "aiSourceHashes": [
+        "ee54c3a28c300d4e2774627540c96173cdb879ce42f7d304da19b8f65abc850a",
+        "40bd306bb7385e9d21cf2f08257c1bade6f52b02d9ba85d9f7ddbf1f7218a600"
+      ],
+      "aiBinaryHashes": [
+        "40ec4ec8c491da8568d4745810763d7edca9fe67ebeb73624996d10f1d1ce1b3",
+        "e27b097a2e0912898e0a869b663e80c07e22c2faed11e3a5a364a45d030efbeb"
+      ],
+      "sdkSourceHash": "14b7a10c580a759a6d1931b85a5e362cd66ee0726705b81318dec3335198c7e2"
+    },
+    {
+      "type": "cpp-ai-match",
+      "completed": true,
+      "forfeit": false,
+      "faultSide": -1,
+      "failures": [
+        null,
+        null
+      ],
+      "cpuBudgetEnforced": false,
+      "wallMilliseconds": 100,
+      "cpuMilliseconds": 10,
+      "timeouts": [
+        0,
+        0
+      ],
+      "observedPeakWorkingSetBytes": [
+        4677632,
+        4620288
+      ],
+      "stateHash": "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870",
+      "aiSourceHashes": [
+        "40bd306bb7385e9d21cf2f08257c1bade6f52b02d9ba85d9f7ddbf1f7218a600",
+        "ee54c3a28c300d4e2774627540c96173cdb879ce42f7d304da19b8f65abc850a"
+      ],
+      "aiBinaryHashes": [
+        "e27b097a2e0912898e0a869b663e80c07e22c2faed11e3a5a364a45d030efbeb",
+        "40ec4ec8c491da8568d4745810763d7edca9fe67ebeb73624996d10f1d1ce1b3"
+      ],
+      "sdkSourceHash": "14b7a10c580a759a6d1931b85a5e362cd66ee0726705b81318dec3335198c7e2"
+    }
+  ],
+  "ubuntuCppGames": [
+    {
+      "type": "cpp-ai-match",
+      "completed": true,
+      "forfeit": false,
+      "faultSide": -1,
+      "failures": [
+        null,
+        null
+      ],
+      "cpuBudgetEnforced": true,
+      "wallMilliseconds": 100,
+      "cpuMilliseconds": 10,
+      "timeouts": [
+        0,
+        1
+      ],
+      "observedPeakWorkingSetBytes": [
+        3145728,
+        3194880
+      ],
+      "stateHash": "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+      "aiSourceHashes": [
+        "ee54c3a28c300d4e2774627540c96173cdb879ce42f7d304da19b8f65abc850a",
+        "40bd306bb7385e9d21cf2f08257c1bade6f52b02d9ba85d9f7ddbf1f7218a600"
+      ],
+      "aiBinaryHashes": [
+        "312a0de02c652ca4f868d59a51e49e6dd8ae3c85209337e2757f14c6f68770c6",
+        "c4e2a3c326dfbf70c3292d52bb1b3b7bfb0b2a32b280451fcae4dd8171ad8068"
+      ],
+      "sdkSourceHash": "e07ba50d2999e065df792271f61ffc8e30c6142ba7282499e09cd11315a8a933"
+    },
+    {
+      "type": "cpp-ai-match",
+      "completed": true,
+      "forfeit": false,
+      "faultSide": -1,
+      "failures": [
+        null,
+        null
+      ],
+      "cpuBudgetEnforced": true,
+      "wallMilliseconds": 100,
+      "cpuMilliseconds": 10,
+      "timeouts": [
+        0,
+        0
+      ],
+      "observedPeakWorkingSetBytes": [
+        3063808,
+        3084288
+      ],
+      "stateHash": "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870",
+      "aiSourceHashes": [
+        "40bd306bb7385e9d21cf2f08257c1bade6f52b02d9ba85d9f7ddbf1f7218a600",
+        "ee54c3a28c300d4e2774627540c96173cdb879ce42f7d304da19b8f65abc850a"
+      ],
+      "aiBinaryHashes": [
+        "c4e2a3c326dfbf70c3292d52bb1b3b7bfb0b2a32b280451fcae4dd8171ad8068",
+        "312a0de02c652ca4f868d59a51e49e6dd8ae3c85209337e2757f14c6f68770c6"
+      ],
+      "sdkSourceHash": "e07ba50d2999e065df792271f61ffc8e30c6142ba7282499e09cd11315a8a933"
+    }
+  ],
+  "ubuntuBridgeCases": 10,
+  "ubuntuCpuViolationMeasurementsMilliseconds": [
+    25.057139,
+    25.066337,
+    25.061048
+  ],
+  "ubuntuCpuThreeTimeoutForfeit": {
+    "type": "cpp-ai-match",
+    "completed": false,
+    "forfeit": true,
+    "faultSide": 0,
+    "failures": [
+      "Three computation timeouts.",
+      null
+    ],
+    "cpuBudgetEnforced": true,
+    "wallMilliseconds": 100,
+    "cpuMilliseconds": 10,
+    "timeouts": [
+      3,
+      0
+    ],
+    "observedPeakWorkingSetBytes": [
+      2998272,
+      2879488
+    ],
+    "stateHash": "7a957ff5ba3b9057142cc54965d41945da5248f8a316ba5b3365fb4601a656c7",
+    "aiSourceHashes": [
+      "",
+      "ee54c3a28c300d4e2774627540c96173cdb879ce42f7d304da19b8f65abc850a"
+    ],
+    "aiBinaryHashes": [
+      "ad9cfd7677813604b2c7fcee03495a8497516c659c63fa40440860df2ab8f16f",
+      "33add443ac6f33846d51c649795b168157e1ebf96c5be296da5ba5a9421e949c"
+    ],
+    "sdkSourceHash": "14b7a10c580a759a6d1931b85a5e362cd66ee0726705b81318dec3335198c7e2"
+  },
+  "windowsNative": {
+    "status": "full-rules-completed",
+    "tick": 9000,
+    "scoresHalf": [
+      420,
+      440
+    ],
+    "stateHash": "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e"
+  },
+  "ubuntuNative": {
+    "status": "full-rules-completed",
+    "tick": 9000,
+    "scoresHalf": [
+      420,
+      440
+    ],
+    "stateHash": "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e"
+  },
+  "ubuntuNativeCpuEnforced": true,
+  "ubuntuNativeTimeouts": [
+    0,
+    0
+  ],
+  "unityFullReplayAndUi": "passed-9001-frames-and-weather-and-radio-links",
+  "unityActualCppReplayViewer": "passed-9001-frames",
+  "unityForfeitReplayViewer": "passed-ticks-0-to-2",
+  "crossPlatformGameHashesEqual": true,
+  "remaining": [
+    "untrusted-code-isolation",
+    "isolated-compilation",
+    "account-and-source-submission",
+    "persistent-full-match-worker",
+    "infrastructure-retry",
+    "production-authorized-spectating",
+    "baseline-editor-import"
+  ],
+  "notes": [
+    "One Ubuntu managed-game frame exceeded a budget and was dropped; no forfeit. Native Ubuntu had zero timeouts.",
+    "AI source hashes identify owned example sources; SDK aggregate hashes reflect files present before each run.",
+    "Memory checks are observed working-set checks for trusted programs; forced kernel isolation is pending.",
+    "Rule R19 is approved separately in fixtures/rules/addendum-v1.json; R01-R18 original digest is unchanged."
+  ],
+  "localEvidenceDirectory": "artifacts/stage45"
+}

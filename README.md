@@ -1,128 +1,179 @@
 # 电波接力 · Turing Signal Relay
 
-第十九届图灵杯“强军·电波 2027”比赛系统。GitHub 仓库：[kanfeng-eng/Turing-Signal-Relay](https://github.com/kanfeng-eng/Turing-Signal-Relay)。
+第十九届图灵杯“强军·电波 2027”比赛系统，使用C#规则核心、Unity 2D观战客户端和C++17选手AI。仓库地址为[kanfeng-eng/Turing-Signal-Relay](https://github.com/kanfeng-eng/Turing-Signal-Relay)。
 
-**当前状态（2026-11-03）：需求与五人协作文档已建立，GitHub 远程仓库已创建；尚无 Unity 工程、服务端代码或可运行游戏。本文中的模块路径和启动入口是后续实现约定，不代表已经存在。**
+## 公网访问
 
-## 1. 已确认的目标
+浏览器直接打开[平台登录页](http://111.231.101.147/Login)，由裁判分配队伍账号后上传ai.cpp、参加评测和下载结果。HTTP以明文传输登录信息与令牌，使用本项目专用密码。
 
-- 五人通过 GitHub 协作，成员编号固定为 1、2、3、4、5。
-- C# + Unity，2D 俯视；不使用 Phaser。
-- 正式比赛游戏、本地 C++17 AI 对战、实时观战、离线回放。
-- Ubuntu 上的服务器评测、源码提交管理、编译和运行沙箱。
-- 单位只接受 AI 指令；观众可操作镜头、暂停离线回放等，不可控制单位。
-- 不制作预热竞猜网页。提交管理页面属于正赛平台，仍在范围内。
-- 基本玩法：96×96 地图、180°旋转对称、每局 9000 tick、每秒 10 tick、双局换边、公平计分。
+观看游戏画面时，下载并完整解压[Windows客户端](http://111.231.101.147/downloads/TuringSignalRelay-windows.zip)，运行TuringSignalRelay.exe，再打开examples/game-1.replay.json。在线比赛在平台结果页生成观战地址与令牌，填入Unity侧栏连接。选手接口见[C++17 SDK下载](http://111.231.101.147/downloads/TuringSignalRelay-sdk.zip)。
 
-## 2. 技术基线
+发布版本为1.0.0 RC1，工程与构建统一使用Unity6000.6.8f1。公网发布与剩余验证范围见[本轮发布记录](docs/PUBLIC_RELEASE.json)。
 
-以下是本次制定的工程方案；规则争议另见[规则台账](docs/RULES.md)，不视为用户已确认的赛事规则。
+## 首次使用
 
-| 用途 | 选择 |
+| 你要做什么 | 阅读与运行入口 |
 | --- | --- |
-| 开发系统 | Windows 11 x64 为团队主验收环境；Windows 10 机器须先通过相同工程的打开和构建检查 |
-| Unity | Unity 6.3 LTS，统一锁定 `6000.3.26f1`，禁止个人升级 |
-| 客户端 | Unity 2D，先用基础精灵和 UI，不以商业素材作为联调前提 |
-| 正式裁判 | 同工程构建 Linux Dedicated Server，共用 C# 规则核心 |
-| 服务器 | Ubuntu Server 24.04 LTS，x86_64；当前未部署验证 |
-| 提交平台 | ASP.NET Core / .NET 10 LTS；单体服务、SQLite、磁盘产物，先支持单机部署 |
-| AI | C++17 SDK；提交 `ai.cpp`，正式环境统一编译，不接收用户可执行文件 |
-| 隔离 | 独立低权限评测 worker，编译和运行均隔离；具体沙箱执行器由 5 号提交小型验证后定稿 |
-| 对接 | 版本化 JSON Lines，C++ SDK 封装传输；UTF-8；命令、回放协议见接口文档 |
+| 看一场完整比赛 | [如何玩这个游戏的使用报告](docs/如何玩这个游戏的使用报告.md)，从Windows包加载examples中的两局回放 |
+| 写AI参加比赛 | [C++ SDK](sdk/cpp/README.md)，用裁判分配的账号提交UTF-8的ai.cpp |
+| 理解架构和实现 | [完成这个游戏的技术报告](docs/完成这个游戏的技术报告.md) |
+| 查看最终发布裁定 | [发布验收报告](docs/发布验收报告.md)与[机器记录](docs/STAGE8_VALIDATION.json) |
+| 构建与部署 | [发布说明](docs/RELEASE.md)和[Ubuntu部署手册](deploy/README.md) |
+| 接手继续开发 | [ChatGPT与Desktop Commander Remote交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md) |
 
-不增加人类玩家联网对战框架。服务端是权威裁判，客户端仅显示快照；客户端和服务器不各写一套规则。
+将TuringSignalRelay-windows.zip完整解压到一个新目录，运行TuringSignalRelay.exe。在右侧输入examples/game-1.replay.json的完整路径并点击“打开回放”，再点击“播放”。另一局为game-2.replay.json。客户端提供单步、倍速、时间轴、阵营视角、镜头拖动、缩放及单位跟随。
 
-官方核实依据（2026-11-03）：[Unity 补丁版本](https://unity.com/releases/editor/whats-new/6000.3.26f1)、[Unity 系统要求](https://docs.unity3d.com/6000.3/Documentation/Manual/system-requirements.html)、[Linux Server 构建方式](https://docs.unity3d.com/6000.3/Documentation/Manual/dedicated-server-build.html)、[.NET 支持周期](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)。补丁选择是可复现基线，不声称是最新补丁；实际构建验证前不宣称兼容通过。
+选手通过AI程序控制单位，观战客户端用于查看状态与回放。正式比赛由裁判安排两支不同队伍的就绪提交，第二局自动换边。账号、上传、在线观战与故障处理的逐步操作见使用报告。
 
-## 3. 按编号开始工作
+## 当前状态
 
-| 编号 | 主责 | 第一项任务 | 上手文档 |
-| --- | --- | --- | --- |
-| 1 | 集成负责人、tick 主循环、共享类型、构建 | 创建统一 Unity 工程，合入最小 tick 演示 | [1 号 README](docs/team/1/README.md) |
-| 2 | 地图、移动、A*、渡口与过桥队列 | 给出对称且可达的测试地图与移动演示 | [2 号 README](docs/team/2/README.md) |
-| 3 | 通信链路、报文、资源建设与计分 | 给出最小送报得分和逐项分账测试 | [3 号 README](docs/team/3/README.md) |
-| 4 | Unity 画面、观战、回放查看器 | 用模拟快照画出地图和单位 | [4 号 README](docs/team/4/README.md) |
-| 5 | C++ SDK、AI 进程、提交平台、Linux 沙箱 | 完成隔离的 C++ 编译与一帧指令往返 | [5 号 README](docs/team/5/README.md) |
+更新于2026-11-07。当前由用户个人承担全部五个模块。
 
-5 号任务较重：1 号承担 headless 构建和 worker 调度集成；3 号承担结算明细与回放数据；4 号承担提交/裁判页面的简单布局；5 号主攻协议桥接与隔离。交接边界写入各自指南。
+用户已取消原Unity版本限制，当前采用已验证的6000.6.8f1统一构建，并按用户选择启用服务器IP的HTTP访问。干净Ubuntu从零安装继续单独列为待验项，本次采用RC预发布。此前版本调整前的⑧结论保留于[验收报告](docs/发布验收报告.md)。
 
-### 每个人具体用什么，交付什么
+本轮5份交付包位于本机`artifacts/release-http/delivery`，源码基点为干净提交cbb4135，包含Windows观战、Linux原生裁判、正式服务、SDK和源码。原阶段7的5份包继续保留各自构建来源与摘要。操作见[发布说明](docs/RELEASE.md)。
 
-| 编号 | 必须使用的技术栈 | 要做出的具体成果 |
-| --- | --- | --- |
-| 1 | C#、Unity工程/asmdef、固定tick、Unity Editor构建API、JSONL文件读写；协助部分用.NET 10进程管理 | 全员共用的Unity工程；规则推进器；Windows观战包与Linux裁判包；回放写入；worker调用裁判的MatchRunner |
-| 2 | 纯C#、二维数组/集合、A*、队列、固定点/整数tick、Unity Test Framework | 对称地图；可达路径；按地形速度移动的单位；渡口/桥排队；每方可见信息集合 |
-| 3 | 纯C#、图连通搜索、状态机、事件调度、整数半分账本、Unity Test Framework | 可通断的通信网络；报文/器材/建设系统；天气与终局；可审计的得分明细和胜负结果 |
-| 4 | C#、Unity Tilemap/SpriteRenderer、LineRenderer、uGUI/TextMeshPro、UnityWebRequest；网页部分用Razor/HTML/CSS | 地图与单位画面；链路/迷雾；观战面板；可暂停跳转的回放播放器；提交/裁判/结果页面布局 |
-| 5 | C++17/GCC、nlohmann/json；C#/.NET 10/ASP.NET Core/Razor Pages/Identity/EF Core SQLite；Ubuntu/nsjail/systemd | C++ SDK和样例AI；AI进程桥；账号与提交API；隔离编译/运行；持久化评测任务；Ubuntu部署 |
+用户本轮“⑤完整玩法、⑥正式沙箱”的实现、边界修复与扩展验收见[⑤⑥说明](docs/STAGES_5_6.md)和[机器记录](docs/STAGE56_VALIDATION.json)。完整规则检查扩展为76项，新增台站缓存与预备沙箱回收回归。
 
-表中是工程实现基线，具体依赖补丁由负责人在首个PR锁定；nsjail需先通过目标宿主验证。**不要求每个人学会整张表**，只掌握自己一行及与相邻成员的接口。技术选择、完整目录和交接清单见[技术栈与联调手册](docs/IMPLEMENTATION_GUIDE.md)，每个编号指南另有文件级任务表。
+- 完整玩法、本地双AI对战、双局换边和可校验回放已接通，功能集为`relay-full-v1`，协议2。
+- 5号的账号、源码提交、隔离编译、持久化评测、下载与观战接口已实现并部署到Ubuntu，当前构建已通过网页上传到双局结果的完整检查。
+- Ubuntu的14项沙箱检查、文件违规与三次CPU超时判负、Worker重启恢复、6路并发上传限额及备份恢复实测通过，证据见[平台验收记录](docs/PLATFORM_VALIDATION.json)。
+- Unity工程版本和本轮构建版本均为`6000.6.8f1`。使用PublicSource生成的源码副本完成导入与构建，元数据分别记录源码与版本。
 
-## 4. 拉取后的操作顺序
+开发分支为`feat/1-bootstrap`，本轮程序包源码基点为`cbb4135`。本机工作区为`C:\Users\kanfe\Desktop\图灵杯`。接手前核对Git状态和远程分支最新提交，保留本机验证产物与私有登录资料。
 
-### 工程初始化前
+使用网页端ChatGPT与Desktop Commander Remote接手时，全文复制[交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md)。其中包含当前证据、剩余任务、工具路径和服务器现场。
 
-拉取仓库后，先阅读本 README → [环境准备](docs/ENVIRONMENT.md) → 自己编号的 README。可以安装环境、拆 Issue、编写协议样例和测试设计。
+## 已确认的产品与技术方案
 
-**只有 1 号创建 `game/` Unity 工程；其余人不得各建一个工程后互相覆盖。** M0 合入前，2—5 号在各自约定目录准备独立内容，4 号可先画 UI 草图，不提交另一个 Unity 工程。
+| 项目 | 当前方案 |
+| --- | --- |
+| 游戏 | C# + Unity，2D俯视，单位仅接受AI指令 |
+| 比赛 | 96×96旋转对称地图，每秒10 tick，每局9000 tick，双局同种子换边 |
+| 正式裁判 | .NET10 Worker直接引用Unity工程同一份纯C#规则源码，用户已确认此宿主方案 |
+| 客户端 | Unity观战、镜头、迷雾、离线回放和授权快照轮询 |
+| AI | C++17 SDK，提交UTF-8的`ai.cpp`，最大256 KiB，由服务器统一编译 |
+| 平台 | ASP.NET Core Identity、Razor Pages、EF Core10、SQLite和磁盘产物 |
+| 账号 | 裁判统一创建队伍及选手账号，同队共享提交与比赛记录 |
+| 隔离 | nsjail、命名空间、seccomp、cgroup v2，编译和运行使用分别配置的策略 |
+| 部署 | Ubuntu24.04 x86_64、专用平台/Worker账号、systemd、Nginx公网HTTP与SSH隧道 |
+| 规则 | signal-relay-1.0，R01—R18全部批准A，R19采用己方兵站与中央公共器材权限 |
 
-### 克隆与建立任务分支
+Unity Linux Dedicated Server保留为原生构建与一致性验证入口。平台裁判和Unity客户端共用规则源码，确定性整数状态与动作重演支撑跨宿主校验。
 
-下面的克隆地址可直接使用；推送任务分支前需要仓库拥有者邀请你成为协作者。
+规则依据与确认记录见[规则台账](docs/RULES.md)、[批准选择](docs/RULE_DECISIONS.md)及`fixtures/rules/`。当前范围包括正赛提交评测平台、正式游戏、AI对战、观战与回放。
+
+## 从哪里开始
+
+| 目的 | 入口 |
+| --- | --- |
+| 接手本机未完成工作 | [ChatGPT + Desktop Commander Remote交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md) |
+| 开发或使用平台 | [5号平台说明](docs/PLATFORM.md) |
+| 安装、更新、备份或恢复服务器 | [Ubuntu部署手册](deploy/README.md) |
+| 编写AI、编译样例 | [C++ SDK说明](sdk/cpp/README.md) |
+| 理解完整规则与C++闭环 | [路线④⑤实现说明](docs/STAGES_4_5.md) |
+| 理解正式数据、移动和平报 | [路线①②③实现说明](docs/STAGES_1_3.md) |
+| Unity安装与独立副本验证 | [开发环境](docs/ENVIRONMENT.md) |
+| 代码来源、素材和第三方复用 | [复用记录](docs/REUSE.md) |
+
+原编号仍用于定位职责，分别为1号集成裁判、2号地图移动、3号规则计分、4号显示回放、5号SDK与平台。原协作指南保留在[1号](docs/team/1/README.md)、[2号](docs/team/2/README.md)、[3号](docs/team/3/README.md)、[4号](docs/team/4/README.md)、[5号](docs/team/5/README.md)。这些指南中的早期任务规划结合本页当前状态阅读。
+
+## 从源码上手
 
 ```powershell
-git clone https://github.com/kanfeng-eng/Turing-Signal-Relay.git
-cd Turing-Signal-Relay
-git switch -c feat/1-bootstrap
+git clone --branch feat/1-bootstrap https://github.com/kanfeng-eng/Turing-Signal-Relay.git
+Set-Location Turing-Signal-Relay
+dotnet restore server/Platform/Platform.csproj --locked-mode
+dotnet restore server/Worker/Worker.csproj --locked-mode
+dotnet build server/Platform/Platform.csproj --no-restore
+dotnet build server/Worker/Worker.csproj --no-restore
 ```
 
-将 `1-bootstrap` 换成自己的编号与任务，例如 `2-pathfinding`。日常分支、PR、Scene 协作见 [GitHub 协作约定](CONTRIBUTING.md)。
+Windows开发环境使用.NET10 SDK及C++17 x64工具链，Unity工程位于game。团队Editor版本写在game/ProjectSettings/ProjectVersion.txt。独立副本的导入、构建与版本边界见后文命令和[环境说明](docs/ENVIRONMENT.md)。新机器首先运行源码校验与可信样例检查，再连接正式评测服务。
 
-M0 合入后：Unity Hub → Add project from disk → 选择 `game/` → 用锁定版本打开 → 打开 `Assets/Game/Scenes/Bootstrap.unity` → Play。此入口由 1 号实现，当前尚不存在。
+## 本机快速验证
 
-首次打开成功标准：Console 无编译错误、能看到 tick 计数递增、暂停恢复正常。后续在同场景选择本地两支样例 AI 进行演示，控制项由 1、4、5 号在 M1 接通。
+在仓库根目录的PowerShell执行。本机.NET10 SDK已安装在下面的路径，其他机器可替换为自己的SDK位置。
 
-## 5. 约定的目标目录
+```powershell
+$relayDotnet = 'D:\kanfe\dotnet10\dotnet.exe'
+& $relayDotnet build server/Platform/Platform.csproj --nologo
+& $relayDotnet build server/Worker/Worker.csproj --nologo
+./tools/check-local-match.ps1 -Dotnet $relayDotnet
+```
 
-以下是目标结构，当前只交付文档及 Git 配置，未创建游戏目录。
+`check-local-match.ps1`需要Visual Studio C++17 x64工具链，会创建新的产物目录，编译样例AI并执行规则、进程、双局和故障检查。完成标志为`LOCAL_MATCH_CHECKS_PASSED`。
+
+仅复验规则、旧Worker或源码结构时使用以下入口。报告与输出目录选择新名字。
+
+```powershell
+& $relayDotnet run --project tools/RelayRunner/RelayRunner.csproj -- full-check "$PWD" "$PWD/artifacts/NEW_FULL_CHECK"
+& $relayDotnet run --project server/Worker.Checks/Worker.Checks.csproj -- artifacts/NEW_WORKER_CHECK
+python tools/verify-source.py --output artifacts/NEW_SOURCE_REPORT.json
+git diff --check
+```
+
+Unity验证使用独立源码副本，脚本会返回副本位置和完成标志。
+
+```powershell
+./tools/run-unity-check.ps1 -EditorDirectory 'C:\Program Files\Unity\Hub\Editor\6000.6.8f1\Editor' -PublicSource -Action Check
+```
+
+观战场景为`game/Assets/Game/Scenes/Observer.unity`。完整对局生成的`relay.replay.json`可通过正常打开回放入口加载。
+
+## 使用已部署平台
+
+公网直接打开[平台登录页](http://111.231.101.147/Login)。使用SSH隧道时运行以下命令并保持终端运行，再访问http://127.0.0.1:5188/Login。
 
 ```text
-README.md / CONTRIBUTING.md
-docs/
-  ENVIRONMENT.md / ARCHITECTURE.md / CONTRACTS.md / RULES.md / MILESTONES.md
-  team/1..5/README.md
-game/                             # 1号唯一初始化
-  Assets/Game/
-    Core/                         # 1号：纯C#类型、tick、命令入口
-    World/                        # 2号：地图、移动、可见性
-    Rules/                        # 3号：链路、任务、计分
-    Presentation/                 # 4号：画面、镜头、UI
-    Integration/                  # 5号：AI进程与数据桥；headless入口由1号负责
-    Editor/                       # 1号：构建入口
-    Tests/                        # 按负责人分子目录
-    Scenes/ / Prefabs/ / Art/      # 4号主责；Bootstrap场景由1号集成
-  Packages/ / ProjectSettings/
-sdk/cpp/                          # 5号：C++17 SDK与样例AI
-server/                           # 5号：提交API、worker；4号协助页面
-deploy/                           # 5号：Ubuntu部署与沙箱配置
-fixtures/                         # 各负责人提供可复现输入、期望结果
+ssh -N -L 5188:127.0.0.1:5188 ubuntu@YOUR_SERVER
 ```
 
-## 6. 工作顺序与验收
+裁判创建队伍账号，选手上传`ai.cpp`并查看编译状态，裁判再选择两支不同队伍的就绪提交发起双局。结果页提供总分、分账、回放和运行日志，也可生成一小时有效的本场只读观战令牌。
 
-1. **M0 环境和契约**：全员同版本打开工程，协议样例一致；规则疑点登记。
-2. **M1 最小闭环**：两支 C++ AI → 移动 → 送一份平报 → 得分 → 保存并查看回放。
-3. **M2 完整规则**：地形、单位能力、四类报文、天气、终局与换边计分；阻塞规则全部定稿。
-4. **M3 Ubuntu 评测**：上传源码 → 隔离编译 → 双局评测 → 日志、回放与结果可查。
-5. **M4 正式发布**：冻结版本及配置、完整 9000 tick、重放一致、异常用例和恢复流程通过。
+正式Worker在Ubuntu执行隔离编译和评测。Windows可用于平台页面开发和受信任样例的本地协议测试。服务器安装、权限、API和配额详情见[平台说明](docs/PLATFORM.md)与[部署手册](deploy/README.md)。
 
-每项验收的证据见[里程碑](docs/MILESTONES.md)。没有给定交付日期，因此不虚构排期；1 号在 M0 收集工时后补充实际日期。
+初始裁判凭据保存在本机私有的`artifacts/stage5/initial-judge.json`。交接提示词提供服务器连接信息和凭据文件位置。
 
-## 7. 先读这些约定
+## 目录与模块
 
-- [架构与模块归属](docs/ARCHITECTURE.md)
-- [共享接口草案与冻结办法](docs/CONTRACTS.md)
-- [原文规则、矛盾与待确认项](docs/RULES.md)
-- 原始依据：本地审阅的《第十九届中兴图灵杯人工智能程序设计大赛策划案（1）.docx》第 4 章及附录 A—C；原件未随公开仓库发布，规则摘录和疑点见规则台账。
+```text
+game/Assets/Game/
+  Core/                 共享类型、整数状态与摘要
+  World/                地图、路径、占用、过河与视野
+  Rules/                通信、报文、资源、建设和计分
+  Integration/          比赛引擎、AI管道、回放、双局与headless入口
+  Presentation/         Unity观战、镜头、面板与回放播放器
+  Editor/               构建与Unity检查
+sdk/cpp/                固定依赖、SDK、样例与故障程序
+server/
+  Evaluation/           共享规则引用、数据库、迁移、沙箱和评测流程
+  Platform/             认证、页面、提交、裁判及查询接口
+  Worker/               正式评测循环及旧Bootstrap调度入口
+  Worker.Checks/        子进程回归
+deploy/                 nsjail、策略、systemd、部署和备份恢复
+fixtures/               协议、地图、批准规则及沙箱样例
+tools/                  编译、检查、构建和打包工具
+docs/                   规则、实现说明、验收记录和交接
+artifacts/              本机验证产物与私有运行资料
+```
 
-AI 可以辅助编码，但提交者必须能够解释关键状态变化、运行验证并审查依赖。完成标志是可复现验收证据，不是“代码已经生成”。
+## 已有证据与剩余验收
+
+| 范围 | 证据及状态 |
+| --- | --- |
+| 正式数据与移动平报 | 52项逻辑检查及9000tick，见[阶段记录](docs/STAGE123_VALIDATION.json) |
+| 完整规则与本地AI | 当前76项、52项旧逻辑与9项进程检查通过，双局各9000tick，见[⑤⑥记录](docs/STAGE56_VALIDATION.json)；原生对照保留于[此前记录](docs/STAGE45_VALIDATION.json) |
+| 旧Worker回归 | Windows与Ubuntu各24项通过，当前记录见[公网发布](docs/PUBLIC_RELEASE.json) |
+| 平台正常全流程 | 公网部署通过，位于`artifacts/release-http/public-platform/CHECKS.json` |
+| Ubuntu沙箱 | 新一轮14项通过，驻留内存增长至约252.9 MiB后受限，本机报告为`artifacts/stage56/sandbox-checks.json` |
+| 数据迁移与备份 | 恢复到独立目录通过，7个账号、5份源码、3份产物及登录/下载核验成功 |
+| 故障与恢复 | 文件违规、三次CPU超时判负、最终快照、日志授权和重启后第二次尝试通过 |
+| 正式沙箱扩展 | 11种单方违规、双方同时违规及SIGKILL后恢复共13项通过，预备沙箱回收回归通过 |
+| 并发与幂等 | 同队6次并发上传仅接受5份，同一请求重复发起及冲突拒绝通过 |
+| Unity授权观战 | 独立副本连接正式接口的4项快照检查通过，含正常与故障终局 |
+| 发布与回滚 | 同一构建发布到新版本目录再回滚，服务健康与数据库计数一致 |
+
+当前部署与交付摘要见[公网发布记录](docs/PUBLIC_RELEASE.json)，⑤⑥细节见[完整玩法与沙箱验收](docs/STAGE56_VALIDATION.json)，此前账号、队列与备份恢复证据保留在[平台验收记录](docs/PLATFORM_VALIDATION.json)。接手操作与复验顺序见[交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md)。
+
+原策划案与完整旧工程保留在本地，已迁入的自有代码和精灵有来源记录。贡献与分支约定见[CONTRIBUTING](CONTRIBUTING.md)。

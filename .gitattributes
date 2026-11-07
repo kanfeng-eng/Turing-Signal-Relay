@@ -4,6 +4,7 @@
 *.cpp text eol=lf
 *.h text eol=lf
 *.hpp text eol=lf
+sdk/cpp/third_party/nlohmann/LICENSE.MIT text eol=lf whitespace=-blank-at-eol
 *.json text eol=lf
 *.asmdef text eol=lf
 *.meta text eol=lf
@@ -11,6 +12,8 @@
 *.prefab text eol=lf
 *.asset text eol=lf
 *.sh text eol=lf
+*.policy text eol=lf
+deploy/**/*.py text eol=lf
 *.ps1 text eol=crlf
 *.png binary
 *.jpg binary

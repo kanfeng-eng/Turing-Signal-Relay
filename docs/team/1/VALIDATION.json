@@ -1,0 +1,217 @@
+{
+  "date": "2026-11-04",
+  "stage": "roles-1-and-4-observer-network-regression-fixes",
+  "teamEditor": "6000.3.26f1",
+  "teamVersionFileUnchanged": true,
+  "developmentEditor": "6000.6.8f1",
+  "developmentMode": "isolated-fresh-copy",
+  "buildOptions": "None",
+  "pureLogicChecks": "passed",
+  "baselineUnityApiStaticCompilation": "passed-with-ugui-2.0.0-assembly-imported-by-development-editor",
+  "baselineUnityImport": "blocked-UPM-HTTP500",
+  "baselinePlayAndBuilds": "pending",
+  "metadataGuids": 47,
+  "assemblyCount": 7,
+  "assemblyGraph": "passed",
+  "localMarkdownLinksChecked": 57,
+  "developmentImportsAndBuilds": "passed",
+  "observerUiControls": {
+    "buttons": 14,
+    "inputFields": 3,
+    "timelineAndMapInitialization": "passed"
+  },
+  "publicSourceWithoutLegacyArt": "passed-sprites-0",
+  "bootstrapReplaySnapshots": 9001,
+  "observerFixtureFrames": 301,
+  "windowsGui": "current-build-launched-and-step-0-to-1-verified; full-unchanged-controls-checked-in-9499d4b",
+  "windowsHeadlessCases": {
+    "default": {
+      "exitCode": 0,
+      "completionMarker": true
+    },
+    "repeat": {
+      "exitCode": 0,
+      "completionMarker": true
+    },
+    "configured": {
+      "exitCode": 0,
+      "completionMarker": true
+    },
+    "invalid-config": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "missing-value": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "option-as-value": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "duplicate-option": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "unknown-option": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "missing-replay": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "refuse-overwrite": {
+      "exitCode": 1,
+      "completionMarker": false
+    }
+  },
+  "ubuntuOS": "24.04.4-x86_64",
+  "ubuntuExecution": "passed-latest-delivery-sha256-verified-10-headless-cases-and-worker-checks",
+  "crossPlatformFinalStateHash": "47683abf831ae7c667b7b3f7f657355ba55fc8da133145ba98bccc4f9b073423",
+  "workerChecks": [
+    "two-successful-games",
+    "exit-7",
+    "exit-0-without-result",
+    "timeout-process-tree-reaped",
+    "concurrent-single-output-owner"
+  ],
+  "workerBuildWarnings": "2 CS8618 warnings in linked Unity DTO on clean nullable build",
+  "platformHttp": "four-pages-and-css-200-Ubuntu",
+  "platformLayout": "Ubuntu-response-HTML-with-inline-original-CSS-rendered-offline-in-Edge-at-1280-and-375-no-document-overflow",
+  "windowsWebPreview": "start-rejected-by-automatic-review-blocked-by-policy",
+  "allCSharpSourcesIdenticalInBuildCopies": true,
+  "evidenceRuns": {
+    "windows": "development-6000.6.8f1-5d2941e130fd4ab4a99a28ea05baa285",
+    "linux": "development-6000.6.8f1-211ca335e0124528bbbefc9b9fa94d92",
+    "public": "observer-network-public-check",
+    "windowsHeadless": "observer-network-headless-checks",
+    "ubuntu": "user-directory/turing-signal-relay/validation-20261104",
+    "observerNetwork": "observer-network-release.log",
+    "ubuntuHeadless": "network-headless-checks",
+    "ubuntuWorker": "worker-network-*"
+  },
+  "sourceSha256": {
+    "game/Assets/Game/Core/BootstrapStateHash.cs": "2628fff67b4c30a1889be42bb403e3c5c38276459a5a28d1d5b3a006e699a370",
+    "game/Assets/Game/Core/Models.cs": "ccdffdbf23160484e420be00d52df2e4de15eb6a2c942ec690607899533fe583",
+    "game/Assets/Game/Core/TickClock.cs": "9e69551e44673098d9b6f3ca3eac464ffd7f6e23bee24a795c218907cea0851f",
+    "game/Assets/Game/Editor/BuildGame.cs": "25c367a75ef3a1952374e91c8e236c9c11a9d3af0550235fe7b2a72b8c31bfe1",
+    "game/Assets/Game/Editor/LegacyArt.cs": "ae30d5ded4bf2ead1a3c78a1b2b074a59b1012a6988857376aed56dd1c55a497",
+    "game/Assets/Game/Editor/ObserverChecks.cs": "2902bb5d31f79029b435150f0a0777bb33947eddeaa3741de9c1d91ebc5fb2eb",
+    "game/Assets/Game/Editor/ObserverNetworkChecks.cs": "cad4c5c95dcfa72dd517cdbb811798aa8833c133988d5fa87a116283d23ec687",
+    "game/Assets/Game/Editor/SmokeChecks.cs": "c007fbf22ace78e0ae2d2a2c38172d828fa8c3f5854f2ea3bc7a980bdd599d46",
+    "game/Assets/Game/Integration/BootstrapController.cs": "b1492ab495940fe8f44d3490a8ab8adb69f8e963c2b5842822ee99dd66ef87f5",
+    "game/Assets/Game/Integration/Headless/HeadlessEntry.cs": "06c003787bbe8fad83234f330d0b8dd61320945d7fbecd2444fe85a367e57236",
+    "game/Assets/Game/Integration/MatchEngine.cs": "6a743863d7d9056f1cc9ee28ad0e6bc60f13772bc1e57a82ae19bbd16d41a52d",
+    "game/Assets/Game/Integration/Replay/BootstrapReplay.cs": "7c1e8a3cd8a2f3ea404bf87bb5fe5666a7ec6d1c2d623b55ac1698cbfce1eb20",
+    "game/Assets/Game/Presentation/LiveFrameBuffer.cs": "51bbac4ed7ff3d4f40ec6ae35b818277ea1285a4946a8eed01f35262a4673e56",
+    "game/Assets/Game/Presentation/ObserverController.cs": "df07f4eff6d52d9969565ae42e99d5bffbe1609b55ce1fc515f2fed7e933eb03",
+    "game/Assets/Game/Presentation/ObserverFrame.cs": "ca2ffefe9600ece6799a63e281003bbfef3a1377c59b98e8fcecfba1bdb11d9d",
+    "game/Assets/Game/Presentation/ObserverGraph.cs": "9d284ba0f986817f1226d65a98d1bc8dbfbf41022f77a40983736a28ae8c8a84",
+    "game/Assets/Game/Presentation/ObserverHud.cs": "9fcac48638bb226bf8d6b11ed9e7c0ae123c81a3762f1fb53fb3bdeff88da476",
+    "game/Assets/Game/Presentation/ObserverMap.cs": "aa53f5dc2f1bd62e6f6f6cf0fa1a8a3856c7a2def2454e607e89e0266afc0df9",
+    "game/Assets/Game/Presentation/ObserverPlayback.cs": "f0957e65f1e39cb1761df4119069f62fcabe9bb45805cb4d189cc2bc9a7f3051",
+    "game/Assets/Game/Tests/Core/BootstrapChecks.cs": "c7c80b2f854f6558e6ab908ce22644a5b8165906f64fdc5c8ae60665f5acd6f3"
+  },
+  "deliveryArtifacts": {
+    "artifacts/delivery/observer-network/TuringSignalRelay-observer-network-linux.tar.gz": {
+      "bytes": 31125173,
+      "sha256": "178a33ff5979b4ec7e4671f20597d116b0bba688c37db417387fa6dd3e302ee4"
+    },
+    "artifacts/delivery/observer-network/TuringSignalRelay-observer-network-windows.zip": {
+      "bytes": 36271320,
+      "sha256": "b82da96fdbd4e0f3554d66dab7e8a0d6737f873efa99e02e4ecc98600e4625c0"
+    }
+  },
+  "legacyArt": {
+    "selectedFbx": 13,
+    "publication": "local-only-license-confirmation-pending",
+    "publicFallback": "basic-colored-markers"
+  },
+  "pending": [
+    "roles-2-and-3-authoritative-world-and-rules",
+    "role-5-MatchJob-AI-sandbox-platform-and-authorized-observer-endpoint",
+    "baseline-editor-runtime-verification",
+    "independent-team-clone-acceptance",
+    "legacy-art-license-records"
+  ],
+  "ubuntuHeadlessCases": {
+    "default": {
+      "exitCode": 0,
+      "completionMarker": true
+    },
+    "repeat": {
+      "exitCode": 0,
+      "completionMarker": true
+    },
+    "configured": {
+      "exitCode": 0,
+      "completionMarker": true
+    },
+    "invalid-config": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "missing-value": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "option-as-value": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "duplicate-option": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "unknown-option": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "missing-replay": {
+      "exitCode": 1,
+      "completionMarker": false
+    },
+    "refuse-overwrite": {
+      "exitCode": 1,
+      "completionMarker": false
+    }
+  },
+  "observerNetworkChecks": {
+    "status": "passed",
+    "requests": {
+      "/sequence": 7,
+      "/slow": 1,
+      "/fresh": 1,
+      "/redirect": 1,
+      "/unauthorized": 1,
+      "/timeout": 1,
+      "/slow-replay": 1
+    },
+    "authorizationErrors": [],
+    "redirectRequests": 0,
+    "unityLog": "observer-network-release.log",
+    "driver": "Editor drives production Poll iterator and real UnityWebRequest; loopback fixture only",
+    "regressionBeforeFix": "9499d4b controller reproduced pre-pause-response-updated-resumed-display",
+    "covered": [
+      "duplicate-and-old-frame",
+      "JSON-error-preserves-frame",
+      "HTTP503-recovery",
+      "rapid-hold-resume-cancellation",
+      "endpoint-and-token-rotation",
+      "redirect-rejected",
+      "HTTP401",
+      "5-second-timeout",
+      "switch-to-offline-replay",
+      "disposed-request-reference-cleared"
+    ]
+  },
+  "observerFrameValidation": "reject-invalid-duration-tick-and-negative-entity-id-without-buffer-mutation",
+  "bootstrapConfiguredReplayTiming": "passed-20-Hz-3-tick-duration-preserved",
+  "buildRetry": {
+    "failedCopy": "development-6000.6.8f1-499e65af85f9403fbbc16066b042a174",
+    "failure": "Unity MovedFromExtractor exit 1 with no diagnostic output",
+    "serialFreshRetry": "passed",
+    "rootCause": "unconfirmed"
+  }
+}
