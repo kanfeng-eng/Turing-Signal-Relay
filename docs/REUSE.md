@@ -56,3 +56,5 @@ nsjail源码固定为d8415bc8eea43cdd413daba25af63127019a1189，Kafel固定为76
 ASP.NET Core Identity及EF Core SQLite采用官方NuGet 10.0.14包。包内nuspec标记MIT许可，来源固定到dotnet/dotnet的0427b9abbead3fa64c6655eb4290c537397131fa提交。各.NET工程保留packages.lock.json中的版本与内容摘要，复用账号哈希、角色、Data Protection、事务与迁移能力。比赛规则仍直接引用本项目纯C#源码。[官方源码](https://github.com/dotnet/dotnet/tree/0427b9abbead3fa64c6655eb4290c537397131fa)
 
 nsjail与Kafel原始归档摘要分别为b051697310426332b2b60706ce99c0009dd8f77413fe637e35b8bedbe12281fb和b9a99b91af7abc84664803709072ee7f6a787dd3f39686484503154d93ef8f33，校验值写入deploy/sandbox/build-nsjail.sh。14项沙箱和完整平台实测摘要见[验收记录](PLATFORM_VALIDATION.json)。
+
+⑤⑥补齐沿用现有nsjail helper、cgroup目录与规则状态机。本轮核对内核memory.max、memory.peak和memory.events语义，新增实际逐页驻留增长、预备沙箱回收及正式违规回归，结果见[⑤⑥验收](STAGE56_VALIDATION.json)。[内核官方文档](https://docs.kernel.org/admin-guide/cgroup-v2.html)

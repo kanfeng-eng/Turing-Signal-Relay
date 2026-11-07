@@ -16,9 +16,9 @@ public static class EvaluationWorker
         using var termination = PosixSignalRegistration.Create(PosixSignal.SIGTERM, context => { context.Cancel = true; stop.Cancel(); });
         var options = new DbContextOptionsBuilder<ContestDb>().UseSqlite(paths.ConnectionString).Options;
         var sandbox = new SandboxClient(paths);
-        foreach (string launcher in Directory.EnumerateFiles(paths.File("matches"), "launch-*", SearchOption.AllDirectories))
+        foreach (string directory in Directory.EnumerateDirectories("/var/lib/tsr-sandbox/runs"))
         {
-            string token = Path.GetFileName(launcher)[7..];
+            string token = Path.GetFileName(directory);
             if (Guid.TryParseExact(token, "N", out _)) await sandbox.InvokeAsync("release", token, null, null, stop.Token);
         }
         using (var initial = new ContestDb(options))

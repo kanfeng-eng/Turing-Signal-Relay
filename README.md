@@ -6,6 +6,8 @@
 
 更新于2026-11-07。当前由用户个人承担全部五个模块。
 
+用户本轮“⑤完整玩法、⑥正式沙箱”的实现、边界修复与扩展验收见[⑤⑥说明](docs/STAGES_5_6.md)和[机器记录](docs/STAGE56_VALIDATION.json)。完整规则检查扩展为76项，新增台站缓存与预备沙箱回收回归。
+
 - 完整玩法、本地双AI对战、双局换边和可校验回放已接通，功能集为`relay-full-v1`，协议2。
 - 5号的账号、源码提交、隔离编译、持久化评测、下载与观战接口已实现并部署到Ubuntu，当前构建已通过网页上传到双局结果的完整检查。
 - Ubuntu的14项沙箱检查、文件违规与三次CPU超时判负、Worker重启恢复、6路并发上传限额及备份恢复实测通过，证据见[平台验收记录](docs/PLATFORM_VALIDATION.json)。
@@ -121,16 +123,17 @@ artifacts/              本机验证产物与私有运行资料
 | 范围 | 证据及状态 |
 | --- | --- |
 | 正式数据与移动平报 | 52项逻辑检查及9000tick，见[阶段记录](docs/STAGE123_VALIDATION.json) |
-| 完整规则与本地AI | 65项完整规则检查，Windows/Ubuntu及Unity原生结果对照，见[阶段记录](docs/STAGE45_VALIDATION.json) |
+| 完整规则与本地AI | 当前76项、52项旧逻辑与9项进程检查通过，双局各9000tick，见[⑤⑥记录](docs/STAGE56_VALIDATION.json)；原生对照保留于[此前记录](docs/STAGE45_VALIDATION.json) |
 | 旧Worker回归 | 24项通过，本轮位于`artifacts/stage5/legacy-worker-checks/CHECKS.json` |
 | 平台正常全流程 | 当前部署通过，位于`artifacts/stage5/http-delivery/CHECKS.json` |
-| Ubuntu沙箱 | 14项通过，本机报告为`artifacts/stage5/sandbox-budget-checks.json`，服务器报告为`/var/lib/tsr/data/security-checks-budget-proof/CHECKS.json` |
+| Ubuntu沙箱 | 新一轮14项通过，驻留内存增长至约252.9 MiB后受限，本机报告为`artifacts/stage56/sandbox-checks.json` |
 | 数据迁移与备份 | 恢复到独立目录通过，7个账号、5份源码、3份产物及登录/下载核验成功 |
 | 故障与恢复 | 文件违规、三次CPU超时判负、最终快照、日志授权和重启后第二次尝试通过 |
+| 正式沙箱扩展 | 11种单方违规、双方同时违规及SIGKILL后恢复共13项通过，预备沙箱回收回归通过 |
 | 并发与幂等 | 同队6次并发上传仅接受5份，同一请求重复发起及冲突拒绝通过 |
 | Unity授权观战 | 独立副本连接正式接口的4项快照检查通过，含正常与故障终局 |
 | 发布与回滚 | 同一构建发布到新版本目录再回滚，服务健康与数据库计数一致 |
 
-当前部署与验证摘要见[平台验收记录](docs/PLATFORM_VALIDATION.json)。接手操作、复验顺序及Unity基线门槛见[交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md)。
+当前部署与⑤⑥验证摘要见[最新验收](docs/STAGE56_VALIDATION.json)，此前账号、队列与备份恢复证据保留在[平台验收记录](docs/PLATFORM_VALIDATION.json)。接手操作、复验顺序及Unity基线门槛见[交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md)。
 
 原策划案与完整旧工程保留在本地，已迁入的自有代码和精灵有来源记录。贡献与分支约定见[CONTRIBUTING](CONTRIBUTING.md)。

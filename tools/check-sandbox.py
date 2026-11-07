@@ -66,6 +66,9 @@ def main():
     for violation, name in enumerate(['host-file', 'network', 'fork', 'thread', 'infinite-loop', 'memory', 'stdout-flood', 'cpu-budget-sample']):
         token, resources, process = start(violations)
         try:
+            assert int((resources / 'memory.max').read_text()) == 256 * 1024 * 1024
+            assert int((resources / 'memory.swap.max').read_text()) == 0
+            assert int((resources / 'pids.max').read_text()) == 1
             process.stdin.write((json.dumps({'type': 'relay-init', 'protocolVersion': 2, 'side': 0, 'testViolation': violation}) + '\n').encode())
             process.stdin.flush()
             ready = line(process, 2)
@@ -101,6 +104,8 @@ def main():
                             'pidsEvents': (resources / 'pids.events').read_text(),
                             'diagnostic': process.stderr.read(4096).decode(errors='replace')})
             assert reports[-1]['memoryPeakBytes'] <= 256 * 1024 * 1024
+            if name == 'memory':
+                assert reports[-1]['memoryPeakBytes'] >= 200 * 1024 * 1024, 'Memory fixture did not exercise resident growth near the cap'
         finally:
             invoke('release', token)
             process.wait(timeout=3)

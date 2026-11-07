@@ -123,9 +123,13 @@ namespace TuringSignalRelay
                 if (message.carrierId >= 0) continue;
                 if (message.stationId >= 0)
                 {
-                    var holding = state.nodes.Find(node => node.id == message.stationId && node.active);
+                    var holding = state.nodes.Find(node => node.id == message.stationId);
                     if (holding == null) message.stationId = -1;
-                    else if (holding.connectedToHome && (message.kind != "secret" || message.decoded)) { Deliver(state, message); continue; }
+                    else
+                    {
+                        if (holding.active && holding.connectedToHome && (message.kind != "secret" || message.decoded)) Deliver(state, message);
+                        continue;
+                    }
                 }
                 var collector = RadioNetwork.Covering(state, message.side, message.x, message.y);
                 if (message.sharedTaskId >= 0 && message.stationId < 0)

@@ -6,6 +6,8 @@
 
 你要接手“电波接力 · Turing Signal Relay”项目，通过Desktop Commander Remote访问我的开发电脑，继续开发、复验和维护。5号正式平台已在当前Ubuntu通过本轮验收，先读取现有代码与记录，按剩余发布门槛推进。每完成一项用实际退出码、结果文件、状态哈希或服务状态验证。需要我处理登录或提供连接信息时再联系我。
 
+最新一轮已补齐⑤完整玩法与⑥正式沙箱。先读docs/STAGES_5_6.md与docs/STAGE56_VALIDATION.json。台站缓存与预备沙箱回收两项回归均已先复现再修复，完整规则76项、正式扩展13项及SIGKILL自动恢复通过。下面保留此前平台验收路径作为历史证据。
+
 ## 一、已经确认的要求
 
 - 当前由我个人承担原1—5号全部开发，编号表示模块。
@@ -91,7 +93,7 @@ Get-Content deploy/README.md
 | 项目 | 当前证据 |
 | --- | --- |
 | 旧地图/平报回归 | 52项检查，原9000tick状态摘要保持一致 |
-| 完整规则 | 65项检查，包含实际规则函数构成的附录668分账 |
+| 完整规则 | 当前76项检查，包含台站缓存、整局任务表及附录668分账 |
 | 可信本地AI管道 | Windows9项进程检查，含崩溃、畸形、超长、超时与清理 |
 | 旧Worker | 24项子进程回归通过 |
 | 真实平台全流程 | 当前部署已通过HTTP上传、隔离编译、双局9000tick、越权、防伪和产物摘要检查 |
@@ -148,7 +150,7 @@ game-1 be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e
 game-2 545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870
 ```
 
-最终部署产物位于final-publish，较早reviewed构建保留作对照。汇总见docs/PLATFORM_VALIDATION.json。目标Ubuntu现场已验证，干净主机从零安装与原Unity版本导入仍待验收。三个工程已声明linux-x64目标，默认Windows开发还原和Linux发布还原均通过锁文件模式。
+最新部署产物位于artifacts/stage56/publish/platform及artifacts/stage56/worker-recovery-publish，较早reviewed和final-publish保留作对照。最新汇总见docs/STAGE56_VALIDATION.json，此前平台记录见docs/PLATFORM_VALIDATION.json。目标Ubuntu现场已验证，干净主机从零安装与原Unity版本导入仍待验收。三个工程已声明linux-x64目标，默认Windows开发还原和Linux发布还原均通过锁文件模式。
 
 ## 五、下一步按此顺序推进
 
@@ -225,7 +227,7 @@ SSH密码由用户通过安全渠道提供。本机初始裁判账号文件为ar
 
 | 位置 | 当前用途 |
 | --- | --- |
-| /opt/tsr/current | 当前发布软链接，交接核对指向/opt/tsr/releases/20261107T092720Z |
+| /opt/tsr/current | 当前发布软链接，交接核对指向/opt/tsr/releases/20261107T120200Z |
 | /opt/tsr/current/platform/Platform.dll | 平台 |
 | /opt/tsr/current/worker/Worker.dll serve | 正式Worker |
 | /opt/tsr/dotnet/dotnet | 服务器.NET10运行时 |
@@ -238,12 +240,12 @@ SSH密码由用户通过安全渠道提供。本机初始裁判账号文件为ar
 
 tsr-platform与tsr-worker使用tsr-data组。SQLite及WAL/SHM需要0660，数据目录2770，密钥目录0700。部署中曾发现SQLite默认0640影响worker写入，现已修复并在代码/安装脚本中处理。
 
-当前服务器三个主DLL的SHA256与本机artifacts/stage5/final-publish对应文件一致。
+当前服务器三个主DLL的SHA256与本机artifacts/stage56/publish/platform及artifacts/stage56/worker-recovery-publish对应文件一致。
 
 ```text
-Platform.dll   0bab379eabb80fb5da7d40ee11858e45cd541c310185372ab9db1b5b5b46607a
-Evaluation.dll d4bdc9fe61cc8f353277385cf1ea2f0c67372e15bec264b7b9c9e676bf3fb8fa
-Worker.dll     9bc05a98f157a66df664585aed5a3999823e7a224fbaa3571c59d3a3341b21ae
+Platform.dll   f7359bcd19f97d3dc65de09808c006b5a336aef7022f5091e4eee07d3ad53c4c
+Evaluation.dll 7691490027fd1a96841ab51bcdcc3aab6aa0f9cd54174db4b08fdde4447adebb
+Worker.dll     e39ba43a198340b662c6dfdbce1611f538e4528b51f9998e63cbe5ffdc94724e
 ```
 
 先运行只读现场检查。

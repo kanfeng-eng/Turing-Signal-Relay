@@ -1,6 +1,6 @@
 # 路线④ C++闭环与⑤完整玩法
 
-2026-11-07。这里的④⑤为本轮实现路线，分别对应 C++ AI 最小闭环和完整玩法。原五人分工中的账号、上传、持久化任务、沙箱仍有后续工作。
+2026-11-07。这里的④⑤分别对应 C++ AI 最小闭环和完整玩法。后续账号、上传、持久化任务与沙箱已接通，最新⑤完整玩法与⑥正式沙箱的补齐和复验见[本轮说明](STAGES_5_6.md)。
 
 完整配置为 fixtures/protocol/relay-full-config.json，协议2，featureSet 为 relay-full-v1。旧配置继续保持 movement-plain-report-v1，旧9000 tick场景摘要不变。R01—R18批准文档保持原字节摘要，新增用户确认的R19单独记录在 fixtures/rules/addendum-v1.json，完整配置同时绑定两个摘要。R19禁止取敌方兵站器材，己方仓库和中央公共器材可取。
 
@@ -12,7 +12,7 @@
 ./tools/check-local-match.ps1 -Dotnet 'D:\kanfe\dotnet10\dotnet.exe' -OutputDirectory "$PWD/artifacts/my-full-check"
 ```
 
-输出目录必须不存在。脚本编译两个样例及故障程序，运行旧52项、完整65项规则检查、9项真实进程检查、完整9000 tick脚本、C++双局换边、畸形JSON与累计3超时判罚，并从保存文件重新重演回放。最后必须看到 LOCAL_MATCH_CHECKS_PASSED 与 CHECKS.json。Windows输出明确标记 cpuBudgetEnforced=false。
+输出目录必须不存在。脚本编译两个样例及故障程序，运行旧52项、完整76项规则检查、9项真实进程检查、完整9000 tick脚本、C++双局换边、畸形JSON与累计3超时判罚，并从保存文件重新重演回放。最后必须看到 LOCAL_MATCH_CHECKS_PASSED 与 CHECKS.json。Windows输出明确标记 cpuBudgetEnforced=false。
 
 ## 单独运行与Ubuntu
 
@@ -62,6 +62,6 @@ Windows客户端从正常“打开回放”入口加载relay.replay.json，支�
 
 机器结果见[本轮验收记录](STAGE45_VALIDATION.json)。Windows/.NET和Ubuntu/.NET实际双局的各局状态摘要一致，Windows原生和Ubuntu原生9000tick结果也一致。65项完整检查包含真实规则函数构成的附录668分账、期限、连续进度、压制恢复、建造退款、兵站归属、双局比较与违规。
 
-本轮通过本地可信C++程序闭环。尚未完成不可信代码的强隔离、隔离编译、源码上传与账号、持久化正式评测任务、裁判基础设施故障重试及正式服务授权。现有演示平台/Worker的Bootstrap路径不自动变成完整C++生产评测。下一步按实现路线中的“隔离编译与正式Worker”推进。
+上述STAGE45记录对应此前可信C++闭环。后续已完成不可信代码隔离、隔离编译、源码上传与账号、持久化正式评测、基础设施重试及正式授权快照，见[平台说明](PLATFORM.md)和[⑤⑥最新记录](STAGE56_VALIDATION.json)。
 
 Unity6000.3.26f1 API静态编译通过，原版UPM实际导入故障仍未解决；6000.6.8f1验证包属于开发构建，原基线发布验收继续保留。

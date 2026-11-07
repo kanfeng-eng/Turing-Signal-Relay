@@ -111,9 +111,36 @@ internal static class FullChecks
 
         TestMessages(config, definition, rules);
         TestSeries(config, definition);
+        TestSchedule(config, definition);
         var hidden = new RelayMatchEngine(config, definition).GetObservation(0);
         Require(Array.TrueForAll(hidden.units, value => value.side == 0) && hidden.hubMaterials[1] == -1 && Array.TrueForAll(hidden.resources, value => value.side == 0), "initial observation hides enemy inventories and units");
         Console.WriteLine("FULL_RULE_CHECKS_PASSED assertions=" + assertions);
+    }
+
+    private static void TestSchedule(RelayConfig config, RelayMapData definition)
+    {
+        var state = Fresh(config, definition);
+        var rules = new FullRuleSystem(definition);
+        for (int tick = 1; tick <= 9000; tick++)
+        {
+            state.tick = tick;
+            rules.Refresh(state, config.seed);
+        }
+        Require(state.messages.FindAll(value => value.kind == "plain").Count == 60, "full match spawns thirty plain pairs");
+        Require(state.messages.FindAll(value => value.kind == "urgent").Count == 12, "full match spawns six urgent pairs");
+        Require(state.messages.FindAll(value => value.kind == "secret").Count == 8, "full match spawns four secret pairs");
+        Require(state.messages.FindAll(value => value.kind == "broadcast").Count == 6, "full match spawns three broadcast pairs");
+        Require(state.messages.FindAll(value => value.kind == "assault").Count == 2, "full match spawns one assault pair");
+        foreach (var message in state.messages.FindAll(value => value.side == 0 && value.sharedTaskId < 0))
+        {
+            var other = state.messages.Find(value => value.id == message.id + 1 && value.side == 1);
+            if (other == null || other.createdTick != message.createdTick || other.x != 95 - message.x || other.y != 95 - message.y)
+                throw new Exception("FULL_RULES_FAIL seeded task pair lost rotational symmetry");
+        }
+        Require(state.messages.FindAll(value => value.kind == "broadcast").TrueForAll(value => value.x != value.secondX || value.y != value.secondY),
+            "broadcast always selects two distinct report points");
+        Require(state.resources.FindAll(value => value.kind == "depot" || value.kind == "central-depot").TrueForAll(value => value.amount == 6),
+            "full match resource refresh respects depot capacity");
     }
 
     private static void TestMessages(RelayConfig config, RelayMapData definition, FullRuleSystem rules)
@@ -164,6 +191,26 @@ internal static class FullChecks
         state.nodes.Find(value => value.id == unit.id).connectedToHome = true;
         state.tick = 51; FullMessageSystem.ProcessNetwork(state);
         Require(secret.deliveredTick == 51, "reconnected station forwards decoded buffer");
+
+        state = Fresh(config, definition); unit = state.units[0]; unit.stationActive = true; unit.suppressedUntilTick = 40;
+        secret = new RelayMessage { id = 200, side = 0, kind = "secret", x = unit.x, y = unit.y, stationId = unit.id, deadlineTicks = 900 };
+        state.messages.Add(secret); state.tick = 10;
+        RadioNetwork.Rebuild(state, definition); FullMessageSystem.ProcessNetwork(state);
+        Require(secret.stationId == unit.id && secret.carrierId == -1 && !secret.decoded && secret.deliveredTick < 0,
+            "suppressed station retains its buffered secret despite nearby home coverage");
+        state.tick = 40; RadioNetwork.Rebuild(state, definition); FullMessageSystem.ProcessNetwork(state);
+        state.tick = 89; FullMessageSystem.ProcessNetwork(state);
+        Require(!secret.decoded, "retained secret requires fifty ticks after suppression ends");
+        state.tick = 90; FullMessageSystem.ProcessNetwork(state);
+        Require(secret.decoded && secret.deliveredTick == 90, "retained secret resumes translation at original station");
+
+        state = Fresh(config, definition); unit = state.units[0]; unit.x = 30; unit.y = 20; unit.stationActive = true;
+        secret = new RelayMessage { id = 200, side = 0, kind = "secret", decoded = true, x = 30, y = 20, stationId = unit.id, deadlineTicks = 900 };
+        state.messages.Add(secret); RadioNetwork.Rebuild(state, definition);
+        state.nodes.Add(new RelayRadioNode { id = 30000, side = 0, x = 40, y = 20, radius = 12, active = true, connectedToHome = true });
+        FullMessageSystem.ProcessNetwork(state);
+        Require(secret.stationId == unit.id && secret.deliveredTick < 0,
+            "station buffer cannot bypass disconnected dual-radius link through ground collection");
         foreach (int age in new[] { 900, 901, 1200, 1201 })
         {
             state = Fresh(config, definition); state.tick = age;

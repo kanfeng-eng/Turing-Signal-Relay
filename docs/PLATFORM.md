@@ -4,6 +4,8 @@
 
 2026-11-07用户已确认正式裁判宿主采用.NET10，直接引用Unity工程同一份纯C#规则源码。当前平台实现已部署，正常双局、故障判负、重启恢复、并发限额与备份恢复均已通过实测，摘要见[平台验收记录](PLATFORM_VALIDATION.json)。接手入口见[交接提示词](HANDOFF_CHATGPT_DESKTOP_COMMANDER.md)。
 
+⑤完整玩法与⑥正式沙箱补齐后的当前部署版本及扩展验收见[最新记录](STAGE56_VALIDATION.json)。此前平台验收文件保留原构建与测试现场。
+
 ## 使用顺序
 
 1. 在本机终端建立SSH隧道，保持终端运行。服务器地址与登录用户使用自己的部署配置。
@@ -102,6 +104,8 @@ sudo -u tsr-worker python3 tools/check-sandbox.py --output NEW_OUTPUT --stress
 PRIVATE_JUDGE_JSON含username和password，仅在本机私有位置保存。平台检查会创建专用测试队伍，执行真实上传、隔离编译、双局、越权与产物摘要检查。沙箱检查会运行受限违规样例和编译压力测试。
 
 tools/check-platform-operations.py用于验证文件违规、三次CPU超时及Worker重启恢复。它输出WORKER_RESTART_REQUIRED后，在服务器执行一次systemctl restart tsr-worker，再等待检查完成。本轮三项均通过，正常双局及恢复后的双局状态摘要一致。
+
+追加--extended可执行11种单方违规、双方同时违规和恢复检查，共13项。运行边界、内存驻留压力及预备沙箱回收的最新结果见[⑤⑥验收](STAGE56_VALIDATION.json)。
 
 tools/check-platform-queue.py验证同一请求的幂等与冲突拒绝、同队6路上传仅允许5个待编译任务。执行前等待队列空闲并暂停Worker，结束后恢复Worker。
 

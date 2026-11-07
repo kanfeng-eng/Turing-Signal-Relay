@@ -27,6 +27,6 @@ foreach ($taskFault in @('malformed','timeout')) {
     if (!$taskReport.forfeit -or $taskReport.faultSide -ne 0 -or $taskReport.completed) { throw 'Participant fault adjudication failed.' }
     if ($taskFault -eq 'timeout' -and $taskReport.timeouts[0] -ne 3) { throw 'Three-timeout rule failed.' }
 }
-[ordered]@{ status='passed'; fullRuleAssertions=65; bridgeCases=9; pairedGames=2; participantFaultCases=2; cpuBudgetEnforced=$false } |
+[ordered]@{ status='passed'; fullRuleAssertions=76; bridgeCases=9; pairedGames=2; participantFaultCases=2; cpuBudgetEnforced=$false } |
     ConvertTo-Json | Set-Content -LiteralPath (Join-Path $OutputDirectory 'CHECKS.json') -Encoding utf8
 Write-Output "LOCAL_MATCH_CHECKS_PASSED $OutputDirectory"
