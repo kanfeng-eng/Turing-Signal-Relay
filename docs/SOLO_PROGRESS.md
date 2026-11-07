@@ -4,6 +4,8 @@
 
 ## 已批准
 
+五部分差距、拟实现文件和分批验收路线见[后续代码实现路线](IMPLEMENTATION_ROADMAP.md)。
+
 R01—R18 均为 A，版本 signal-relay-1.0。批准参数与取舍见[集中选择单](RULE_DECISIONS.md)，机器可读选择及文档摘要见 fixtures/rules/approved-v1.json。原始数值与问题索引见[规则台账](RULES.md)。
 
 ## 本轮已实现
