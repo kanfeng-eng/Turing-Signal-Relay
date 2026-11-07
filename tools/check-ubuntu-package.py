@@ -14,6 +14,7 @@ import subprocess
 import tarfile
 import time
 import urllib.request
+import urllib.error
 import uuid
 
 
@@ -39,7 +40,7 @@ def validate_payload(args):
     player.chmod(player.stat().st_mode | stat.S_IXUSR)
     checks = root / "worker-checks/WorkerChecks"
     checks.chmod(checks.stat().st_mode | stat.S_IXUSR)
-    env = dict(os.environ, DOTNET_ROOT=str(runtime.parent))
+    env = dict(os.environ, DOTNET_ROOT=str(runtime.parent), TSR_DATA=str(root / 'platform-data'), TSR_REPOSITORY=str(root))
     run_local(["python3", str(root / "tools/check-bootstrap-headless.py"), "--player", str(player), "--output", str(root / "headless")], root, root / "headless.log")
     run_local([str(runtime), str(root / "worker-checks/WorkerChecks.dll"), str(root / "worker-results")], root, root / "worker-checks.log", env)
     run_local([str(runtime), str(root / "worker/Worker.dll"), str(player), str(root / "pair"), "60"], root, root / "pair.log", env)
@@ -49,6 +50,17 @@ def validate_payload(args):
     assert worker["status"] == "passed" and len(worker["cases"]) == 24
     pair = json.loads((root / "pair/runs.json").read_text())
     assert len(pair) == 2 and all(item["Succeeded"] and item["StateHash"] == args.expected_hash for item in pair)
+    full_game = None
+    if args.full_expected_hash:
+        for name in ('courier', 'transporter'):
+            run_local(['/usr/bin/g++', '-std=c++17', '-O2', '-pipe', '-static', '-I', str(root / 'sdk/cpp'),
+                       '-I', str(root / 'sdk/cpp/examples'), str(root / 'sdk/cpp/examples' / (name + '.cpp')),
+                       '-o', str(root / name)], root, root / (name + '-compile.log'))
+        run_local(['python3', str(root / 'tools/check-relay-headless.py'), '--player', str(player),
+                   '--repository', str(root), '--red', str(root / 'courier'), '--blue', str(root / 'transporter'),
+                   '--output', str(root / 'full-game'), '--expected-hash', args.full_expected_hash],
+                  root, root / 'full-game.log', env)
+        full_game = json.loads((root / 'full-game/CHECKS.json').read_text())
     service = root / "platform"
     http_log = root / "platform.log"
     with http_log.open("w") as output:
@@ -69,8 +81,17 @@ def validate_payload(args):
             with urllib.request.urlopen(origin + route, timeout=10) as response:
                 body = response.read().decode("utf-8")
                 assert response.status == 200
-                assert "@media" in body if route.endswith(".css") else "演示数据" in body and "<h1>" in body
+                if route.endswith('.css'):
+                    assert '@media' in body
+                else:
+                    assert '<h1>' in body and '登录电波接力' in body and response.geturl().endswith('/Login')
                 http[route] = {"status": response.status, "bytes": len(body.encode("utf-8"))}
+        try:
+            urllib.request.urlopen(origin + '/api/submissions', timeout=10)
+        except urllib.error.HTTPError as error:
+            assert error.code == 401
+        else:
+            raise AssertionError('Anonymous submissions API access was accepted')
     finally:
         process.terminate()
         try:
@@ -81,7 +102,7 @@ def validate_payload(args):
     report = {"status": "passed", "architecture": platform.machine(), "stateHash": result["stateHash"],
               "headlessCaseCount": len(json.loads((root / "headless/CHECKS.json").read_text())),
               "workerCaseCount": len(worker["cases"]), "pairSucceeded": 2, "platformHttp": http,
-              "payloadSha256": args.payload_sha}
+              "payloadSha256": args.payload_sha, "fullGame": full_game, "anonymousApiStatus": 401}
     (root / "UBUNTU.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print("UBUNTU_PACKAGE_CHECKS_PASSED", flush=True)
 
@@ -102,10 +123,15 @@ def validate_ssh(args):
     with tarfile.open(payload, "w:gz") as archive:
         archive.add(linux, arcname="judge.tar.gz")
         archive.add(directory / "server-linux/Worker.Checks", arcname="worker-checks")
-        archive.add(directory / "server/Worker", arcname="worker")
-        archive.add(directory / "server/Platform", arcname="platform")
+        for name in ('Worker', 'Platform'):
+            linux_service = directory / 'server-linux' / name
+            archive.add(linux_service if linux_service.is_dir() else directory / 'server' / name, arcname=name.lower())
         for name in ["check-bootstrap-headless.py", "verify-bootstrap-artifacts.py"]:
             archive.add(repository / "tools" / name, arcname="tools/" + name)
+        if 'windowsFullGame' in delivery:
+            for name in ('fixtures', 'sdk/cpp'):
+                archive.add(repository / name, arcname=name)
+            archive.add(repository / 'tools/check-relay-headless.py', arcname='tools/check-relay-headless.py')
     digest = hashlib.sha256(payload.read_bytes()).hexdigest()
     client = paramiko.SSHClient()
     client.load_host_keys(str(args.known_hosts.resolve(strict=True)))
@@ -130,6 +156,9 @@ def validate_ssh(args):
             sftp.put(str(Path(__file__).resolve()), remote + "/check-ubuntu-package.py")
         arguments = ["python3", remote + "/check-ubuntu-package.py", "--payload-root", remote, "--runtime", runtime,
                      "--expected-hash", expected_hash, "--payload-sha", digest]
+        if 'windowsFullGame' in delivery:
+            full = json.loads((directory / delivery['windowsFullGame']).read_text(encoding='utf-8-sig'))
+            arguments += ['--full-expected-hash', full['stateHash']]
         _, stdout, stderr = client.exec_command(" ".join(shlex.quote(value) for value in arguments), timeout=300)
         text, errors = stdout.read().decode("utf-8", "replace"), stderr.read().decode("utf-8", "replace")
         if stdout.channel.recv_exit_status() != 0 or "UBUNTU_PACKAGE_CHECKS_PASSED" not in text:
@@ -159,6 +188,7 @@ if __name__ == "__main__":
     parser.add_argument("--runtime", required=True)
     parser.add_argument("--payload-root", type=Path, help=argparse.SUPPRESS)
     parser.add_argument("--expected-hash", help=argparse.SUPPRESS)
+    parser.add_argument("--full-expected-hash", help=argparse.SUPPRESS)
     parser.add_argument("--payload-sha", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if args.payload_root:
