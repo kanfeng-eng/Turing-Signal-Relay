@@ -6,6 +6,8 @@
 
 更新于2026-11-07。当前由用户个人承担全部五个模块。
 
+阶段7可独立推进的发布工作已完成。5份交付包位于本机`artifacts/stage7/release-final`，包含Windows观战、Linux原生裁判、正式服务、SDK和源码。Windows/Linux原生与部署后的.NET完整对局摘要一致。操作见[发布说明](docs/RELEASE.md)，状态与包摘要见[阶段7记录](docs/STAGE7_VALIDATION.json)。
+
 用户本轮“⑤完整玩法、⑥正式沙箱”的实现、边界修复与扩展验收见[⑤⑥说明](docs/STAGES_5_6.md)和[机器记录](docs/STAGE56_VALIDATION.json)。完整规则检查扩展为76项，新增台站缓存与预备沙箱回收回归。
 
 - 完整玩法、本地双AI对战、双局换边和可校验回放已接通，功能集为`relay-full-v1`，协议2。

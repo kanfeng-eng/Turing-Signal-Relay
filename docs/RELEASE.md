@@ -2,6 +2,14 @@
 
 阶段7负责将已实现的完整玩法、观战、SDK和平台整理成可运行的交付包。原Unity基线为6000.3.26f1；获准的6000.6.8f1独立副本产物在BUILD-INFO.json中单独标明。干净Ubuntu从零部署需要独立测试主机，用户当前暂无额外服务器，现有Ubuntu承担实际运行复验。
 
+## 本轮交付状态
+
+2026-11-07，可独立推进的构建、打包、现有Ubuntu复验与服务更新已通过，5份包位于本机artifacts/stage7/release-final。构建源码为干净提交01b22ce，版本、SHA256与边界见[阶段7记录](STAGE7_VALIDATION.json)。总体状态继续保留两项发布门槛。
+
+Windows与Linux原生完整9000tick、部署后的.NET共享规则裁判结果摘要一致。现有Ubuntu通过24项Worker回归、10项原生入口检查、双进程兼容入口、真实登录跳转及匿名API拒绝。服务包已更新部署，真实上传至双局结果和回放检查通过。
+
+本轮修正了Worker.Checks在进程树终止后立即断言子进程退出的时序问题，复用已有30秒有界等待，Windows与Ubuntu均重新通过24项。依据为.NET的异步终止及后代进程等待语义。[Microsoft文档](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.process.kill?view=net-10.0)
+
 ## 一键构建与本机验收
 
 需要Python、.NET10 SDK、Visual Studio C++17 x64工具链，以及Unity Editor的Windows和Linux Dedicated Server构建模块。在仓库根目录执行，输出目录须为新目录。

@@ -6,6 +6,8 @@
 
 你要接手“电波接力 · Turing Signal Relay”项目，通过Desktop Commander Remote访问我的开发电脑，继续开发、复验和维护。5号正式平台已在当前Ubuntu通过本轮验收，先读取现有代码与记录，按剩余发布门槛推进。每完成一项用实际退出码、结果文件、状态哈希或服务状态验证。需要我处理登录或提供连接信息时再联系我。
 
+阶段7可独立推进部分已完成，先读docs/RELEASE.md和docs/STAGE7_VALIDATION.json。5份交付包位于artifacts/stage7/release-final，构建源码为干净提交01b22ce。Windows/Linux原生完整9000tick及部署后的.NET裁判摘要一致，Ubuntu的24项Worker回归和真实平台完整流程通过。原Unity基线导入及干净Ubuntu从零安装仍待验，用户已明确选择暂不提供额外服务器、先完成可独立推进工作。
+
 最新一轮已补齐⑤完整玩法与⑥正式沙箱。先读docs/STAGES_5_6.md与docs/STAGE56_VALIDATION.json。台站缓存与预备沙箱回收两项回归均已先复现再修复，完整规则76项、正式扩展13项及SIGKILL自动恢复通过。下面保留此前平台验收路径作为历史证据。
 
 ## 一、已经确认的要求
@@ -17,7 +19,7 @@
 - **正式裁判宿主已经选定.NET10。** Worker直接编译引用Unity工程的同一份纯C#规则源码。此前实测结果哈希与Unity原生裁判一致。我已明确选择此方案。
 - 平台采用ASP.NET Core Identity、EF Core10、SQLite、Razor Pages，账号由裁判统一创建队伍和选手。
 - 本轮通过SSH隧道访问127.0.0.1的5188端口。
-- 已授权在本项目范围安装nsjail依赖、创建低权限服务账号、配置cgroup和systemd。服务器上还有其他业务，操作范围限定在本项目。
+- 已授权在本项目范围安装nsjail依赖、创建低权限服务账号、配置cgroup和systemd。阶段7用户另行授权直接删除无关业务且无需备份，旧打字网站已清理，其临时备份也已删除，项目与SSH服务继续正常运行。
 - 旧代码与素材归我所有。新增模块先查GitHub可复用实现，固定版本、许可和摘要，并记录采用理由。
 
 工程原则是先说明关键假设，遇到实质歧义再集中确认，复用已有代码，做与任务相关的最小修改，完成前运行相应验证。
@@ -150,7 +152,7 @@ game-1 be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e
 game-2 545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870
 ```
 
-最新部署产物位于artifacts/stage56/publish/platform及artifacts/stage56/worker-recovery-publish，较早reviewed和final-publish保留作对照。最新汇总见docs/STAGE56_VALIDATION.json，此前平台记录见docs/PLATFORM_VALIDATION.json。目标Ubuntu现场已验证，干净主机从零安装与原Unity版本导入仍待验收。三个工程已声明linux-x64目标，默认Windows开发还原和Linux发布还原均通过锁文件模式。
+最新部署产物位于artifacts/stage7/release-final/server-linux/Platform及Worker，完整服务归档为TuringSignalRelay-server-linux.tar.gz。最新部署汇总见docs/STAGE7_VALIDATION.json，⑤⑥及此前平台证据保留原现场。目标Ubuntu已验证，干净主机从零安装与原Unity版本导入仍待验收。三个工程已声明linux-x64目标，默认Windows开发还原和Linux发布还原均通过锁文件模式。
 
 ## 五、下一步按此顺序推进
 
@@ -227,7 +229,7 @@ SSH密码由用户通过安全渠道提供。本机初始裁判账号文件为ar
 
 | 位置 | 当前用途 |
 | --- | --- |
-| /opt/tsr/current | 当前发布软链接，交接核对指向/opt/tsr/releases/20261107T120200Z |
+| /opt/tsr/current | 当前发布软链接，交接核对指向/opt/tsr/releases/20261107T125042Z |
 | /opt/tsr/current/platform/Platform.dll | 平台 |
 | /opt/tsr/current/worker/Worker.dll serve | 正式Worker |
 | /opt/tsr/dotnet/dotnet | 服务器.NET10运行时 |
@@ -240,12 +242,12 @@ SSH密码由用户通过安全渠道提供。本机初始裁判账号文件为ar
 
 tsr-platform与tsr-worker使用tsr-data组。SQLite及WAL/SHM需要0660，数据目录2770，密钥目录0700。部署中曾发现SQLite默认0640影响worker写入，现已修复并在代码/安装脚本中处理。
 
-当前服务器三个主DLL的SHA256与本机artifacts/stage56/publish/platform及artifacts/stage56/worker-recovery-publish对应文件一致。
+当前服务器三个主DLL的SHA256与本机artifacts/stage7/release-final/server-linux/Platform及Worker对应文件一致。
 
 ```text
-Platform.dll   f7359bcd19f97d3dc65de09808c006b5a336aef7022f5091e4eee07d3ad53c4c
-Evaluation.dll 7691490027fd1a96841ab51bcdcc3aab6aa0f9cd54174db4b08fdde4447adebb
-Worker.dll     e39ba43a198340b662c6dfdbce1611f538e4528b51f9998e63cbe5ffdc94724e
+Platform.dll   ea920f0d562feacfeb3c3b3253d14517cd95263f3d7786ca911f5870af283d48
+Evaluation.dll a48a7d24341e92c745140b30aa2a498111fef031fb3ede5fc87733fd97d344ec
+Worker.dll     ed9643df51777586eecb130e912a85ff0381ec84505a4ad8e26f6d02fa077f4c
 ```
 
 先运行只读现场检查。
