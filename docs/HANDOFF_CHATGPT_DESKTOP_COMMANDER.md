@@ -4,6 +4,8 @@
 
 ---
 
+⑧发布验收已完成现有环境复验，最新入口为docs/发布验收报告.md和docs/STAGE8_VALIDATION.json。README、docs/如何玩这个游戏的使用报告.md、docs/完成这个游戏的技术报告.md已完成。候选包复验通过，正式发布暂缓，后续集中处理原Unity6000.3.26f1实际导入/构建及干净Ubuntu从零安装。最新文档通过Git交付，5份程序包保留01b22ce构建来源和原SHA256。
+
 你要接手“电波接力 · Turing Signal Relay”项目，通过Desktop Commander Remote访问我的开发电脑，继续开发、复验和维护。5号正式平台已在当前Ubuntu通过本轮验收，先读取现有代码与记录，按剩余发布门槛推进。每完成一项用实际退出码、结果文件、状态哈希或服务状态验证。需要我处理登录或提供连接信息时再联系我。
 
 阶段7可独立推进部分已完成，先读docs/RELEASE.md和docs/STAGE7_VALIDATION.json。5份交付包位于artifacts/stage7/release-final，构建源码为干净提交01b22ce。Windows/Linux原生完整9000tick及部署后的.NET裁判摘要一致，Ubuntu的24项Worker回归和真实平台完整流程通过。原Unity基线导入及干净Ubuntu从零安装仍待验，用户已明确选择暂不提供额外服务器、先完成可独立推进工作。

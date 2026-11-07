@@ -9,6 +9,7 @@
 | 看一场完整比赛 | [如何玩这个游戏的使用报告](docs/如何玩这个游戏的使用报告.md)，从Windows包加载examples中的两局回放 |
 | 写AI参加比赛 | [C++ SDK](sdk/cpp/README.md)，用裁判分配的账号提交UTF-8的ai.cpp |
 | 理解架构和实现 | [完成这个游戏的技术报告](docs/完成这个游戏的技术报告.md) |
+| 查看最终发布裁定 | [发布验收报告](docs/发布验收报告.md)与[机器记录](docs/STAGE8_VALIDATION.json) |
 | 构建与部署 | [发布说明](docs/RELEASE.md)和[Ubuntu部署手册](deploy/README.md) |
 | 接手继续开发 | [ChatGPT与Desktop Commander Remote交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md) |
 
@@ -19,6 +20,8 @@
 ## 当前状态
 
 更新于2026-11-07。当前由用户个人承担全部五个模块。
+
+⑧发布验收已完成现有环境复验，候选包检查通过，正式发布暂缓。新一轮覆盖76项完整规则、Windows与Ubuntu各24项Worker检查、Ubuntu原生9000tick、真实上传至双局结果、权限与回放摘要。原Unity基线导入/构建及干净Ubuntu从零部署仍待通过，详见[最终验收报告](docs/发布验收报告.md)。
 
 阶段7可独立推进的发布工作已完成。5份交付包位于本机`artifacts/stage7/release-final`，包含Windows观战、Linux原生裁判、正式服务、SDK和源码。Windows/Linux原生与部署后的.NET完整对局摘要一致。操作见[发布说明](docs/RELEASE.md)，状态与包摘要见[阶段7记录](docs/STAGE7_VALIDATION.json)。
 
