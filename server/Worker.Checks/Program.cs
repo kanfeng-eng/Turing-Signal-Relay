@@ -51,7 +51,7 @@ try
     string timeoutDirectory = Path.Combine(output, "timeout");
     var timeout = await runner.RunAsync(fixture, timeoutDirectory, TimeSpan.FromSeconds(2), CancellationToken.None);
     Require(timeout.TimedOut && !timeout.Succeeded, "Timeout was not reported.");
-    CheckStopped(timeoutDirectory);
+    await CheckStopped(timeoutDirectory);
     Record("timeout-tree");
     using (var cancelled = new CancellationTokenSource())
     {
@@ -60,7 +60,7 @@ try
         await WaitUntil(() => File.Exists(Path.Combine(directory, "child.pid")), "Fixture child did not start.");
         cancelled.Cancel();
         await ExpectCancelled(run);
-        CheckStopped(directory);
+        await CheckStopped(directory);
         Record("running-cancel-tree");
     }
     Environment.SetEnvironmentVariable("TSR_WORKER_FIXTURE", "large");
@@ -149,10 +149,10 @@ static bool Alive(int pid)
     catch (DirectoryNotFoundException) { return false; }
     catch (FileNotFoundException) { return false; }
 }
-static void CheckStopped(string directory)
+static async Task CheckStopped(string directory)
 {
     foreach (string file in Directory.GetFiles(directory, "*.pid"))
-        Require(!Alive(int.Parse(File.ReadAllText(file))), "Fixture process survived cleanup.");
+        await WaitUntil(() => !Alive(int.Parse(File.ReadAllText(file))), "Fixture process survived cleanup.");
 }
 static async Task<int> Fixture(string[] arguments)
 {
