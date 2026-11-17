@@ -25,6 +25,7 @@ var runner = new BootstrapMatchRunner();
 var passed = new List<string>();
 try
 {
+    await RequirementChecks.RunAsync(output);
     foreach (string scenario in new[] { "valid", "legacy", "empty", "exit7", "malformed-result", "bad-type", "bad-digest", "bad-final-hash", "header-config", "replay-tamper", "replay-duplicate", "replay-truncated", "replay-final-mismatch", "replay-version", "config-invalid", "wrong-result-number" })
     {
         Environment.SetEnvironmentVariable("TSR_WORKER_FIXTURE", scenario);

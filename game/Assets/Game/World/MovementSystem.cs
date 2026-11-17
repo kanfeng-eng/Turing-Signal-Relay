@@ -67,17 +67,17 @@ namespace TuringSignalRelay
                 if (crossing != null)
                 {
                     if (unit.waitingSinceTick < 0) unit.waitingSinceTick = state.tick;
-                    if ((crossing.kind == CrossingKind.Ferry && !RelayMap.FerryOpen(state.tick)) ||
+                    if ((crossing.kind == CrossingKind.Ferry && !RelayMap.FerryOpen(state.tick, state.ruleParameters)) ||
                         state.units.Exists(other => other.edgeCompleteTick > 0 && other.crossingId == crossing.id)) continue;
                 }
                 if (Occupied(map, state, unit, next.x, next.y))
                 {
-                    if (++unit.blockedTicks >= 10)
+                    if (++unit.blockedTicks >= state.ruleParameters.replanTicks)
                         Replan(map, state, unit);
                     continue;
                 }
-                int ticks = crossing == null ? GridPathfinder.EnterTicks(map.Grid.At(new GridPosition(next.x, next.y)), unit.role) :
-                    GridPathfinder.CrossingTicks(crossing.kind, unit.role);
+                int ticks = crossing == null ? GridPathfinder.EnterTicks(map.Grid.At(new GridPosition(next.x, next.y)), unit.role, state.ruleParameters) :
+                    GridPathfinder.CrossingTicks(crossing.kind, unit.role, state.ruleParameters);
                 unit.edgeX = next.x; unit.edgeY = next.y; unit.edgeCompleteTick = state.tick + ticks;
                 unit.crossingId = crossing == null ? -1 : crossing.id;
                 unit.blockedTicks = 0; unit.waitingSinceTick = -1;

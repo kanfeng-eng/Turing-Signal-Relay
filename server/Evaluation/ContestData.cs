@@ -17,6 +17,19 @@ public sealed class Team
 {
     public string Id { get; set; } = Guid.NewGuid().ToString("N");
     public string Name { get; set; } = "";
+    public bool Disqualified { get; set; }
+}
+
+public sealed class SubmissionReview
+{
+    public string Id { get; set; } = Guid.NewGuid().ToString("N");
+    public string SubmissionId { get; set; } = "";
+    public string SourceHash { get; set; } = "";
+    public string JudgeId { get; set; } = "";
+    public string Decision { get; set; } = "";
+    public string Reason { get; set; } = "";
+    public string FindingsJson { get; set; } = "";
+    public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
 }
 
 public sealed class Submission
@@ -64,10 +77,12 @@ public sealed class ContestDb(DbContextOptions<ContestDb> options) : IdentityDbC
     public DbSet<Submission> Submissions => Set<Submission>();
     public DbSet<ContestMatch> Matches => Set<ContestMatch>();
     public DbSet<MatchArtifact> Artifacts => Set<MatchArtifact>();
+    public DbSet<SubmissionReview> SubmissionReviews => Set<SubmissionReview>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
         builder.Entity<Team>().HasIndex(x => x.Name).IsUnique();
+        builder.Entity<SubmissionReview>().HasOne<Submission>().WithMany().HasForeignKey(x => x.SubmissionId).OnDelete(DeleteBehavior.Restrict);
         builder.Entity<ContestUser>().HasOne<Team>().WithMany().HasForeignKey(x => x.TeamId).OnDelete(DeleteBehavior.Restrict);
         builder.Entity<Submission>().HasOne<Team>().WithMany().HasForeignKey(x => x.TeamId).OnDelete(DeleteBehavior.Restrict);
         builder.Entity<Submission>().HasIndex(x => new { x.Status, x.CreatedUtc });
@@ -106,9 +121,13 @@ public static class ContestJson
     public static T Read<T>(string path) => JsonSerializer.Deserialize<T>(System.IO.File.ReadAllText(path), Options) ?? throw new InvalidDataException("Missing JSON data.");
     public static void Write(string path, object value)
     {
-        string temporary = path + ".tmp";
-        System.IO.File.WriteAllText(temporary, JsonSerializer.Serialize(value, value.GetType(), Options));
-        System.IO.File.Move(temporary, path, true);
+        string temporary = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            System.IO.File.WriteAllText(temporary, JsonSerializer.Serialize(value, value.GetType(), Options));
+            System.IO.File.Move(temporary, path, true);
+        }
+        finally { if (System.IO.File.Exists(temporary)) System.IO.File.Delete(temporary); }
     }
     public static string Hash(byte[] bytes) => Convert.ToHexStringLower(SHA256.HashData(bytes));
 }
@@ -130,12 +149,15 @@ public sealed class ContestOperations(ContestDb db, ContestPaths paths)
         if (bytes.Length == 0 || bytes.Contains((byte)0)) throw new ArgumentException("请上传非空UTF-8源码。");
         try { new UTF8Encoding(false, true).GetString(bytes); } catch (DecoderFallbackException) { throw new ArgumentException("源码必须使用UTF-8编码。"); }
         await using var transaction = await db.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellation);
+        if (!await db.Teams.AnyAsync(x => x.Id == teamId && !x.Disqualified, cancellation))
+            throw new ArgumentException("本队参赛资格已取消，请联系裁判。");
         if (await db.Submissions.CountAsync(x => x.TeamId == teamId && (x.Status == "queued" || x.Status == "compiling"), cancellation) >= 5)
             throw new ArgumentException("本队最多同时保留5个待编译提交。");
         var submission = new Submission { TeamId = teamId, Note = note, SourceHash = ContestJson.Hash(bytes) };
         string directory = paths.File("submissions", submission.Id);
         Directory.CreateDirectory(directory);
         await System.IO.File.WriteAllBytesAsync(Path.Combine(directory, "ai.cpp"), bytes, cancellation);
+        ContestJson.Write(Path.Combine(directory, "source-scan.json"), SourceScanner.Scan(bytes));
         db.Submissions.Add(submission);
         await db.SaveChangesAsync(cancellation);
         await transaction.CommitAsync(cancellation);
@@ -151,6 +173,8 @@ public sealed class ContestOperations(ContestDb db, ContestPaths paths)
         var first = await db.Submissions.SingleOrDefaultAsync(x => x.Id == firstId && x.Status == "ready", cancellation);
         var second = await db.Submissions.SingleOrDefaultAsync(x => x.Id == secondId && x.Status == "ready", cancellation);
         if (first == null || second == null || first.TeamId == second.TeamId) throw new ArgumentException("请选择两支不同队伍已编译的提交。");
+        if (await db.Teams.AnyAsync(x => (x.Id == first.TeamId || x.Id == second.TeamId) && x.Disqualified, cancellation))
+            throw new ArgumentException("存在已取消参赛资格的队伍。");
         var match = new ContestMatch { TeamASubmissionId = first.Id, TeamBSubmissionId = second.Id, TeamAId = first.TeamId, TeamBId = second.TeamId, Seed = seed, RequestKey = requestKey };
         db.Matches.Add(match);
         try { await db.SaveChangesAsync(cancellation); }

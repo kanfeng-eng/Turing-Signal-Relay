@@ -34,6 +34,7 @@ builder.Services.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
 builder.Services.AddRazorPages(options => { options.Conventions.AuthorizeFolder("/"); options.Conventions.AllowAnonymousToPage("/Login"); })
     .AddMvcOptions(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 builder.Services.AddScoped<ContestOperations>();
+builder.Services.AddScoped<SubmissionReviewService>();
 builder.Services.AddScoped<AccountAdmin>();
 builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.IncludeFields = true);
 builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 300 * 1024);

@@ -115,6 +115,35 @@ internal static class FullChecks
         var hidden = new RelayMatchEngine(config, definition).GetObservation(0);
         Require(Array.TrueForAll(hidden.units, value => value.side == 0) && hidden.hubMaterials[1] == -1 && Array.TrueForAll(hidden.resources, value => value.side == 0), "initial observation hides enemy inventories and units");
         Console.WriteLine("FULL_RULE_CHECKS_PASSED assertions=" + assertions);
+        TestConfiguredReplay(config, definition);
+    }
+
+    private static void TestConfiguredReplay(RelayConfig source, RelayMapData map)
+    {
+        var configured = source.Copy();
+        configured.parameters = new RelayRuleParameters { plainFirstTick = 10, communicatorCount = 4, depotCapacity = 8 };
+        configured.parametersHash = RelayStateHash.Parameters(configured.parameters);
+        var engine = new RelayMatchEngine(configured, map);
+        var initial = engine.GetSnapshot();
+        if (initial.units.Count != 16 || engine.StateHash() == new RelayMatchEngine(source, map).StateHash())
+            throw new Exception("Configured units or state digest were ignored.");
+        var recording = new RelayRecording { config = engine.Config, map = engine.MapData, mapHash = engine.MapHash, initialStateHash = engine.StateHash() };
+        configured.parameters.plainFirstTick = 20;
+        var frames = new List<RelayRecordedTick>();
+        while (!engine.Completed)
+        {
+            engine.Step(null, null);
+            if (engine.Tick == 10 && engine.GetSnapshot().messages.Count != 2)
+                throw new Exception("Caller mutation changed the frozen schedule.");
+            frames.Add(new RelayRecordedTick { tick = engine.Tick, batches = new RelayCommandBatch[0], stateHash = engine.StateHash() });
+        }
+        recording.frames = frames.ToArray();
+        if (RelayReplay.Verify(recording).StateHash() != engine.StateHash()) throw new Exception("Configured replay diverged.");
+        recording.config.parameters.plainFirstTick++;
+        bool rejected = false;
+        try { RelayReplay.Verify(recording); } catch (ArgumentException) { rejected = true; }
+        if (!rejected) throw new Exception("Tampered rule parameters were accepted.");
+        Console.WriteLine("PARAMETER_REPLAY_CHECKS_PASSED ticks=9000 frozen-input units digest tamper");
     }
 
     private static void TestSchedule(RelayConfig config, RelayMapData definition)

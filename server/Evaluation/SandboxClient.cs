@@ -42,6 +42,7 @@ public sealed class SandboxClient(ContestPaths paths)
     {
         byte[] source = await File.ReadAllBytesAsync(paths.File("submissions", submission.Id, "ai.cpp"), cancellation);
         if (ContestJson.Hash(source) != submission.SourceHash) throw new InvalidDataException("Submission source digest changed.");
+        ContestJson.Write(paths.File("submissions", submission.Id, "source-scan.json"), SourceScanner.Scan(source));
         var value = await InvokeAsync("compile", submission.Id, source, null, cancellation);
         return new CompilationResult(value.GetProperty("success").GetBoolean(), value.GetProperty("sourceHash").GetString()!,
             value.GetProperty("binaryHash").GetString()!, value.GetProperty("compiler").GetString()!, value.GetProperty("diagnostic").GetString()!,

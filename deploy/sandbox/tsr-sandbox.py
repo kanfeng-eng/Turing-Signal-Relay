@@ -219,7 +219,9 @@ def run(token):
     directory = ROOT / 'runs' / token
     submission = identifier((directory / 'submission').read_text())
     binary = ROOT / 'submissions' / submission / 'ai'
-    args = base_args(CGROUP / token, directory / 'root', 256, 1, 180, 'run.policy')
+    # Allow the maximum game budget plus startup, host work and supervisor margin.
+    run_wall_seconds = 9000 * 100 // 1000 + 2 * 2 + 120 + 30
+    args = base_args(CGROUP / token, directory / 'root', 256, 1, run_wall_seconds, 'run.policy')
     args += ['--log', str(directory / 'jail.log')]
     args += ['--bindmount_ro', str(binary) + ':/ai', '--', '/ai']
     write(directory / 'supervisor.pid', os.getpid())

@@ -14,8 +14,18 @@ namespace TuringSignalRelay
         public string supplementalRulesHash = "";
         public int seed;
         public int durationTicks = 9000;
+        public RelayRuleParameters parameters;
+        public string parametersHash = "";
         public void Validate()
         {
+            if (parameters != null)
+            {
+                parameters.Validate();
+                if (!FullRules() || (parametersHash != RelayStateHash.Parameters(parameters) &&
+                    !(string.IsNullOrEmpty(parametersHash) && RelayStateHash.Parameters(parameters) == RelayStateHash.Parameters(new RelayRuleParameters()))))
+                    throw new ArgumentException("Rule parameter digest mismatch.");
+            }
+            else if (!string.IsNullOrEmpty(parametersHash)) throw new ArgumentException("Missing rule parameters.");
             if (protocolVersion != 2 || rulesVersion != "signal-relay-1.0" || (featureSet != "movement-plain-report-v1" && featureSet != "relay-full-v1") ||
                 durationTicks < 1 || durationTicks > 9000 || rulesHash != ApprovedRulesHash)
                 throw new ArgumentException("Invalid relay configuration.");
@@ -26,7 +36,12 @@ namespace TuringSignalRelay
                 if (!(digit >= '0' && digit <= '9') && !(digit >= 'a' && digit <= 'f'))
                     throw new ArgumentException("Invalid approved rules digest.");
         }
-        public RelayConfig Copy() { return (RelayConfig)MemberwiseClone(); }
+        public RelayConfig Copy()
+        {
+            var result = (RelayConfig)MemberwiseClone();
+            result.parameters = parameters == null ? null : parameters.Copy();
+            return result;
+        }
         public bool FullRules() { return featureSet == "relay-full-v1"; }
     }
 
@@ -172,6 +187,7 @@ namespace TuringSignalRelay
     [Serializable]
     public sealed class RelayState
     {
+        internal RelayRuleParameters ruleParameters = new RelayRuleParameters();
         public int protocolVersion = 2;
         public string type = "relay-snapshot";
         public int tick;
@@ -194,6 +210,7 @@ namespace TuringSignalRelay
         public RelayState Copy()
         {
             var result = (RelayState)MemberwiseClone();
+            result.ruleParameters = ruleParameters.Copy();
             result.scoreHalfPoints = (int[])scoreHalfPoints.Clone();
             result.units = units.ConvertAll(value => value.Copy());
             result.messages = messages.ConvertAll(value => value.Copy());

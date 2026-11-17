@@ -7,6 +7,14 @@ namespace TuringSignalRelay
 {
     public static class RelayStateHash
     {
+        public static string Parameters(RelayRuleParameters parameters)
+        {
+            return Digest(writer => {
+                var fields = typeof(RelayRuleParameters).GetFields();
+                Array.Sort(fields, (first, second) => string.CompareOrdinal(first.Name, second.Name));
+                foreach (var field in fields) { writer.Write(field.Name); writer.Write((int)field.GetValue(parameters)); }
+            });
+        }
         private static string Digest(Action<BinaryWriter> write)
         {
             using (var stream = new MemoryStream())
@@ -37,6 +45,7 @@ namespace TuringSignalRelay
             return Digest(writer => {
                 writer.Write("TSR_RELAY_STATE_V1"); writer.Write(config.protocolVersion); writer.Write(config.rulesVersion);
                 writer.Write(config.featureSet); writer.Write(config.rulesHash); writer.Write(config.seed); writer.Write(config.durationTicks); writer.Write(mapHash);
+                if (!string.IsNullOrEmpty(config.parametersHash)) { writer.Write("TSR_PARAMETERS_V1"); writer.Write(config.parametersHash); }
                 writer.Write(state.tick); writer.Write(state.completed);
                 foreach (int score in state.scoreHalfPoints) writer.Write(score);
                 writer.Write(state.units.Count);

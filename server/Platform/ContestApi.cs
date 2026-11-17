@@ -117,6 +117,7 @@ public static class ContestApi
                 catch (System.Security.Cryptography.CryptographicException) { }
             }
             if (!allowed) return Results.Unauthorized();
+            if (match.Status == "disqualified") return Results.StatusCode(StatusCodes.Status410Gone);
             if (game is < 1 or > 2) return Results.BadRequest();
             string file = paths.File(match.ResultDirectory, "game-" + (game ?? 1), "snapshot.json");
             if (match.ResultDirectory.Length == 0 || !File.Exists(file)) return Results.Accepted();

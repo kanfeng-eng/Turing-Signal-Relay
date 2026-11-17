@@ -41,5 +41,5 @@ public sealed class ResultsModel(ContestDb db, UserManager<ContestUser> users, C
         SpectatorToken = protection.CreateProtector("relay-snapshot-v1").ToTimeLimitedDataProtector().Protect(id, TimeSpan.FromHours(1));
         return Page();
     }
-    public static string StatusLabel(string status) => status switch { "queued" => "等待评测", "running" => "正在比赛", "completed" => "评测完成", "failed" => "需要裁判处理", _ => status };
+    public static string StatusLabel(string status) => status switch { "queued" => "等待评测", "running" => "正在比赛", "completed" => "评测完成", "failed" => "需要裁判处理", "disqualified" => "违规成绩作废", _ => status };
 }

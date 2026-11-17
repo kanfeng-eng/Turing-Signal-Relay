@@ -8,6 +8,33 @@ namespace TuringSignalRelay
         private readonly RelayMapData map;
         public FullRuleSystem(RelayMapData definition) { map = definition; }
 
+        public static int NextEventTick(int tick, int duration, RelayRuleParameters parameters, bool fullRules)
+        {
+            int next = NextPeriodic(tick, parameters.plainFirstTick, parameters.plainPeriodTicks, 50, duration);
+            if (fullRules)
+            {
+                foreach (int candidate in new[] {
+                    NextPeriodic(tick, parameters.urgentFirstTick, parameters.urgentPeriodTicks, parameters.urgentCount, duration),
+                    NextPeriodic(tick, parameters.secretFirstTick, parameters.secretPeriodTicks, parameters.secretCount, duration),
+                    NextPeriodic(tick, parameters.broadcastFirstTick, parameters.broadcastPeriodTicks, parameters.broadcastCount, duration),
+                    NextPeriodic(tick, parameters.depotPeriodTicks, parameters.depotPeriodTicks, duration / parameters.depotPeriodTicks, duration),
+                    parameters.airdropTick, parameters.centralDepotTick, parameters.ferryFirstTick, parameters.stormTick,
+                    NextPeriodic(tick, parameters.ferryFirstTick, parameters.ferryPeriodTicks, duration / parameters.ferryPeriodTicks + 1, duration),
+                    NextPeriodic(tick, parameters.ferryFirstTick + parameters.ferryOpenTicks, parameters.ferryPeriodTicks, duration / parameters.ferryPeriodTicks + 1, duration),
+                    parameters.stormTick + parameters.stormDurationTicks, parameters.interferenceTick,
+                    parameters.interferenceTick + parameters.interferenceDurationTicks, parameters.hubOpenTick, parameters.assaultTick })
+                    if (candidate > tick && candidate < duration && (next < 0 || candidate < next)) next = candidate;
+            }
+            return next;
+        }
+
+        private static int NextPeriodic(int tick, int first, int period, int count, int duration)
+        {
+            int index = tick < first ? 0 : (tick - first) / period + 1;
+            long next = first + (long)index * period;
+            return index < count && next < duration ? (int)next : -1;
+        }
+
         public void Initialize(RelayState state)
         {
             state.resources.Clear();
@@ -15,8 +42,8 @@ namespace TuringSignalRelay
                 if (site.kind == "depot") state.resources.Add(new RelayResource { id = site.id, side = site.side, x = site.x, y = site.y, kind = "depot" });
                 else if (site.kind == "headquarters") state.resources.Add(new RelayResource { id = 30000 + site.side, side = site.side, x = site.x, y = site.y, kind = "headquarters" });
             var central = Array.Find(map.sites, site => site.kind == "central-depot");
-            state.resources.Add(new RelayResource { id = central.id, side = -1, x = central.x, y = central.y, kind = "central-depot", availableTick = 3000 });
-            state.resources.Add(new RelayResource { id = 3000, side = -1, x = 47, y = 47, kind = "airdrop", availableTick = 1200 });
+            state.resources.Add(new RelayResource { id = central.id, side = -1, x = central.x, y = central.y, kind = "central-depot", availableTick = state.ruleParameters.centralDepotTick });
+            state.resources.Add(new RelayResource { id = 3000, side = -1, x = 47, y = 47, kind = "airdrop", availableTick = state.ruleParameters.airdropTick });
             state.resources.Sort((a, b) => a.id.CompareTo(b.id));
             RadioNetwork.Rebuild(state, map);
         }
@@ -24,20 +51,22 @@ namespace TuringSignalRelay
         public void Refresh(RelayState state, int seed, List<string> events = null)
         {
             string oldWeather = state.weather;
-            state.weatherReduction = state.tick >= 3600 && state.tick < 4050 ? 3 : state.tick >= 4800 && state.tick < 5100 ? 5 : 0;
-            state.weather = state.weatherReduction == 3 ? "storm" : state.weatherReduction == 5 ? "interference" : "clear";
+            bool storm = state.tick >= state.ruleParameters.stormTick && state.tick < state.ruleParameters.stormTick + state.ruleParameters.stormDurationTicks;
+            bool interference = state.tick >= state.ruleParameters.interferenceTick && state.tick < state.ruleParameters.interferenceTick + state.ruleParameters.interferenceDurationTicks;
+            state.weatherReduction = Math.Max(storm ? state.ruleParameters.stormReduction : 0, interference ? state.ruleParameters.interferenceReduction : 0);
+            state.weather = interference && state.ruleParameters.interferenceReduction == state.weatherReduction ? "interference" : storm ? "storm" : "clear";
             if (events != null && state.weather != oldWeather) events.Add("weather " + state.weather);
-            if (state.tick == 1200) state.resources.Find(value => value.kind == "airdrop").amount = 4;
-            if (state.tick % 250 == 0)
+            if (state.tick == state.ruleParameters.airdropTick) state.resources.Find(value => value.kind == "airdrop").amount = state.ruleParameters.airdropAmount;
+            if (state.tick % state.ruleParameters.depotPeriodTicks == 0)
             {
                 foreach (var resource in state.resources)
-                    if (resource.kind == "depot" || (resource.kind == "central-depot" && state.tick > 3000))
-                        resource.amount = Math.Min(6, resource.amount + 2);
+                    if (resource.kind == "depot" || (resource.kind == "central-depot" && state.tick > state.ruleParameters.centralDepotTick))
+                        resource.amount = Math.Min(state.ruleParameters.depotCapacity, resource.amount + state.ruleParameters.depotRefreshAmount);
                 for (int side = 0; side < 2; side++)
                 {
                     int leading = state.scoreHalfPoints[1 - side], own = state.scoreHalfPoints[side];
-                    if (leading <= 0 || (long)(leading - own) * 100 <= (long)leading * 15 || state.compensationCount[side] >= 2) continue;
-                    var candidates = state.resources.FindAll(value => value.kind == "depot" && value.side == side && value.amount < 6);
+                    if (leading <= 0 || (long)(leading - own) * 100 <= (long)leading * state.ruleParameters.compensationPercent || state.compensationCount[side] >= state.ruleParameters.compensationLimit) continue;
+                    var candidates = state.resources.FindAll(value => value.kind == "depot" && value.side == side && value.amount < state.ruleParameters.depotCapacity);
                     candidates.Sort((a, b) => a.amount == b.amount ? a.id.CompareTo(b.id) : a.amount.CompareTo(b.amount));
                     if (candidates.Count > 0) { candidates[0].amount++; state.compensationCount[side]++; }
                 }
@@ -52,7 +81,11 @@ namespace TuringSignalRelay
                 }
         }
 
-        public static int MaterialCapacity(RelayUnit unit) { return unit.role == UnitRole.Engineer ? 3 : unit.role == UnitRole.Transporter ? 6 : 0; }
+        public static int MaterialCapacity(RelayUnit unit, RelayRuleParameters parameters = null)
+        {
+            parameters = parameters ?? new RelayRuleParameters();
+            return unit.role == UnitRole.Engineer ? parameters.engineerMaterials : unit.role == UnitRole.Transporter ? parameters.transporterMaterials : 0;
+        }
         public bool InHub(int x, int y) { return Array.Exists(map.sites, site => site.kind == "hub" && site.x == x && site.y == y); }
 
         private bool AtResource(RelayResource resource, RelayUnit unit)
@@ -70,7 +103,7 @@ namespace TuringSignalRelay
         private RelayResource UnloadStock(RelayState state, RelayUnit unit)
         {
             return state.resources.Find(value => value.side == unit.side && (value.kind == "depot" || value.kind == "headquarters") && AtResource(value, unit) &&
-                (value.kind == "headquarters" || value.amount < 6));
+                (value.kind == "headquarters" || value.amount < state.ruleParameters.depotCapacity));
         }
 
         public bool TryStart(RelayState state, RelayUnit unit, RelayCommand command, out string error)
@@ -86,20 +119,20 @@ namespace TuringSignalRelay
                 if (action == "setupStation")
                 {
                     if (unit.stationActive || unit.task == action) return true;
-                    Begin(unit, action, state.tick, 20);
+                    Begin(unit, action, state.tick, state.ruleParameters.stationSetupTicks);
                 }
                 else if (action == "withdrawStation") { unit.stationActive = false; Begin(unit, "idle", state.tick, 0); }
                 else
                 {
-                    if (state.tick < unit.suppressReadyTick || !RelayGeometry.Within(unit.x, unit.y, command.x, command.y, 7) ||
+                    if (state.tick < unit.suppressReadyTick || !RelayGeometry.Within(unit.x, unit.y, command.x, command.y, state.ruleParameters.suppressionRadius) ||
                         command.x < 0 || command.y < 0 || command.x >= 96 || command.y >= 96) { error = "invalid-suppression"; return true; }
                     var targets = state.units.FindAll(value => value.side != unit.side && value.stationActive && value.x == command.x && value.y == command.y);
                     var fixedTargets = state.stations.FindAll(value => value.side != unit.side && value.x == command.x && value.y == command.y);
                     if (targets.Count == 0 && fixedTargets.Count == 0) { error = "no-enemy-station"; return true; }
-                    foreach (var target in targets) target.suppressedUntilTick = Math.Max(target.suppressedUntilTick, state.tick + 40);
-                    foreach (var target in fixedTargets) target.suppressedUntilTick = Math.Max(target.suppressedUntilTick, state.tick + 40);
+                    foreach (var target in targets) target.suppressedUntilTick = Math.Max(target.suppressedUntilTick, state.tick + state.ruleParameters.suppressionTicks);
+                    foreach (var target in fixedTargets) target.suppressedUntilTick = Math.Max(target.suppressedUntilTick, state.tick + state.ruleParameters.suppressionTicks);
                     state.eventFocusUnitId = targets.Count > 0 ? targets[0].id : unit.id;
-                    unit.suppressReadyTick = state.tick + 250; Begin(unit, "idle", state.tick, 0);
+                    unit.suppressReadyTick = state.tick + state.ruleParameters.suppressionCooldownTicks; Begin(unit, "idle", state.tick, 0);
                 }
                 return true;
             }
@@ -110,7 +143,7 @@ namespace TuringSignalRelay
             }
             if (action == "pickup")
             {
-                if (unit.messageIds.Count > 0 || unit.materials + unit.reservedMaterials >= MaterialCapacity(unit)) error = "material-capacity";
+                if (unit.messageIds.Count > 0 || unit.materials + unit.reservedMaterials >= MaterialCapacity(unit, state.ruleParameters)) error = "material-capacity";
                 else if (PickupStock(state, unit) == null) error = "no-owned-materials-here";
             }
             else if (action == "unloadMaterials")
@@ -119,12 +152,12 @@ namespace TuringSignalRelay
             }
             else if (action == "deliverMaterials")
             {
-                if (unit.materials <= 0 || state.tick < 5400 || !InHub(unit.x, unit.y)) error = "cannot-deliver-to-hub";
+                if (unit.materials <= 0 || state.tick < state.ruleParameters.hubOpenTick || !InHub(unit.x, unit.y)) error = "cannot-deliver-to-hub";
             }
             else
             {
                 var target = state.units.Find(value => value.id == command.targetUnitId);
-                if (!CanTransfer(unit, target)) error = "invalid-material-transfer";
+                if (!CanTransfer(unit, target, state.ruleParameters)) error = "invalid-material-transfer";
             }
             if (error == null)
             {
@@ -139,7 +172,7 @@ namespace TuringSignalRelay
             if (unit.role != UnitRole.Engineer) return "requires-engineer";
             if (unit.task == command.action && unit.targetX == command.x && unit.targetY == command.y) return null;
             bool bridge = command.action == "buildBridge";
-            int cost = bridge ? 3 : 2;
+            int cost = bridge ? state.ruleParameters.bridgeCost : state.ruleParameters.relayCost;
             if (unit.materials + unit.reservedMaterials < cost) return "insufficient-materials";
             if (command.x < 0 || command.y < 0 || command.x >= 96 || command.y >= 96) return "invalid-build-site";
             if (bridge)
@@ -154,7 +187,7 @@ namespace TuringSignalRelay
                 state.stations.Exists(value => value.x == command.x && value.y == command.y)) return "invalid-build-site";
             if (state.units.Exists(value => value.id != unit.id && value.task == command.action && value.targetX == command.x && value.targetY == command.y)) return "site-already-reserved";
             unit.materials += unit.reservedMaterials; unit.reservedMaterials = cost; unit.materials -= cost;
-            Begin(unit, command.action, state.tick, bridge ? 60 : 50); unit.targetX = command.x; unit.targetY = command.y;
+            Begin(unit, command.action, state.tick, bridge ? state.ruleParameters.bridgeBuildTicks : state.ruleParameters.relayBuildTicks); unit.targetX = command.x; unit.targetY = command.y;
             return null;
         }
 
@@ -175,10 +208,10 @@ namespace TuringSignalRelay
             if (action != "setupStation") { unit.decodeMessageId = -1; unit.decodeStartedTick = -1; }
         }
 
-        private static bool CanTransfer(RelayUnit sender, RelayUnit target)
+        private static bool CanTransfer(RelayUnit sender, RelayUnit target, RelayRuleParameters parameters)
         {
             return target != null && target.id != sender.id && target.side == sender.side && target.x == sender.x && target.y == sender.y &&
-                sender.materials > 0 && target.messageIds.Count == 0 && target.materials + target.reservedMaterials < MaterialCapacity(target);
+                sender.materials > 0 && target.messageIds.Count == 0 && target.materials + target.reservedMaterials < MaterialCapacity(target, parameters);
         }
 
         public void CompleteTasks(RelayState state, List<string> events)
@@ -199,12 +232,12 @@ namespace TuringSignalRelay
                     {
                         var crossing = Array.Find(map.crossings, value => value.kind == CrossingKind.BuiltBridge && (value.fromX + value.toX) / 2 == unit.targetX && (value.fromY + value.toY) / 2 == unit.targetY);
                         state.bridges.Add(new RelayBuiltBridge { crossingId = crossing.id, side = unit.side, completedTick = state.tick });
-                        if (state.bridges.FindAll(value => value.side == unit.side).Count <= 3) FullMessageSystem.Award(state, unit.side, "bridge-construction", 40);
+                        if (state.bridges.FindAll(value => value.side == unit.side).Count <= state.ruleParameters.bridgeScoreLimit) FullMessageSystem.Award(state, unit.side, "bridge-construction", state.ruleParameters.bridgeHalfPoints);
                     }
                     else
                     {
                         state.stations.Add(new RelayFixedStation { id = unit.side * 10000 + unit.targetY * 96 + unit.targetX, side = unit.side, x = unit.targetX, y = unit.targetY });
-                        if (state.stations.FindAll(value => value.side == unit.side).Count <= 4) FullMessageSystem.Award(state, unit.side, "relay-construction", 30);
+                        if (state.stations.FindAll(value => value.side == unit.side).Count <= state.ruleParameters.relayScoreLimit) FullMessageSystem.Award(state, unit.side, "relay-construction", state.ruleParameters.relayHalfPoints);
                     }
                     unit.reservedMaterials = 0;
                 }
@@ -213,7 +246,7 @@ namespace TuringSignalRelay
                     var resource = PickupStock(state, unit);
                     if (resource != null && unit.messageIds.Count == 0)
                     {
-                        int count = Math.Min(resource.amount, MaterialCapacity(unit) - unit.materials - unit.reservedMaterials);
+                        int count = Math.Min(resource.amount, MaterialCapacity(unit, state.ruleParameters) - unit.materials - unit.reservedMaterials);
                         unit.materials += count; resource.amount -= count;
                     }
                 }
@@ -222,20 +255,20 @@ namespace TuringSignalRelay
                     var resource = UnloadStock(state, unit);
                     if (resource != null)
                     {
-                        int count = resource.kind == "headquarters" ? unit.materials : Math.Min(unit.materials, 6 - resource.amount);
+                        int count = resource.kind == "headquarters" ? unit.materials : Math.Min(unit.materials, state.ruleParameters.depotCapacity - resource.amount);
                         resource.amount += count; unit.materials -= count;
                     }
                 }
                 else if (action == "deliverMaterials")
                 {
-                    if (state.tick >= 5400 && InHub(unit.x, unit.y)) { state.hubMaterials[unit.side] += unit.materials; unit.materials = 0; }
+                    if (state.tick >= state.ruleParameters.hubOpenTick && InHub(unit.x, unit.y)) { state.hubMaterials[unit.side] += unit.materials; unit.materials = 0; }
                 }
                 else if (action == "transferMaterials")
                 {
                     var target = state.units.Find(value => value.id == unit.actionTargetUnitId);
-                    if (CanTransfer(unit, target))
+                    if (CanTransfer(unit, target, state.ruleParameters))
                     {
-                        int count = Math.Min(unit.materials, MaterialCapacity(target) - target.materials - target.reservedMaterials);
+                        int count = Math.Min(unit.materials, MaterialCapacity(target, state.ruleParameters) - target.materials - target.reservedMaterials);
                         target.materials += count; unit.materials -= count;
                     }
                 }
@@ -278,13 +311,13 @@ namespace TuringSignalRelay
         {
             foreach (int side in new[] { 0, 1 })
             {
-                if (state.units.FindAll(unit => unit.side == side && InHub(unit.x, unit.y)).Count >= 3) FullMessageSystem.Award(state, side, "hub-personnel", 80);
-                if (Array.Exists(map.sites, site => site.kind == "hub" && RadioNetwork.Covering(state, side, site.x, site.y) != null)) FullMessageSystem.Award(state, side, "hub-network", 80);
-                if (state.hubMaterials[side] >= 6) FullMessageSystem.Award(state, side, "hub-materials", 80);
+                if (state.units.FindAll(unit => unit.side == side && InHub(unit.x, unit.y)).Count >= state.ruleParameters.hubUnits) FullMessageSystem.Award(state, side, "hub-personnel", state.ruleParameters.hubConditionHalfPoints);
+                if (Array.Exists(map.sites, site => site.kind == "hub" && RadioNetwork.Covering(state, side, site.x, site.y) != null)) FullMessageSystem.Award(state, side, "hub-network", state.ruleParameters.hubConditionHalfPoints);
+                if (state.hubMaterials[side] >= state.ruleParameters.hubMaterials) FullMessageSystem.Award(state, side, "hub-materials", state.ruleParameters.hubConditionHalfPoints);
                 int remaining = 0;
                 foreach (var unit in state.units) if (unit.side == side) remaining += unit.materials + unit.reservedMaterials;
                 foreach (var resource in state.resources) if (resource.side == side && resource.kind == "headquarters") remaining += resource.amount;
-                if (remaining > 0) FullMessageSystem.Award(state, side, "material-remainder", Math.Min(10, remaining) * 2);
+                if (remaining > 0) FullMessageSystem.Award(state, side, "material-remainder", Math.Min(state.ruleParameters.remainderLimit, remaining) * state.ruleParameters.remainderHalfPoints);
             }
         }
 

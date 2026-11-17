@@ -60,12 +60,14 @@ namespace TuringSignalRelay
             {
                 int members = state.units.FindAll(unit => unit.side == side && unit.x >= 47 && unit.x <= 48 && unit.y >= 47 && unit.y <= 48).Count;
                 bool connected = System.Array.Exists(definition.sites, site => site.kind == "hub" && RadioNetwork.Covering(state, side, site.x, site.y) != null);
-                hub[side] = (System.Math.Min(3, members) / 3f + System.Math.Min(6, state.hubMaterials[side]) / 6f + (connected ? 1 : 0)) / 3;
+                hub[side] = (System.Math.Min(state.ruleParameters.hubUnits, members) / (float)state.ruleParameters.hubUnits +
+                    System.Math.Min(state.ruleParameters.hubMaterials, state.hubMaterials[side]) / (float)state.ruleParameters.hubMaterials + (connected ? 1 : 0)) / 3;
             }
             return new ObserverFrame { protocolVersion = 1, type = "observer-frame", tick = state.tick,
                 durationTicks = config.durationTicks, terrain = terrain, visibleToMask = masks, staticTerrainKnown = true,
                 scoreHalfPoints = (int[])state.scoreHalfPoints.Clone(), entities = entities.ToArray(), links = links.ToArray(),
                 weather = state.weather, hubProgressBySide = hub, hubProgress = System.Math.Max(hub[0], hub[1]),
+                nextEventTick = FullRuleSystem.NextEventTick(state.tick, config.durationTicks, state.ruleParameters, config.FullRules()),
                 eventFocusId = state.eventFocusUnitId >= 0 ? state.eventFocusUnitId : state.eventFocusMessageId >= 0 ? MessageId(state.eventFocusMessageId) : -1,
                 rulesVersion = config.rulesVersion + "/" + config.featureSet, eventText = string.Join("\n", state.events) };
         }

@@ -21,7 +21,9 @@ namespace TuringSignalRelay
             if (settings == null) throw new ArgumentNullException("settings");
             settings.Validate();
             config = settings.Copy();
+            if (config.parameters != null) state.ruleParameters = config.parameters.Copy();
             map = new RelayMap(definition);
+            map.Grid.Parameters = state.ruleParameters;
             this.definition = map.Export();
             foreach (var site in map.Export().sites)
                 if (site.kind == "depot" || site.kind == "central-depot")
@@ -29,9 +31,12 @@ namespace TuringSignalRelay
             for (int side = 0; side < 2; side++)
             {
                 var home = map.Headquarters(side);
-                for (int number = 0; number < 7; number++)
+                int communicators = state.ruleParameters.communicatorCount;
+                int engineers = state.ruleParameters.engineerCount;
+                int count = communicators + engineers + state.ruleParameters.transporterCount;
+                for (int number = 0; number < count; number++)
                     state.units.Add(new RelayUnit { id = side * 100 + number, side = side, x = home.x, y = home.y,
-                        role = number < 3 ? UnitRole.Communicator : number < 5 ? UnitRole.Engineer : UnitRole.Transporter });
+                        role = number < communicators ? UnitRole.Communicator : number < communicators + engineers ? UnitRole.Engineer : UnitRole.Transporter });
             }
             if (config.FullRules()) { full = new FullRuleSystem(this.definition); full.Initialize(state); }
         }

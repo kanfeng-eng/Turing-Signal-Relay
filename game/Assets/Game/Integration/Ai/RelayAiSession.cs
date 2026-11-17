@@ -40,6 +40,8 @@ namespace TuringSignalRelay
 
     public static class RelayAiSession
     {
+        public const int FrameWallMilliseconds = 100;
+        public const int StartupMilliseconds = 2000;
         public static async Task<RelayAiGame> RunAsync(RelayConfig config, RelayMapData map, string[] paths, IRelayAiJson json,
             bool strictCpu, CancellationToken cancellation, Action<int> progress = null, Func<int, AiProcessBridge> bridgeFactory = null, Action<RelayMatchEngine> capture = null)
         {
@@ -60,7 +62,7 @@ namespace TuringSignalRelay
                         bridges[side] = bridgeFactory == null ? new AiProcessBridge(paths[side]) : bridgeFactory(side);
                         if (strictCpu && !bridges[side].PreciseCpuAvailable) throw new PlatformNotSupportedException("Precise CPU accounting unavailable.");
                         string readyText = await bridges[side].ExchangeAsync(json.Initialization(new RelayAiInit { side = side, config = config, map = map }),
-                            -1, null, 2000, false, cancellation);
+                            -1, null, StartupMilliseconds, false, cancellation);
                         if (readyText == null) throw new System.IO.InvalidDataException("AI startup timeout.");
                         var ready = json.Ready(readyText);
                         if (ready == null || ready.type != "relay-ready" || ready.protocolVersion != 2 || ready.side != side)
@@ -119,7 +121,7 @@ namespace TuringSignalRelay
                     if (reply == null || reply.type != "relay-commands" || reply.protocolVersion != 2 || reply.side != side)
                         throw new System.IO.InvalidDataException("Invalid response envelope.");
                     return reply.tick;
-                }, 100, game.cpuBudgetEnforced, cancellation);
+                }, FrameWallMilliseconds, game.cpuBudgetEnforced, cancellation);
                 if (text == null)
                 {
                     if (++game.timeouts[side] >= 3) game.failures[side] = "Three computation timeouts.";

@@ -9,6 +9,7 @@ namespace TuringSignalRelay
         public int Height { get; private set; }
         private readonly TerrainKind[] terrain;
         internal readonly CrossingDefinition[] Crossings;
+        internal RelayRuleParameters Parameters = new RelayRuleParameters();
 
         public GridMap(int width, int height, TerrainKind[] cells)
             : this(width, height, cells, new CrossingDefinition[0]) { }
@@ -45,22 +46,23 @@ namespace TuringSignalRelay
 
     public static class GridPathfinder
     {
-        public static int EnterTicks(TerrainKind terrain, UnitRole role)
+        public static int EnterTicks(TerrainKind terrain, UnitRole role, RelayRuleParameters parameters = null)
         {
+            parameters = parameters ?? new RelayRuleParameters();
             int speed;
             switch (role)
             {
-                case UnitRole.Communicator: speed = 120; break;
-                case UnitRole.Engineer: speed = 90; break;
-                case UnitRole.Transporter: speed = 70; break;
+                case UnitRole.Communicator: speed = parameters.communicatorSpeed; break;
+                case UnitRole.Engineer: speed = parameters.engineerSpeed; break;
+                case UnitRole.Transporter: speed = parameters.transporterSpeed; break;
                 default: throw new ArgumentOutOfRangeException("role");
             }
             int multiplier;
             switch (terrain)
             {
-                case TerrainKind.Road: multiplier = 10; break;
-                case TerrainKind.Grass: multiplier = 14; break;
-                case TerrainKind.Mountain: multiplier = 22; break;
+                case TerrainKind.Road: multiplier = parameters.roadMultiplier; break;
+                case TerrainKind.Grass: multiplier = parameters.grassMultiplier; break;
+                case TerrainKind.Mountain: multiplier = parameters.mountainMultiplier; break;
                 default: throw new ArgumentException("Terrain cannot be entered.");
             }
             return (100 * multiplier + speed - 1) / speed;
@@ -84,7 +86,9 @@ namespace TuringSignalRelay
         {
             if (map == null) throw new ArgumentNullException("map");
             if (side < 0 || side > 1) throw new ArgumentOutOfRangeException("side");
-            int minimum = EnterTicks(TerrainKind.Road, role);
+            int minimum = Math.Min(EnterTicks(TerrainKind.Road, role, map.Parameters), Math.Min(EnterTicks(TerrainKind.Grass, role, map.Parameters), EnterTicks(TerrainKind.Mountain, role, map.Parameters)));
+            foreach (var crossing in map.Crossings)
+                minimum = Math.Min(minimum, CrossingTicks(crossing.kind, role, map.Parameters) / 2);
             path = new GridPosition[0];
             costTicks = 0;
             if (!map.Contains(start) || !map.Contains(goal) || map.At(start) == TerrainKind.River || map.At(goal) == TerrainKind.River)
@@ -123,7 +127,7 @@ namespace TuringSignalRelay
                     {
                         next = new GridPosition(position.X + dx[direction], position.Y + dy[direction]);
                         if (!map.Contains(next) || map.At(next) == TerrainKind.River) continue;
-                        edgeCost = EnterTicks(map.At(next), role);
+                        edgeCost = EnterTicks(map.At(next), role, map.Parameters);
                     }
                     else
                     {
@@ -134,7 +138,7 @@ namespace TuringSignalRelay
                         if (position.Equals(from)) next = to;
                         else if (position.Equals(to)) next = from;
                         else continue;
-                        edgeCost = CrossingTicks(crossing.kind, role);
+                        edgeCost = CrossingTicks(crossing.kind, role, map.Parameters);
                     }
                     if (!map.Contains(next) || map.At(next) == TerrainKind.River) continue;
                     int index = next.Y * map.Width + next.X;
@@ -149,12 +153,13 @@ namespace TuringSignalRelay
             return false;
         }
 
-        public static int CrossingTicks(CrossingKind kind, UnitRole role)
+        public static int CrossingTicks(CrossingKind kind, UnitRole role, RelayRuleParameters parameters = null)
         {
             if (kind < CrossingKind.RopeBridge || kind > CrossingKind.BuiltBridge)
                 throw new ArgumentOutOfRangeException("kind");
-            int ticks = kind == CrossingKind.Ferry ? 30 : 20;
-            return role == UnitRole.Transporter ? ticks * 2 : ticks;
+            parameters = parameters ?? new RelayRuleParameters();
+            int ticks = kind == CrossingKind.Ferry ? parameters.ferryTicks : kind == CrossingKind.RopeBridge ? parameters.ropeBridgeTicks : parameters.builtBridgeTicks;
+            return role == UnitRole.Transporter ? ticks * parameters.transporterCrossingMultiplier : ticks;
         }
 
         private static int Distance(GridPosition a, GridPosition b)

@@ -22,7 +22,7 @@ public static class ContestDatabase
             var options = new DbContextOptionsBuilder<ContestDb>().UseSqlite("Data Source=:memory:").Options;
             await using var reference = new ContestDb(options);
             await reference.Database.OpenConnectionAsync();
-            await reference.Database.MigrateAsync();
+            await reference.GetService<IMigrator>().MigrateAsync(db.Database.GetMigrations().First());
             if (schema != await SchemaAsync(reference)) throw new InvalidDataException("Existing database schema does not match the initial contest schema. Restore a verified backup before upgrading.");
             var history = db.GetService<IHistoryRepository>();
             await using var transaction = await db.Database.BeginTransactionAsync();

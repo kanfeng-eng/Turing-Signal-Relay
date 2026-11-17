@@ -25,6 +25,16 @@ internal static class Program
     {
         try
         {
+            if (args.Length == 4 && args[0] == "configure")
+            {
+                var configured = Read<RelayConfig>(args[1]);
+                configured.parameters = Read<RelayRuleParameters>(args[2]);
+                configured.parametersHash = RelayStateHash.Parameters(configured.parameters);
+                configured.Validate();
+                Write(args[3], configured);
+                Console.WriteLine("RULE_PARAMETERS_VERIFIED " + configured.parametersHash);
+                return 0;
+            }
             if (args.Length == 2 && args[0] == "bridge-check")
             {
                 AiBridgeChecks.Run(Path.GetFullPath(args[1])).GetAwaiter().GetResult();

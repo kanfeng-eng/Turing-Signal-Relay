@@ -11,13 +11,13 @@ namespace TuringSignalRelay
             state.nodes.Clear(); state.links.Clear();
             foreach (var site in map.sites)
                 if (site.kind == "headquarters") state.nodes.Add(new RelayRadioNode { id = HomeId(site.side), side = site.side,
-                    x = site.x, y = site.y, kind = "headquarters", radius = Math.Max(0, 9 - state.weatherReduction), active = true, connectedToHome = true });
+                    x = site.x, y = site.y, kind = "headquarters", radius = Math.Max(0, state.ruleParameters.communicatorRadius - state.weatherReduction), active = true, connectedToHome = true });
             foreach (var unit in state.units)
                 if (unit.stationActive) state.nodes.Add(new RelayRadioNode { id = unit.id, side = unit.side, x = unit.x, y = unit.y,
-                    kind = "communicator", radius = Math.Max(0, 9 - state.weatherReduction), active = state.tick >= unit.suppressedUntilTick });
+                    kind = "communicator", radius = Math.Max(0, state.ruleParameters.communicatorRadius - state.weatherReduction), active = state.tick >= unit.suppressedUntilTick });
             foreach (var station in state.stations)
                 state.nodes.Add(new RelayRadioNode { id = 20000 + station.id, side = station.side, x = station.x, y = station.y,
-                    kind = "relay", radius = Math.Max(0, 12 - state.weatherReduction), active = state.tick >= station.suppressedUntilTick });
+                    kind = "relay", radius = Math.Max(0, state.ruleParameters.relayRadius - state.weatherReduction), active = state.tick >= station.suppressedUntilTick });
             state.nodes.Sort((a, b) => a.id.CompareTo(b.id));
             for (int i = 0; i < state.nodes.Count; i++)
                 for (int j = i + 1; j < state.nodes.Count; j++)

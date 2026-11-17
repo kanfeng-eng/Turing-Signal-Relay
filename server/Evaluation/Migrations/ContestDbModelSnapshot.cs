@@ -344,10 +344,52 @@ namespace Evaluation.Migrations
                     b.ToTable("Submissions");
                 });
 
+            modelBuilder.Entity("TuringSignalRelay.Evaluation.SubmissionReview", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Decision")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FindingsJson")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("JudgeId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SourceHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SubmissionId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubmissionId");
+
+                    b.ToTable("SubmissionReviews");
+                });
+
             modelBuilder.Entity("TuringSignalRelay.Evaluation.Team", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("Disqualified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -449,6 +491,15 @@ namespace Evaluation.Migrations
                     b.HasOne("TuringSignalRelay.Evaluation.Team", null)
                         .WithMany()
                         .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TuringSignalRelay.Evaluation.SubmissionReview", b =>
+                {
+                    b.HasOne("TuringSignalRelay.Evaluation.Submission", null)
+                        .WithMany()
+                        .HasForeignKey("SubmissionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

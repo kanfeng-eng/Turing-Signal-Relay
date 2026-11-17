@@ -81,7 +81,11 @@ def main():
     parser.add_argument('--credentials', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--auth-only', action='store_true')
+    parser.add_argument('--requirements', action='store_true', help='Check simultaneous games and judge review on disposable test teams')
+    parser.add_argument('--slow', action='store_true', help='Run a legal 50ms/frame strategy beyond the previous six-minute deadline')
     args = parser.parse_args()
+    if args.auth_only and (args.requirements or args.slow):
+        parser.error('Requirements and slow checks need complete matches')
     args.output.mkdir(parents=True, exist_ok=False)
     judge = Client(args.url)
     credentials = json.loads(args.credentials.read_text(encoding='utf-8-sig'))
@@ -105,6 +109,13 @@ def main():
     repository = Path(__file__).resolve().parent.parent
     source_a = (repository / 'sdk/cpp/examples/courier.cpp').read_bytes()
     source_b = (repository / 'sdk/cpp/examples/transporter.cpp').read_bytes()
+    if args.slow:
+        source_a = (repository / 'sdk/cpp/examples/courier_policy.hpp').read_bytes().replace(b'../turing_sdk.hpp', b'turing_sdk.hpp')
+        source_a = b'#include <thread>\n#include <chrono>\n' + source_a.replace(b'while (client.getframeinfo()) {',
+            b'while (client.getframeinfo()) { std::this_thread::sleep_for(std::chrono::milliseconds(50));')
+        source_a += b'\nint main(){return courier_main(0, false);}\n'
+    if args.requirements:
+        source_a += b'\n// fopen mentioned for manual scan review only\n'
     assert first.upload(source_a, token=False)[0] == 400
     assert first.upload(source_a, filename='program.exe')[0] == 400
     assert first.upload(b'x' * (256 * 1024 + 1))[0] in (400, 413)
@@ -133,13 +144,27 @@ def main():
         code, body = judge.create_match(submission_a, submission_b, key)
         assert code == 202, (code, body[:500])
         match_id = json.loads(body)['id']
+        started = time.monotonic()
         assert json.loads(judge.create_match(submission_a, submission_b, key)[1])['id'] == match_id
         assert outsider.request('/api/matches/' + match_id)[0] == 404
         assert Client(args.url).request('/api/matches/' + match_id + '/snapshot')[0] == 401
         code, body = first.request('/api/matches/' + match_id + '/spectator-token', b'', {'X-CSRF-TOKEN': first.csrf()})
         assert code == 200
         token = json.loads(body)['token']
-        result = wait_json(judge, '/api/matches/' + match_id, {'completed', 'failed'}, 420)
+        if args.requirements or args.slow:
+            deadline = time.monotonic() + 60
+            while time.monotonic() < deadline:
+                snapshots = [judge.request('/api/matches/' + match_id + '/snapshot?game=' + str(number)) for number in (1, 2)]
+                if all(code == 200 and json.loads(body)['status'] == 'running' for code, body in snapshots):
+                    report['simultaneousGames'] = [json.loads(body)['tick'] for _, body in snapshots]
+                    (args.output / 'parallel.json').write_text(json.dumps({'id': match_id, 'ticks': report['simultaneousGames']}))
+                    print('SIMULTANEOUS_GAMES_VERIFIED', match_id, flush=True)
+                    break
+                time.sleep(.2)
+            else:
+                raise AssertionError('Both games did not run concurrently')
+        result = wait_json(judge, '/api/matches/' + match_id, {'completed', 'failed'}, 1200 if args.slow else 420)
+        report['matchElapsedSeconds'] = time.monotonic() - started
         assert result['match']['status'] == 'completed', result['match']['diagnostic']
         for number in (1, 2):
             game = result['result']['games'][number - 1]
@@ -147,6 +172,8 @@ def main():
             snapshot_path = '/api/matches/' + match_id + '/snapshot?game=' + str(number)
             code, body = Client(args.url).request(snapshot_path, headers={'Authorization': 'Bearer ' + token})
             assert code == 200 and json.loads(body)['tick'] == 9000
+        if args.slow:
+            assert report['matchElapsedSeconds'] > 360
         code, body = judge.request('/api/matches/' + match_id + '/artifacts')
         assert code == 200
         for artifact in json.loads(body):
@@ -159,6 +186,18 @@ def main():
         report['compilerFailure'] = 'passed'
         report['idempotentMatchCreation'] = 'passed'
         report['authorizedSnapshotsAndArtifacts'] = 'passed'
+        if args.requirements:
+            assert b'fopen' in judge.request('/Judge')[1]
+            code, body = judge.form('/Judge?handler=Review', {'ReviewSubmissionId': submission_a, 'Decision': 'approved', 'ReviewReason': 'review-check-approved-' + suffix})
+            assert code == 200 and ('review-check-approved-' + suffix).encode() in body
+            code, body = judge.form('/Judge?handler=Review', {'ReviewSubmissionId': submission_a, 'Decision': 'disqualified', 'ReviewReason': 'review-check-disqualified-' + suffix})
+            assert code == 200 and ('review-check-disqualified-' + suffix).encode() in body
+            value = json.loads(judge.request('/api/matches/' + match_id)[1])
+            assert value['match']['status'] == 'disqualified' and value['result'] is None
+            assert first.upload(source_a)[0] == 400
+            assert judge.create_match(submission_a, submission_b, secrets.token_hex(16))[0] == 400
+            assert Client(args.url).request('/api/matches/' + match_id + '/snapshot', headers={'Authorization': 'Bearer ' + token})[0] == 410
+            report['scanReviewAndDisqualification'] = 'passed'
     report['status'] = 'passed'
     (args.output / 'CHECKS.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print('PLATFORM_CHECKS_PASSED', args.output, flush=True)

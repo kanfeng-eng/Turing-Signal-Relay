@@ -106,7 +106,11 @@ namespace TuringSignalRelay
                     crossing.enabled = bridges.Exists(bridge => bridge.crossingId == crossing.id);
         }
 
-        public static bool FerryOpen(int tick) { return tick >= 2400 && (tick - 2400) % 450 < 150; }
+        public static bool FerryOpen(int tick, RelayRuleParameters parameters = null)
+        {
+            parameters = parameters ?? new RelayRuleParameters();
+            return tick >= parameters.ferryFirstTick && (tick - parameters.ferryFirstTick) % parameters.ferryPeriodTicks < parameters.ferryOpenTicks;
+        }
         private static bool Inside(int x, int y) { return x >= 0 && y >= 0 && x < 96 && y < 96; }
 
         private void ValidateReachability()

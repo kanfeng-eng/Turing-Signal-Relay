@@ -60,7 +60,14 @@ public sealed class EvaluationProcessor(ContestDb db, ContestPaths paths, Sandbo
             match.Status = match.Attempts < 2 ? "queued" : "failed";
             match.Diagnostic = "评测基础设施故障 " + error.Message;
         }
+        await using var transaction = await db.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellation);
+        if (await db.Teams.AnyAsync(x => (x.Id == match.TeamAId || x.Id == match.TeamBId) && x.Disqualified, cancellation))
+        {
+            match.Status = "disqualified";
+            match.Diagnostic = "关联队伍已被裁判取消参赛资格。";
+        }
         await db.SaveChangesAsync(cancellation);
+        await transaction.CommitAsync(cancellation);
         return true;
     }
 
@@ -68,16 +75,16 @@ public sealed class EvaluationProcessor(ContestDb db, ContestPaths paths, Sandbo
     {
         string output = paths.File(match.ResultDirectory);
         Directory.CreateDirectory(output);
+        if (await db.Teams.AnyAsync(x => (x.Id == match.TeamAId || x.Id == match.TeamBId) && x.Disqualified, cancellation)) return;
         var first = await db.Submissions.SingleAsync(x => x.Id == match.TeamASubmissionId, cancellation);
         var second = await db.Submissions.SingleAsync(x => x.Id == match.TeamBSubmissionId, cancellation);
         if (first.Status != "ready" || second.Status != "ready") throw new InvalidDataException("A match requires compiled submissions.");
         var config = ContestJson.Read<RelayConfig>(Path.Combine(paths.Repository, "fixtures/protocol/relay-full-config.json"));
         var map = ContestJson.Read<RelayMapData>(Path.Combine(paths.Repository, "fixtures/world/map-v1.json"));
         config.seed = match.Seed;
-        var outcomes = new RelayGameOutcome[2];
         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellation);
-        deadline.CancelAfter(TimeSpan.FromMinutes(6));
-        for (int number = 0; number < 2; number++)
+        deadline.CancelAfter(MatchTimeLimit(config.durationTicks));
+        async Task<RelayGameOutcome> RunGameAsync(int number)
         {
             var ordered = number == 0 ? new[] { first, second } : new[] { second, first };
             string directory = Path.Combine(output, "game-" + (number + 1));
@@ -114,14 +121,20 @@ public sealed class EvaluationProcessor(ContestDb db, ContestPaths paths, Sandbo
                         memory = File.ReadAllText(Path.Combine(x.ResourceDirectory, "memory.events")),
                         pids = File.ReadAllText(Path.Combine(x.ResourceDirectory, "pids.events")) }).ToArray() });
                 for (int side = 0; side < 2; side++) await File.WriteAllTextAsync(Path.Combine(directory, "ai-" + side + ".stderr.txt"), game.diagnostics[side] ?? "", deadline.Token);
-                outcomes[number] = new RelayGameOutcome { result = game.result, forfeit = game.recording.forfeit, faultSide = game.recording.faultSide,
+                return new RelayGameOutcome { result = game.result, forfeit = game.recording.forfeit, faultSide = game.recording.faultSide,
                     teamBySide = number == 0 ? new[] { 0, 1 } : new[] { 1, 0 } };
+            }
+            catch
+            {
+                deadline.Cancel();
+                throw;
             }
             finally
             {
                 await Task.WhenAll(runs.Select(run => run.ReleaseAsync()));
             }
         }
+        var outcomes = await Task.WhenAll(RunGameAsync(0), RunGameAsync(1));
         var series = RelaySeries.Aggregate(outcomes[0], outcomes[1]);
         ContestJson.Write(Path.Combine(output, "series.result.json"), series);
         var artifacts = new List<MatchArtifact>();
@@ -134,5 +147,12 @@ public sealed class EvaluationProcessor(ContestDb db, ContestPaths paths, Sandbo
         db.Artifacts.AddRange(artifacts);
         match.Status = "completed";
         match.Diagnostic = series.status == "completed" ? "双局评测完成。" : "双局评测完成，存在选手故障。";
+    }
+
+    public static TimeSpan MatchTimeLimit(int durationTicks)
+    {
+        if (durationTicks is < 1 or > 9000) throw new ArgumentOutOfRangeException(nameof(durationTicks));
+        return TimeSpan.FromMilliseconds((long)durationTicks * RelayAiSession.FrameWallMilliseconds +
+            2L * RelayAiSession.StartupMilliseconds) + TimeSpan.FromMinutes(2);
     }
 }

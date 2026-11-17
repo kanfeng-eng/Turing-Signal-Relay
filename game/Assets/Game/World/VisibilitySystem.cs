@@ -6,13 +6,17 @@ namespace TuringSignalRelay
         {
             var home = map.Headquarters(side);
             var target = new GridPosition(x, y);
-            if (GridMap.InRadius(new GridPosition(home.x, home.y), target, 3)) return true;
+            if (GridMap.InRadius(new GridPosition(home.x, home.y), target, state.ruleParameters.headquartersVision)) return true;
             foreach (var unit in state.units)
-                if (unit.side == side && GridMap.InRadius(new GridPosition(unit.x, unit.y), target, Radius(unit.role))) return true;
+                if (unit.side == side && GridMap.InRadius(new GridPosition(unit.x, unit.y), target, Radius(unit.role, state.ruleParameters))) return true;
             return false;
         }
 
-        public static int Radius(UnitRole role) { return role == UnitRole.Communicator ? 5 : role == UnitRole.Engineer ? 4 : 3; }
+        public static int Radius(UnitRole role, RelayRuleParameters parameters = null)
+        {
+            parameters = parameters ?? new RelayRuleParameters();
+            return role == UnitRole.Communicator ? parameters.communicatorVision : role == UnitRole.Engineer ? parameters.engineerVision : parameters.transporterVision;
+        }
 
         public static int[] Masks(RelayMap map, RelayState state)
         {
@@ -20,9 +24,9 @@ namespace TuringSignalRelay
             for (int side = 0; side < 2; side++)
             {
                 var home = map.Headquarters(side);
-                Paint(masks, side, home.x, home.y, 3);
+                Paint(masks, side, home.x, home.y, state.ruleParameters.headquartersVision);
             }
-            foreach (var unit in state.units) Paint(masks, unit.side, unit.x, unit.y, Radius(unit.role));
+            foreach (var unit in state.units) Paint(masks, unit.side, unit.x, unit.y, Radius(unit.role, state.ruleParameters));
             return masks;
         }
 

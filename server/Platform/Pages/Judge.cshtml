@@ -3,6 +3,29 @@
 @{ ViewData["Title"] = "裁判台"; }
 <h1>裁判台</h1>
 <p>安排双局换边比赛</p>
+<article>
+<h2>源码扫描与人工复核</h2>
+<p>扫描提示文件、网络、进程、线程及可能的硬编码。字符串、注释和合法坐标也可能命中，请结合源码与运行记录填写结论。</p>
+<div class="table-wrap"><table><caption>最近20份提交</caption><thead><tr><th>提交</th><th>队伍</th><th>扫描提示</th></tr></thead><tbody>
+@foreach (var submission in Model.RecentSubmissions) {
+<tr><td><a class="download" href="/api/submissions/@submission.Id/source">@submission.Id</a></td><td>@Model.Teams[submission.TeamId]</td><td>
+@if (Model.Scans.TryGetValue(submission.Id, out var scan)) {
+    @if (scan.Findings.Length == 0) { <span>未命中扫描规则</span> }
+    @foreach (var finding in scan.Findings) { <p>第 @finding.Line 行 · @finding.Category · <code>@finding.Symbol</code></p> }
+} else { <span>源码摘要异常，请检查原始文件</span> }
+</td></tr>
+}
+</tbody></table></div>
+<form method="post" asp-page-handler="Review">
+<label asp-for="ReviewSubmissionId">提交编号</label><input asp-for="ReviewSubmissionId" required maxlength="32">
+<label asp-for="Decision">复核结论</label><select asp-for="Decision"><option value="approved">复核通过</option><option value="disqualified">取消该队伍资格及相关比赛成绩</option></select>
+<label asp-for="ReviewReason">复核理由</label><textarea asp-for="ReviewReason" required maxlength="2000"></textarea>
+<button type="submit">记录复核结论</button>
+</form>
+<div class="table-wrap"><table><caption>最近30条复核记录</caption><thead><tr><th>提交</th><th>结论</th><th>理由</th><th>裁判</th><th>时间（北京时间）</th></tr></thead><tbody>
+@foreach (var review in Model.RecentReviews) { <tr><td>@review.SubmissionId</td><td>@(review.Decision == "disqualified" ? "取消队伍资格" : "复核通过")</td><td>@review.Reason</td><td>@review.JudgeId</td><td>@review.CreatedUtc.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss")</td></tr> }
+</tbody></table></div>
+</article>
 <div asp-validation-summary="All" role="alert"></div>
 <article>
 <form method="post" asp-page-handler="Match" class="judge">

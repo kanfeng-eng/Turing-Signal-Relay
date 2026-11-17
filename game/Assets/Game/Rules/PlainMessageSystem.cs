@@ -7,21 +7,25 @@ namespace TuringSignalRelay
     {
         public static void Spawn(RelayState state, RelaySite[] reports, int seed)
         {
-            if (state.tick < 200 || state.tick >= 9000 || (state.tick - 200) % 300 != 0) return;
-            int number = (state.tick - 200) / 300;
+            if (state.tick < state.ruleParameters.plainFirstTick || state.tick >= 9000 || (state.tick - state.ruleParameters.plainFirstTick) % state.ruleParameters.plainPeriodTicks != 0) return;
+            int number = (state.tick - state.ruleParameters.plainFirstTick) / state.ruleParameters.plainPeriodTicks;
             uint value = unchecked((uint)seed ^ ((uint)(number + 1) * 0x9e3779b9u));
             value ^= value << 13; value ^= value >> 17; value ^= value << 5;
             var first = reports[(int)(value % (uint)reports.Length)];
             for (int side = 0; side < 2; side++)
-                state.messages.Add(new RelayMessage { id = number * 2 + side, side = side, createdTick = state.tick,
+                state.messages.Add(new RelayMessage { id = number * 2 + side, side = side, createdTick = state.tick, deadlineTicks = state.ruleParameters.plainDeadlineTicks,
                     x = side == 0 ? first.x : 95 - first.x, y = side == 0 ? first.y : 95 - first.y });
         }
 
-        public static int Capacity(RelayUnit unit) { return unit.role == UnitRole.Communicator ? 1 : unit.role == UnitRole.Transporter ? 3 : 0; }
+        public static int Capacity(RelayUnit unit, RelayRuleParameters parameters = null)
+        {
+            parameters = parameters ?? new RelayRuleParameters();
+            return unit.role == UnitRole.Communicator ? parameters.communicatorReports : unit.role == UnitRole.Transporter ? parameters.transporterReports : 0;
+        }
 
         public static string ValidateLoad(RelayState state, RelayUnit unit, int messageId)
         {
-            if (unit.messageIds.Count >= Capacity(unit)) return "message-capacity";
+            if (unit.messageIds.Count >= Capacity(unit, state.ruleParameters)) return "message-capacity";
             var message = state.messages.Find(value => value.id == messageId);
             if (message == null || message.side != unit.side || message.carrierId != -1 || message.deliveredTick >= 0 || message.x != unit.x || message.y != unit.y)
                 return "message-unavailable";
@@ -38,7 +42,7 @@ namespace TuringSignalRelay
             candidates.Remove(requested); candidates.Insert(0, requested);
             foreach (var message in candidates)
             {
-                if (unit.messageIds.Count == Capacity(unit)) break;
+                if (unit.messageIds.Count == Capacity(unit, state.ruleParameters)) break;
                 message.carrierId = unit.id;
                 unit.messageIds.Add(message.id);
             }
@@ -49,7 +53,7 @@ namespace TuringSignalRelay
         public static string Transfer(RelayState state, RelayUnit sender, RelayUnit target, int messageId)
         {
             if (target == null || sender.id == target.id || sender.side != target.side || sender.x != target.x || sender.y != target.y ||
-                !sender.messageIds.Contains(messageId) || target.messageIds.Count >= Capacity(target)) return "invalid-transfer";
+                !sender.messageIds.Contains(messageId) || target.messageIds.Count >= Capacity(target, state.ruleParameters)) return "invalid-transfer";
             sender.messageIds.Remove(messageId); target.messageIds.Add(messageId); target.messageIds.Sort();
             state.messages.Find(value => value.id == messageId).carrierId = target.id;
             return null;

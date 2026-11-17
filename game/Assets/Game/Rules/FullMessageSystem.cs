@@ -9,19 +9,19 @@ namespace TuringSignalRelay
         {
             var reports = Array.FindAll(map.sites, site => site.kind == "report" && site.side == 0);
             PlainMessageSystem.Spawn(state, reports, seed);
-            if (state.tick >= 1800 && state.tick <= 7800 && (state.tick - 1800) % 1200 == 0)
-                Pair(state, "urgent", 100 + (state.tick - 1800) / 1200 * 2, 300, 47, 47, true);
-            if (state.tick >= 2400 && state.tick <= 7800 && (state.tick - 2400) % 1800 == 0)
+            if (state.tick >= state.ruleParameters.urgentFirstTick && (state.tick - state.ruleParameters.urgentFirstTick) / state.ruleParameters.urgentPeriodTicks < state.ruleParameters.urgentCount && (state.tick - state.ruleParameters.urgentFirstTick) % state.ruleParameters.urgentPeriodTicks == 0)
+                Pair(state, "urgent", 100 + (state.tick - state.ruleParameters.urgentFirstTick) / state.ruleParameters.urgentPeriodTicks * 2, state.ruleParameters.urgentDeadlineTicks, 47, 47, true);
+            if (state.tick >= state.ruleParameters.secretFirstTick && (state.tick - state.ruleParameters.secretFirstTick) / state.ruleParameters.secretPeriodTicks < state.ruleParameters.secretCount && (state.tick - state.ruleParameters.secretFirstTick) % state.ruleParameters.secretPeriodTicks == 0)
             {
-                int index = (state.tick - 2400) / 1800;
+                int index = (state.tick - state.ruleParameters.secretFirstTick) / state.ruleParameters.secretPeriodTicks;
                 var site = reports[Choice(seed, index, 23)];
-                Pair(state, "secret", 200 + index * 2, 900, site.x, site.y, false);
+                Pair(state, "secret", 200 + index * 2, state.ruleParameters.secretDeadlineTicks, site.x, site.y, false);
             }
-            if (state.tick >= 3600 && state.tick <= 7200 && (state.tick - 3600) % 1800 == 0)
+            if (state.tick >= state.ruleParameters.broadcastFirstTick && (state.tick - state.ruleParameters.broadcastFirstTick) / state.ruleParameters.broadcastPeriodTicks < state.ruleParameters.broadcastCount && (state.tick - state.ruleParameters.broadcastFirstTick) % state.ruleParameters.broadcastPeriodTicks == 0)
             {
-                int index = (state.tick - 3600) / 1800;
+                int index = (state.tick - state.ruleParameters.broadcastFirstTick) / state.ruleParameters.broadcastPeriodTicks;
                 int first = Choice(seed, index, 71), second = (first + 1 + Choice(seed, index, 97) % 2) % 3;
-                Pair(state, "broadcast", 300 + index * 2, 600, reports[first].x, reports[first].y, false);
+                Pair(state, "broadcast", 300 + index * 2, state.ruleParameters.broadcastDeadlineTicks, reports[first].x, reports[first].y, false);
                 foreach (var message in state.messages)
                     if (message.id == 300 + index * 2 || message.id == 301 + index * 2)
                     {
@@ -29,7 +29,7 @@ namespace TuringSignalRelay
                         message.secondY = message.side == 0 ? reports[second].y : 95 - reports[second].y;
                     }
             }
-            if (state.tick == 7200) Pair(state, "assault", 400, 300, 47, 47, true);
+            if (state.tick == state.ruleParameters.assaultTick) Pair(state, "assault", 400, state.ruleParameters.urgentDeadlineTicks, 47, 47, true);
         }
 
         private static int Choice(int seed, int index, uint stream)
@@ -64,14 +64,14 @@ namespace TuringSignalRelay
             {
                 if (age > message.deadlineTicks) return false;
                 bool later = state.messages.Exists(other => other.sharedTaskId == message.sharedTaskId && other.side != message.side && other.deliveredTick >= 0 && other.deliveredTick < state.tick);
-                basis = message.kind == "assault" ? 120 : 90;
-                half = later ? 40 : basis;
+                basis = message.kind == "assault" ? state.ruleParameters.assaultFirstHalfPoints : state.ruleParameters.urgentFirstHalfPoints;
+                half = later ? state.ruleParameters.urgentLaterHalfPoints : basis;
             }
-            else if (message.kind == "broadcast") { basis = 40; half = 40; }
+            else if (message.kind == "broadcast") { basis = state.ruleParameters.broadcastHalfPoints; half = basis; }
             else
             {
-                basis = message.kind == "secret" ? 50 : 20;
-                half = age <= message.deadlineTicks ? basis * 3 / 2 : age <= message.deadlineTicks + 300 ? basis : basis / 2;
+                basis = message.kind == "secret" ? state.ruleParameters.secretBaseHalfPoints : state.ruleParameters.plainBaseHalfPoints;
+                half = age <= message.deadlineTicks ? basis * 3 / 2 : age <= message.deadlineTicks + state.ruleParameters.lateWindowTicks ? basis : basis / 2;
             }
             Award(state, message.side, message.kind + "-delivery", half, message.id, age, basis);
             foreach (var unit in state.units) unit.messageIds.Remove(message.id);
@@ -81,7 +81,7 @@ namespace TuringSignalRelay
 
         public static string ValidateLoad(RelayState state, RelayUnit unit, int id, RelayMapData map)
         {
-            if (unit.materials > 0 || unit.reservedMaterials > 0 || unit.messageIds.Count >= PlainMessageSystem.Capacity(unit)) return "message-capacity";
+            if (unit.materials > 0 || unit.reservedMaterials > 0 || unit.messageIds.Count >= PlainMessageSystem.Capacity(unit, state.ruleParameters)) return "message-capacity";
             var message = state.messages.Find(value => value.id == id);
             if (message == null || message.side != unit.side || message.carrierId >= 0 || message.deliveredTick >= 0 || message.expired || message.kind == "broadcast") return "message-unavailable";
             bool position = message.x == unit.x && message.y == unit.y;
@@ -99,7 +99,7 @@ namespace TuringSignalRelay
             candidates.Sort((a, b) => a.id.CompareTo(b.id)); candidates.Insert(0, selected);
             foreach (var message in candidates)
             {
-                if (unit.messageIds.Count == PlainMessageSystem.Capacity(unit)) break;
+                if (unit.messageIds.Count == PlainMessageSystem.Capacity(unit, state.ruleParameters)) break;
                 message.carrierId = unit.id; message.stationId = -1; message.x = unit.x; message.y = unit.y;
                 unit.messageIds.Add(message.id);
             }
@@ -117,7 +117,7 @@ namespace TuringSignalRelay
                     bool covered = RadioNetwork.Covering(state, message.side, message.x, message.y) != null && RadioNetwork.Covering(state, message.side, message.secondX, message.secondY) != null;
                     if (!covered) message.progressStartedTick = -1;
                     else if (message.progressStartedTick < 0) message.progressStartedTick = state.tick;
-                    else if (state.tick - message.progressStartedTick >= 30 && state.tick - message.createdTick <= message.deadlineTicks) Deliver(state, message);
+                    else if (state.tick - message.progressStartedTick >= state.ruleParameters.broadcastHoldTicks && state.tick - message.createdTick <= message.deadlineTicks) Deliver(state, message);
                     continue;
                 }
                 if (message.carrierId >= 0) continue;
@@ -161,7 +161,7 @@ namespace TuringSignalRelay
                 if (message == null) { unit.decodeMessageId = -1; unit.decodeStartedTick = -1; if (unit.task == "decode") unit.task = "idle"; continue; }
                 unit.task = "decode";
                 if (unit.decodeMessageId != message.id) { unit.decodeMessageId = message.id; unit.decodeStartedTick = state.tick; }
-                if (state.tick - unit.decodeStartedTick >= 50)
+                if (state.tick - unit.decodeStartedTick >= state.ruleParameters.decodeTicks)
                 {
                     message.decoded = true; unit.task = "idle"; unit.decodeMessageId = -1; unit.decodeStartedTick = -1;
                     if (message.carrierId == unit.id)
