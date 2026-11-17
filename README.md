@@ -8,7 +8,7 @@
 
 观看游戏画面时，下载并完整解压[Windows客户端](http://111.231.101.147/downloads/TuringSignalRelay-windows.zip)，运行TuringSignalRelay.exe，再打开examples/game-1.replay.json。在线比赛在平台结果页生成观战地址与令牌，填入Unity侧栏连接。选手接口见[C++17 SDK下载](http://111.231.101.147/downloads/TuringSignalRelay-sdk.zip)。
 
-发布版本为1.0.0 RC1，工程与构建统一使用Unity6000.6.8f1。公网发布与剩余验证范围见[本轮发布记录](docs/PUBLIC_RELEASE.json)。
+发布版本为1.0.0 RC2，工程与构建统一使用Unity6000.6.8f1。公网发布与剩余验证范围见[本轮发布记录](docs/REQUIREMENTS_VALIDATION.json)。
 
 ## 首次使用
 
@@ -27,11 +27,13 @@
 
 ## 当前状态
 
-更新于2026-11-07。当前由用户个人承担全部五个模块。
+更新于2026-11-17。当前由用户个人承担全部五个模块。
+
+本轮已完成策划案核对后的双局并行、整场时限、源码扫描与裁判复核、事件倒计时和规则参数配置。实现与操作见[要求修正说明](docs/REQUIREMENTS_FIXES.md)，现有环境验收与剩余范围见[机器记录](docs/REQUIREMENTS_VALIDATION.json)。
 
 用户已取消原Unity版本限制，当前采用已验证的6000.6.8f1统一构建，并按用户选择启用服务器IP的HTTP访问。干净Ubuntu从零安装继续单独列为待验项，本次采用RC预发布。此前版本调整前的⑧结论保留于[验收报告](docs/发布验收报告.md)。
 
-本轮5份交付包位于本机`artifacts/release-http/delivery`，源码基点为干净提交cbb4135，包含Windows观战、Linux原生裁判、正式服务、SDK和源码。原阶段7的5份包继续保留各自构建来源与摘要。操作见[发布说明](docs/RELEASE.md)。
+本轮5份交付包位于本机`artifacts/requirements-fixes/delivery-verified`，源码基点为干净提交44aaa3e，包含Windows观战、Linux原生裁判、正式服务、SDK和源码。原阶段7的5份包继续保留各自构建来源与摘要。操作见[发布说明](docs/RELEASE.md)。
 
 用户本轮“⑤完整玩法、⑥正式沙箱”的实现、边界修复与扩展验收见[⑤⑥说明](docs/STAGES_5_6.md)和[机器记录](docs/STAGE56_VALIDATION.json)。完整规则检查扩展为76项，新增台站缓存与预备沙箱回收回归。
 
@@ -40,7 +42,7 @@
 - Ubuntu的14项沙箱检查、文件违规与三次CPU超时判负、Worker重启恢复、6路并发上传限额及备份恢复实测通过，证据见[平台验收记录](docs/PLATFORM_VALIDATION.json)。
 - Unity工程版本和本轮构建版本均为`6000.6.8f1`。使用PublicSource生成的源码副本完成导入与构建，元数据分别记录源码与版本。
 
-开发分支为`feat/1-bootstrap`，本轮程序包源码基点为`cbb4135`。本机工作区为`C:\Users\kanfe\Desktop\图灵杯`。接手前核对Git状态和远程分支最新提交，保留本机验证产物与私有登录资料。
+开发分支为`feat/1-bootstrap`，本轮程序包源码基点为`44aaa3e`。本机工作区为`C:\Users\kanfe\Desktop\图灵杯`。接手前核对Git状态和远程分支最新提交，保留本机验证产物与私有登录资料。
 
 使用网页端ChatGPT与Desktop Commander Remote接手时，全文复制[交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md)。其中包含当前证据、剩余任务、工具路径和服务器现场。
 
@@ -165,7 +167,7 @@ artifacts/              本机验证产物与私有运行资料
 | 正式数据与移动平报 | 52项逻辑检查及9000tick，见[阶段记录](docs/STAGE123_VALIDATION.json) |
 | 完整规则与本地AI | 当前76项、52项旧逻辑与9项进程检查通过，双局各9000tick，见[⑤⑥记录](docs/STAGE56_VALIDATION.json)；原生对照保留于[此前记录](docs/STAGE45_VALIDATION.json) |
 | 旧Worker回归 | Windows与Ubuntu各24项通过，当前记录见[公网发布](docs/PUBLIC_RELEASE.json) |
-| 平台正常全流程 | 公网部署通过，位于`artifacts/release-http/public-platform/CHECKS.json` |
+| 平台正常全流程 | 公网部署通过，位于`artifacts/requirements-fixes/platform-final-requirements/CHECKS.json` |
 | Ubuntu沙箱 | 新一轮14项通过，驻留内存增长至约252.9 MiB后受限，本机报告为`artifacts/stage56/sandbox-checks.json` |
 | 数据迁移与备份 | 恢复到独立目录通过，7个账号、5份源码、3份产物及登录/下载核验成功 |
 | 故障与恢复 | 文件违规、三次CPU超时判负、最终快照、日志授权和重启后第二次尝试通过 |
@@ -174,6 +176,6 @@ artifacts/              本机验证产物与私有运行资料
 | Unity授权观战 | 独立副本连接正式接口的4项快照检查通过，含正常与故障终局 |
 | 发布与回滚 | 同一构建发布到新版本目录再回滚，服务健康与数据库计数一致 |
 
-当前部署与交付摘要见[公网发布记录](docs/PUBLIC_RELEASE.json)，⑤⑥细节见[完整玩法与沙箱验收](docs/STAGE56_VALIDATION.json)，此前账号、队列与备份恢复证据保留在[平台验收记录](docs/PLATFORM_VALIDATION.json)。接手操作与复验顺序见[交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md)。
+当前部署与交付摘要见[当前发布记录](docs/REQUIREMENTS_VALIDATION.json)，⑤⑥细节见[完整玩法与沙箱验收](docs/STAGE56_VALIDATION.json)，此前账号、队列与备份恢复证据保留在[平台验收记录](docs/PLATFORM_VALIDATION.json)。接手操作与复验顺序见[交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md)。
 
 原策划案与完整旧工程保留在本地，已迁入的自有代码和精灵有来源记录。贡献与分支约定见[CONTRIBUTING](CONTRIBUTING.md)。

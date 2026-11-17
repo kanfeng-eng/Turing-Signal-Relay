@@ -84,7 +84,7 @@ def validate_payload(args):
                 if route.endswith('.css'):
                     assert '@media' in body
                 else:
-                    assert '<h1>' in body and '登录电波接力' in body and response.geturl().endswith('/Login')
+                    assert '<h1' in body and 'name="Username"' in body and 'name="Password"' in body and response.geturl().endswith('/Login')
                 http[route] = {"status": response.status, "bytes": len(body.encode("utf-8"))}
         try:
             urllib.request.urlopen(origin + '/api/submissions', timeout=10)
