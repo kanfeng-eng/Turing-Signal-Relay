@@ -1,6 +1,11 @@
 using System;
 using System.Collections.Generic;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("TuringSignalRelay.World")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("TuringSignalRelay.Rules")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("TuringSignalRelay.Integration")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("TuringSignalRelay.Presentation")]
+
 namespace TuringSignalRelay
 {
     [Serializable]

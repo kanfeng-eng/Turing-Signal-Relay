@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("TuringSignalRelay.Integration")]
+
 namespace TuringSignalRelay
 {
     public sealed class GridMap
