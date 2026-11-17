@@ -63,6 +63,7 @@ try {
     $taskResult = Join-Path $OutputDirectory 'unity-result.json'
     & "$PSScriptRoot\run-unity-check.ps1" -EditorDirectory $EditorDirectory -Action Delivery -DevelopmentCopy:$DevelopmentCopy -PublicSource:(!$IncludeLocalArt) -ResultFile $taskResult
     $taskBuild = Get-Content -LiteralPath $taskResult -Raw | ConvertFrom-Json
+    Invoke-EditorCheck 'TuringSignalRelay.Editor.SmokeChecks.Run' 'BOOTSTRAP_CHECKS_PASSED' (Join-Path $OutputDirectory 'unity-check.log')
     & "$PSScriptRoot\verify-unity-api.ps1" -EditorDirectory $ApiEditorDirectory -Compiler $Compiler -UiAssembly (Join-Path $taskBuild.project 'Library\ScriptAssemblies\UnityEngine.UI.dll')
     Invoke-EditorCheck 'TuringSignalRelay.Editor.ObserverAcceptanceChecks.Run' 'OBSERVER_ACCEPTANCE_CHECKS_PASSED' (Join-Path $OutputDirectory 'observer-acceptance.log')
     Copy-Item -LiteralPath (Join-Path $taskBuild.artifacts 'observer-acceptance.json') -Destination $OutputDirectory
