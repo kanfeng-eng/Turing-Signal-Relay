@@ -46,11 +46,16 @@ public sealed class EvaluationProcessor(ContestDb db, ContestPaths paths, Sandbo
             await db.SaveChangesAsync(cancellation);
             return true;
         }
-        var match = await db.Matches.OrderBy(x => x.CreatedUtc).FirstOrDefaultAsync(x => x.Status == "queued", cancellation);
-        if (match == null) return false;
-        match.Status = "running"; match.Attempts++;
-        match.ResultDirectory = Path.Combine("matches", match.Id, "attempt-" + match.Attempts);
-        await db.SaveChangesAsync(cancellation);
+        ContestMatch? match;
+        await using (var claim = await db.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable, cancellation))
+        {
+            match = await db.Matches.OrderBy(x => x.CreatedUtc).FirstOrDefaultAsync(x => x.Status == "queued", cancellation);
+            if (match == null) return false;
+            match.Status = "running"; match.Attempts++;
+            match.ResultDirectory = Path.Combine("matches", match.Id, "attempt-" + match.Attempts);
+            await db.SaveChangesAsync(cancellation);
+            await claim.CommitAsync(cancellation);
+        }
         try
         {
             await RunMatchAsync(match, cancellation);
