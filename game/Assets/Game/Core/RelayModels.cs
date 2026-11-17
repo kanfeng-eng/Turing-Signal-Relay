@@ -26,8 +26,10 @@ namespace TuringSignalRelay
             if (parameters != null)
             {
                 parameters.Validate();
-                if (!FullRules() || (parametersHash != RelayStateHash.Parameters(parameters) &&
-                    !(string.IsNullOrEmpty(parametersHash) && RelayStateHash.Parameters(parameters) == RelayStateHash.Parameters(new RelayRuleParameters()))))
+                string digest = RelayStateHash.Parameters(parameters);
+                bool approvedDefaults = digest == RelayStateHash.Parameters(new RelayRuleParameters());
+                if ((!FullRules() && (!approvedDefaults || !string.IsNullOrEmpty(parametersHash))) ||
+                    (parametersHash != digest && !(string.IsNullOrEmpty(parametersHash) && approvedDefaults)))
                     throw new ArgumentException("Rule parameter digest mismatch.");
             }
             else if (!string.IsNullOrEmpty(parametersHash)) throw new ArgumentException("Missing rule parameters.");

@@ -12,6 +12,12 @@ internal static class RequirementChecks
     {
         void Check(bool value, string name) { if (!value) throw new Exception("REQUIREMENTS_FAIL " + name); }
         var defaults = new RelayRuleParameters();
+        var legacy = new RelayConfig { rulesHash = RelayConfig.ApprovedRulesHash, parameters = defaults.Copy() };
+        legacy.Validate();
+        legacy.parameters.plainFirstTick = 100;
+        bool legacyRejected = false;
+        try { legacy.Validate(); } catch (ArgumentException) { legacyRejected = true; }
+        Check(legacyRejected, "legacy materialized defaults and custom parameter rejection");
         Check(EvaluationProcessor.MatchTimeLimit(9000) > TimeSpan.FromSeconds(904), "full frame budget and initialization");
         Check(FullRuleSystem.NextEventTick(0, 9000, defaults, true) == 200, "initial countdown");
         Check(FullRuleSystem.NextEventTick(200, 9000, defaults, true) == 250, "countdown after event");
