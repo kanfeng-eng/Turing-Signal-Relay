@@ -17,7 +17,7 @@
 | 看一场完整比赛 | [如何玩这个游戏的使用报告](docs/如何玩这个游戏的使用报告.md)，从Windows包加载examples中的两局回放 |
 | 写AI参加比赛 | [C++ SDK](sdk/cpp/README.md)，用裁判分配的账号提交UTF-8的ai.cpp |
 | 理解架构和实现 | [完成这个游戏的技术报告](docs/完成这个游戏的技术报告.md) |
-| 查看最终发布裁定 | [发布验收报告](docs/发布验收报告.md)与[机器记录](docs/STAGE8_VALIDATION.json) |
+| 查看当前发布验收 | [要求修正说明](docs/REQUIREMENTS_FIXES.md)与[机器记录](docs/REQUIREMENTS_VALIDATION.json) |
 | 构建与部署 | [发布说明](docs/RELEASE.md)和[Ubuntu部署手册](deploy/README.md) |
 | 接手继续开发 | [ChatGPT与Desktop Commander Remote交接提示词](docs/HANDOFF_CHATGPT_DESKTOP_COMMANDER.md) |
 
@@ -166,7 +166,7 @@ artifacts/              本机验证产物与私有运行资料
 | --- | --- |
 | 正式数据与移动平报 | 52项逻辑检查及9000tick，见[阶段记录](docs/STAGE123_VALIDATION.json) |
 | 完整规则与本地AI | 当前76项、52项旧逻辑与9项进程检查通过，双局各9000tick，见[⑤⑥记录](docs/STAGE56_VALIDATION.json)；原生对照保留于[此前记录](docs/STAGE45_VALIDATION.json) |
-| 旧Worker回归 | Windows与Ubuntu各24项通过，当前记录见[公网发布](docs/PUBLIC_RELEASE.json) |
+| 旧Worker回归 | Windows与Ubuntu各24项通过，当前记录见[公网发布](docs/REQUIREMENTS_VALIDATION.json) |
 | 平台正常全流程 | 公网部署通过，位于`artifacts/requirements-fixes/platform-final-requirements/CHECKS.json` |
 | Ubuntu沙箱 | 新一轮14项通过，驻留内存增长至约252.9 MiB后受限，本机报告为`artifacts/stage56/sandbox-checks.json` |
 | 数据迁移与备份 | 恢复到独立目录通过，7个账号、5份源码、3份产物及登录/下载核验成功 |
