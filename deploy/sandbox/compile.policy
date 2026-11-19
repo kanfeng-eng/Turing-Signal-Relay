@@ -1,0 +1,17 @@
+ALLOW {
+    read, write, readv, writev, pread64, pwrite64, close, open, openat, access, faccessat, faccessat2,
+    newstat, newlstat, newfstat, newfstatat, statx, statfs, fstatfs,
+    lseek, brk, mmap, mprotect, munmap, mremap, madvise,
+    rt_sigaction, rt_sigprocmask, rt_sigreturn, sigaltstack,
+    arch_prctl, set_tid_address, set_robust_list, rseq, futex,
+    clock_gettime, clock_nanosleep, nanosleep, times, getrusage,
+    getpid, getppid, gettid, getuid, geteuid, getgid, getegid,
+    getrandom, newuname, sysinfo, prlimit64, sched_yield, sched_getaffinity,
+    getcwd, chdir, fchdir, getdents, getdents64, readlink, readlinkat,
+    dup, dup2, dup3, fcntl, pipe, pipe2, poll, ppoll, pselect6, select,
+    clone, clone3, fork, vfork, execve, wait4, waitid,
+    unlink, unlinkat, rename, renameat, renameat2, mkdir, mkdirat, rmdir,
+    chmod, fchmod, umask, ftruncate, truncate, fsync, fdatasync,
+    ioctl, kill, tgkill, restart_syscall, exit, exit_group
+}
+DEFAULT KILL

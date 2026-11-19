@@ -1,0 +1,12 @@
+ALLOW {
+    read, write, readv, writev, close, newfstat, newfstatat,
+    lseek, readlink, readlinkat, brk, mmap, mprotect, munmap, mremap, madvise,
+    rt_sigaction, rt_sigprocmask, rt_sigreturn, sigaltstack,
+    arch_prctl, set_tid_address, set_robust_list, rseq,
+    futex, clock_gettime, clock_nanosleep, nanosleep,
+    getpid, gettid, getuid, geteuid, getgid, getegid,
+    getrandom, newuname, prlimit64, sched_yield, sched_getaffinity,
+    ioctl { fd == 0 || fd == 1 || fd == 2 },
+    execve, exit, exit_group
+}
+DEFAULT KILL

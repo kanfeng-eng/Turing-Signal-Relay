@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
+    <Compile Include="../../game/Assets/Game/Core/*.cs" Link="Core/%(Filename)%(Extension)" />
+    <Compile Include="../../game/Assets/Game/World/*.cs" Link="World/%(Filename)%(Extension)" />
+    <Compile Include="../../game/Assets/Game/Rules/*.cs" Link="Rules/%(Filename)%(Extension)" />
+    <Compile Include="../../game/Assets/Game/Integration/Relay*.cs" Link="Integration/%(Filename)%(Extension)" />
+    <Compile Include="../../game/Assets/Game/Integration/Ai/*.cs" Link="Ai/%(Filename)%(Extension)" />
+    <Compile Include="../../game/Assets/Game/Presentation/ObserverFrame.cs" Link="Presentation/ObserverFrame.cs" />
+    <Compile Include="../../game/Assets/Game/Presentation/ObserverSnapshotBuilder.cs" Link="Presentation/ObserverSnapshotBuilder.cs" />
+  </ItemGroup>
+</Project>

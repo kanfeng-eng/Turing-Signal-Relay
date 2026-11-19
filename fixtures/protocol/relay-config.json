@@ -1,0 +1,8 @@
+{
+  "protocolVersion": 2,
+  "rulesVersion": "signal-relay-1.0",
+  "featureSet": "movement-plain-report-v1",
+  "rulesHash": "d40030db80eeda806c921adcce8f4f963481df53ec93fcc734f8993aa7966318",
+  "seed": 17,
+  "durationTicks": 9000
+}

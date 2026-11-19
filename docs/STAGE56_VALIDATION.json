@@ -1,0 +1,319 @@
+{
+  "verifiedOn": "2026-11-07T20:09:01+08:00",
+  "status": "passed",
+  "scope": [
+    "stage-5-full-gameplay",
+    "stage-6-formal-sandbox"
+  ],
+  "baseCommit": "ff678b9af8f7525dfa939407e4131abf98fc71dc",
+  "branch": "feat/1-bootstrap",
+  "featureSet": "relay-full-v1",
+  "protocolVersion": 2,
+  "rulesVersion": "signal-relay-1.0",
+  "gameplay": {
+    "status": "passed",
+    "fullRuleAssertions": 76,
+    "legacyLogicCases": 52,
+    "trustedBridgeCases": 9,
+    "bufferBugReproducedBeforeFix": true,
+    "suppressedStationRetainsBuffer": true,
+    "disconnectedStationCannotBypassLinks": true,
+    "translationRestartsAfterSuppression": true,
+    "fullMatchTaskCountsAndSeedSymmetry": "passed",
+    "appendix668ScoreBreakdown": "passed",
+    "localMatch": {
+      "status": "passed",
+      "fullRuleAssertions": 76,
+      "bridgeCases": 9,
+      "pairedGames": 2,
+      "participantFaultCases": 2,
+      "cpuBudgetEnforced": false
+    },
+    "pairedTicks": [
+      9000,
+      9000
+    ],
+    "gameStateHashes": [
+      "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+      "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870"
+    ],
+    "totalScoresHalfPoints": [
+      840,
+      880
+    ]
+  },
+  "sandbox": {
+    "status": "passed",
+    "caseCount": 14,
+    "cases": [
+      {
+        "case": "legal-static-program",
+        "status": "passed",
+        "exitCode": 0
+      },
+      {
+        "case": "compiler-host-file",
+        "status": "denied",
+        "exitCode": 1
+      },
+      {
+        "case": "test-fixture-compilation",
+        "status": "passed",
+        "memoryPeakBytes": 299798528
+      },
+      {
+        "case": "host-file",
+        "status": "denied",
+        "exitCode": 159,
+        "memoryPeakBytes": 434176
+      },
+      {
+        "case": "network",
+        "status": "denied",
+        "exitCode": 159,
+        "memoryPeakBytes": 434176
+      },
+      {
+        "case": "fork",
+        "status": "denied",
+        "exitCode": 159,
+        "memoryPeakBytes": 368640
+      },
+      {
+        "case": "thread",
+        "status": "denied",
+        "exitCode": 159,
+        "memoryPeakBytes": 454656
+      },
+      {
+        "case": "infinite-loop",
+        "status": "denied",
+        "exitCode": -9,
+        "memoryPeakBytes": 598016
+      },
+      {
+        "case": "memory",
+        "status": "denied",
+        "exitCode": 86,
+        "memoryPeakBytes": 265199616
+      },
+      {
+        "case": "stdout-flood",
+        "status": "denied",
+        "exitCode": -9,
+        "memoryPeakBytes": 598016
+      },
+      {
+        "case": "cpu-budget-sample",
+        "status": "denied",
+        "exitCode": -9,
+        "memoryPeakBytes": 610304
+      },
+      {
+        "case": "compile-memory-budget",
+        "status": "denied"
+      },
+      {
+        "case": "compile-time-budget",
+        "status": "denied",
+        "seconds": 30.129585861228406
+      },
+      {
+        "case": "compile-cancellation-cleanup",
+        "status": "passed"
+      }
+    ],
+    "runtimeMemoryBytes": 268435456,
+    "runtimeSwapBytes": 0,
+    "runtimePids": 1,
+    "residentGrowthProbe": {
+      "peakBytes": 265199616,
+      "exitCode": 86,
+      "memoryEvents": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "allocationFailedNearAddressSpaceLimit": true
+    },
+    "allTestRuntimeGroupsRemoved": true
+  },
+  "formalOperations": {
+    "status": "passed",
+    "cases": [
+      {
+        "case": "file-access-forfeit",
+        "id": "b004fd1a878841528cc6b63b2d15fcfb",
+        "status": "passed",
+        "reason": "EndOfStreamException: AI stdout closed.",
+        "tick": 1
+      },
+      {
+        "case": "three-cpu-timeouts",
+        "id": "686f3e42688b4058bc8d2d9b2106ed6b",
+        "status": "passed",
+        "reason": "Three computation timeouts.",
+        "tick": 2
+      },
+      {
+        "case": "network-forfeit",
+        "id": "001d6c80be9a4a25a9a8c3f578d70d64",
+        "status": "passed",
+        "reason": "EndOfStreamException: AI stdout closed.",
+        "tick": 1
+      },
+      {
+        "case": "fork-forfeit",
+        "id": "2aee632c9113433c9e6182543559f55d",
+        "status": "passed",
+        "reason": "EndOfStreamException: AI stdout closed.",
+        "tick": 1
+      },
+      {
+        "case": "thread-forfeit",
+        "id": "16a31388fec24024afe2e3664669430b",
+        "status": "passed",
+        "reason": "EndOfStreamException: AI stdout closed.",
+        "tick": 1
+      },
+      {
+        "case": "three-wall-timeouts",
+        "id": "e809422ad26b4245bb1cded22704e086",
+        "status": "passed",
+        "reason": "Three computation timeouts.",
+        "tick": 2
+      },
+      {
+        "case": "memory-forfeit",
+        "id": "207af56d0507417d8f82da79b8d99699",
+        "status": "passed",
+        "reason": "EndOfStreamException: AI stdout closed.",
+        "tick": 0
+      },
+      {
+        "case": "stdout-flood-forfeit",
+        "id": "edb42c2da57645f4ac02bc861a26da2c",
+        "status": "passed",
+        "reason": "InvalidDataException: AI stdout line exceeds limit.",
+        "tick": 0
+      },
+      {
+        "case": "malformed-json-forfeit",
+        "id": "b82f3d3e5c944cf6ab15049cc250a1eb",
+        "status": "passed",
+        "reason": "JsonException: Expected depth to be zero at the end of the JSON payload. There is an open JSON object or array that should be closed. Path: $ | LineNumber: 0 | BytePositionInLine: 1.",
+        "tick": 0
+      },
+      {
+        "case": "future-tick-forfeit",
+        "id": "978ebf3a31104f97a68f1f081dce382f",
+        "status": "passed",
+        "reason": "InvalidDataException: AI replied for a future tick.",
+        "tick": 0
+      },
+      {
+        "case": "action-limit-forfeit",
+        "id": "29b55840cfd74f06914d1f77d720a0b2",
+        "status": "passed",
+        "reason": "InvalidDataException: Invalid command batch.",
+        "tick": 0
+      },
+      {
+        "case": "both-teams-forfeit",
+        "id": "319374605e6f434bbb2128965f30960f",
+        "status": "passed"
+      },
+      {
+        "case": "worker-restart-recovery",
+        "id": "4bac0387755748289ce56f13e335f73b",
+        "status": "passed",
+        "attempts": 2,
+        "hashes": [
+          "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+          "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870"
+        ]
+      }
+    ]
+  },
+  "preparedSandboxRecovery": {
+    "status": "passed",
+    "preparedBeforeLauncher": true,
+    "runDirectoryRemoved": true,
+    "cgroupRemoved": true
+  },
+  "hardCrashRecovery": {
+    "status": "passed",
+    "signal": "SIGKILL",
+    "automaticSystemdRestart": true,
+    "preparedRunDirectoryRemoved": true,
+    "preparedCgroupRemoved": true
+  },
+  "platformHttp": {
+    "authentication": "passed",
+    "csrf": "passed",
+    "ownership": "passed",
+    "uploadBounds": "passed",
+    "escapedNotes": "passed",
+    "submissionIds": [
+      "39314044e16a4983959e62993c6a2ece",
+      "47275e6da71044d8add1300181e8bc71"
+    ],
+    "matches": [
+      {
+        "id": "8c532650005c482aad63b4be178f18f2",
+        "status": "completed",
+        "hashes": [
+          "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+          "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870"
+        ]
+      }
+    ],
+    "compilerFailure": "passed",
+    "idempotentMatchCreation": "passed",
+    "authorizedSnapshotsAndArtifacts": "passed",
+    "status": "passed"
+  },
+  "unityImport": {
+    "status": "passed",
+    "editorVersion": "6000.6.8f1",
+    "publicSourceCopy": true
+  },
+  "baselineEditor": "6000.3.26f1",
+  "baselineApiCompile": "passed",
+  "baselineUpmImport": "unresolved",
+  "deployment": {
+    "release": "/opt/tsr/releases/20261107T120200Z",
+    "platformService": "active",
+    "workerService": "active",
+    "healthHttpStatus": 200,
+    "noIdleRuntimeCgroups": true,
+    "noIdleRunDirectories": true,
+    "sha256": {
+      "Platform.dll": "f7359bcd19f97d3dc65de09808c006b5a336aef7022f5091e4eee07d3ad53c4c",
+      "Evaluation.dll": "7691490027fd1a96841ab51bcdcc3aab6aa0f9cd54174db4b08fdde4447adebb",
+      "Worker.dll": "e39ba43a198340b662c6dfdbce1611f538e4528b51f9998e63cbe5ffdc94724e"
+    },
+    "preUpdateBackup": "/var/lib/tsr/backups/stage56-before-rules-fix"
+  },
+  "evidenceFiles": [
+    "artifacts/stage56/local-complete/CHECKS.json",
+    "artifacts/stage56/local-complete/series/series.result.json",
+    "artifacts/stage56/http-full/CHECKS.json",
+    "artifacts/stage56/operations-extended-verified/CHECKS.json",
+    "artifacts/stage56/sandbox-checks.json",
+    "artifacts/stage56/prepared-recovery.json",
+    "artifacts/stage56/hard-crash-checks.json",
+    "artifacts/stage56/unity-check.json",
+    "artifacts/stage56/worker-final/CHECKS.json"
+  ],
+  "remainingOverallReleaseGates": [
+    "Unity 6000.3.26f1 UPM import and build",
+    "Clean Ubuntu host installation from scratch"
+  ],
+  "notes": [
+    "The buffer regression failed before the rule fix and passed after it. Existing example-game hashes remained unchanged.",
+    "The resident growth probe exited on allocation failure near the 256 MiB address-space limit and did not trigger a kernel OOM kill.",
+    "Formal recovery was tested with SIGKILL of the worker main process plus a prepared sandbox that had no launcher file. Systemd restarted the worker and the second match attempt completed.",
+    "Earlier platform backup, restore, queue and deployment-cycle evidence remains in docs/PLATFORM_VALIDATION.json."
+  ],
+  "legacyWorkerRegression": {
+    "status": "passed",
+    "cases": 24
+  }
+}

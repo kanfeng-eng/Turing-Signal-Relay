@@ -1,0 +1,14 @@
+{
+  "name": "TuringSignalRelay.Editor",
+  "references": [
+    "TuringSignalRelay.Core",
+    "TuringSignalRelay.Integration",
+    "TuringSignalRelay.Checks",
+    "TuringSignalRelay.Presentation",
+    "TuringSignalRelay.Rules",
+    "UnityEngine.UI"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ]
+}

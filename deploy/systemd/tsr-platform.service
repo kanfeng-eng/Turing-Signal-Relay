@@ -1,0 +1,23 @@
+[Unit]
+Description=Turing Signal Relay contest platform
+After=network.target
+
+[Service]
+User=tsr-platform
+Group=tsr-data
+WorkingDirectory=/opt/tsr/current/platform
+EnvironmentFile=/etc/tsr/contest.env
+Environment=ASPNETCORE_URLS=http://127.0.0.1:5188
+Environment=ASPNETCORE_ENVIRONMENT=Production
+ExecStart=/opt/tsr/dotnet/dotnet /opt/tsr/current/platform/Platform.dll
+Restart=on-failure
+RestartSec=3
+UMask=0007
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/tsr/data
+
+[Install]
+WantedBy=multi-user.target

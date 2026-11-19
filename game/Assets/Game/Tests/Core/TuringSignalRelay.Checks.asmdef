@@ -1,0 +1,11 @@
+{
+  "name": "TuringSignalRelay.Checks",
+  "references": [
+    "TuringSignalRelay.Core",
+    "TuringSignalRelay.Integration"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "noEngineReferences": true
+}

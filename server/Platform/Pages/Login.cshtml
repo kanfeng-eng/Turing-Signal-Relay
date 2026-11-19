@@ -1,0 +1,41 @@
+@page
+@model LoginModel
+@{ ViewData["Title"] = "登录"; }
+<section class="login-workspace">
+<div class="signal-intro">
+<p class="eyebrow">图灵杯 · AI 策略竞赛</p>
+<h1>让每一次接力，<br>抵达胜利。</h1>
+<p class="lead">部署你的 AI，在运输与通信之间找到最优路线。<br class="desktop-break">从第一份报文，到最后一刻的战局。</p>
+<figure class="signal-map">
+<figcaption><span>通信态势 / RELAY NETWORK</span><span>链路示意</span></figcaption>
+<svg viewBox="0 0 600 270" role="img" aria-labelledby="relay-map-title">
+<title id="relay-map-title">红蓝双方通过中继与中央枢纽传递报文的示意图</title>
+<defs><pattern id="map-grid" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M 30 0 L 0 0 0 30" fill="none" stroke="currentColor" stroke-width=".5"/></pattern></defs>
+<rect class="map-grid" width="600" height="270" fill="url(#map-grid)"/>
+<path class="map-river" d="M330 -20 C240 65 365 95 284 163 S245 230 285 290"/>
+<path class="map-link red-link" d="M75 195 L175 165 L232 90 L300 135"/>
+<path class="map-link blue-link" d="M525 65 L425 95 L368 180 L300 135"/>
+<path class="map-alternate" d="M175 165 L245 220 M425 95 L355 40"/>
+<circle class="map-radius" cx="175" cy="165" r="42"/><circle class="map-radius" cx="425" cy="95" r="42"/>
+<rect class="red-node" x="66" y="186" width="18" height="18" rx="3"/><circle class="red-node" cx="175" cy="165" r="6"/><circle class="red-node" cx="232" cy="90" r="6"/>
+<rect class="blue-node" x="516" y="56" width="18" height="18" rx="3"/><circle class="blue-node" cx="425" cy="95" r="6"/><circle class="blue-node" cx="368" cy="180" r="6"/>
+<rect class="hub-node" x="288" y="123" width="24" height="24" rx="3" transform="rotate(45 300 135)"/>
+<circle class="message-node" cx="204" cy="127" r="4"/><circle class="message-node" cx="396" cy="138" r="4"/>
+<g class="map-label"><text x="48" y="229">红方指挥所</text><text x="145" y="142">中继</text><text x="273" y="178">中央枢纽</text><text x="404" y="77">中继</text><text x="490" y="42">蓝方指挥所</text></g>
+</svg>
+<div class="map-legend"><span><i class="legend-red"></i>红方链路</span><span><i class="legend-blue"></i>蓝方链路</span><span class="map-note">移动 · 组网 · 送达</span></div>
+</figure>
+<div class="match-format"><span><b>双局换边</b>同种子，公平对抗</span><span><b>AI 自主决策</b>C++17 策略接入</span><span><b>完整回放</b>复盘每一次选择</span></div>
+</div>
+<article class="login-panel">
+<div class="panel-heading"><span class="utility-label">队伍入口 / TEAM ACCESS</span><h2>登录比赛工作台</h2><p>使用裁判分配的账号，继续你的比赛。</p></div>
+<form method="post">
+<div asp-validation-summary="All" role="alert"></div>
+<label asp-for="Username">用户名</label><input asp-for="Username" autocomplete="username" placeholder="输入裁判分配的用户名" required>
+<label asp-for="Password">密码</label><input asp-for="Password" type="password" autocomplete="current-password" placeholder="输入你的密码" required>
+<button type="submit">登录工作台 <span aria-hidden="true">→</span></button>
+</form>
+<div class="account-help"><strong>还没有账号？</strong><p>账号由裁判统一创建。请联系比赛组织者获取队伍账号；忘记密码时，也请联系裁判处理。</p></div>
+<p class="transport-note">当前使用 HTTP 连接，请使用本项目专用密码。</p>
+</article>
+</section>

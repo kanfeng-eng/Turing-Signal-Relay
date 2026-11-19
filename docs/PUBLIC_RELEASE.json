@@ -1,0 +1,346 @@
+{
+  "verifiedOn": "2026-11-07T21:41:20+08:00",
+  "status": "published-current-environment",
+  "version": "1.0.0-rc.1",
+  "releaseChannel": "prerelease",
+  "githubReleaseUrl": "https://github.com/kanfeng-eng/Turing-Signal-Relay/releases/tag/v1.0.0-rc.1",
+  "packageSourceCommit": "cbb4135f2db2b2861270e616dd59cb1ec5e24d9a",
+  "packageSourceModified": false,
+  "teamEditor": "6000.6.8f1",
+  "buildEditor": "6000.6.8f1",
+  "userDecisions": {
+    "unityVersionRestrictionRemoved": true,
+    "access": "public IP over HTTP"
+  },
+  "urls": {
+    "login": "http://111.231.101.147/Login",
+    "windowsClient": "http://111.231.101.147/downloads/TuringSignalRelay-windows.zip",
+    "cppSdk": "http://111.231.101.147/downloads/TuringSignalRelay-sdk.zip",
+    "sha256": "http://111.231.101.147/downloads/SHA256SUMS.txt"
+  },
+  "transport": {
+    "httpPublished": true,
+    "httpsPublished": false,
+    "credentialsAndTokensEncryptedInTransit": false
+  },
+  "application": {
+    "browserFeatures": [
+      "accounts",
+      "AI source submission",
+      "sandbox evaluation",
+      "match results",
+      "replay download"
+    ],
+    "visualClient": "Unity Windows client",
+    "unitControl": "AI-only"
+  },
+  "packages": [
+    {
+      "name": "TuringSignalRelay-windows.zip",
+      "bytes": 38233406,
+      "sha256": "7a3b84cd6a679d2482cbd4339210d7f0457b9d71481cb6442d061dfa0d64c7bc"
+    },
+    {
+      "name": "TuringSignalRelay-linux.tar.gz",
+      "bytes": 31333867,
+      "sha256": "0ca1ce960fec7116f3c78eddb2c287d99f74ebb1482de6c5bc48f3448c766f29"
+    },
+    {
+      "name": "TuringSignalRelay-server-linux.tar.gz",
+      "bytes": 6081964,
+      "sha256": "b3de249fe1c6fb7cc1772d87e0a035f38f9f2d7056b244c15971ce6480947487"
+    },
+    {
+      "name": "TuringSignalRelay-sdk.zip",
+      "bytes": 157455,
+      "sha256": "e6a4f285d8e82deeef2e75f4d6d256d12f5becd8eef79f853c8303b7fc4a31a4"
+    },
+    {
+      "name": "TuringSignalRelay-source.zip",
+      "bytes": 746099,
+      "sha256": "e7be7f595cff1923a5676586eac474b7e3e3364fec011da752e8c3cbb00b3df6"
+    }
+  ],
+  "baselineUnityImport": {
+    "status": "passed",
+    "editorVersion": "6000.6.8f1",
+    "action": "Check",
+    "publicSource": true
+  },
+  "localFullGame": {
+    "status": "passed",
+    "fullRuleAssertions": 76,
+    "bridgeCases": 9,
+    "pairedGames": 2,
+    "participantFaultCases": 2,
+    "cpuBudgetEnforced": false
+  },
+  "windowsWorkerCases": 24,
+  "observerAcceptance": {
+    "frames": 9001,
+    "loads": 3,
+    "viewportSizes": 5,
+    "fixtureBytes": 357380497,
+    "loadSeconds": [
+      10.5634511,
+      10.354365099999999,
+      10.6334412
+    ],
+    "retainedBytes": [
+      27684864,
+      28880896,
+      28975104
+    ],
+    "peakWorkingSetBytes": 0,
+    "peakWorkingSetAvailable": false,
+    "unityAllocatedBytes": 250067441,
+    "status": "passed"
+  },
+  "observerNetwork": {
+    "status": "passed",
+    "requests": {
+      "/sequence": 7,
+      "/slow": 1,
+      "/fresh": 1,
+      "/redirect": 1,
+      "/unauthorized": 1,
+      "/timeout": 1,
+      "/slow-replay": 1
+    },
+    "authorizationErrors": [],
+    "redirectRequests": 0,
+    "unityLog": "observer-network.log"
+  },
+  "windowsNativeFullGame": {
+    "status": "passed",
+    "ticks": 9000,
+    "stateHash": "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+    "scoresHalfPoints": [
+      420,
+      440
+    ]
+  },
+  "ubuntuPackages": {
+    "status": "passed",
+    "architecture": "x86_64",
+    "stateHash": "47683abf831ae7c667b7b3f7f657355ba55fc8da133145ba98bccc4f9b073423",
+    "headlessCaseCount": 10,
+    "workerCaseCount": 24,
+    "pairSucceeded": 2,
+    "platformHttp": {
+      "/": {
+        "status": 200,
+        "bytes": 1862
+      },
+      "/History": {
+        "status": 200,
+        "bytes": 1862
+      },
+      "/Judge": {
+        "status": 200,
+        "bytes": 1862
+      },
+      "/Results": {
+        "status": 200,
+        "bytes": 1862
+      },
+      "/css/site.css": {
+        "status": 200,
+        "bytes": 8232
+      }
+    },
+    "payloadSha256": "3b9ca54e53e3f6db580394c82ad1d10e53e017934644e44b4b53afa4047aa7ad",
+    "fullGame": {
+      "status": "passed",
+      "ticks": 9000,
+      "stateHash": "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+      "scoresHalfPoints": [
+        420,
+        440
+      ]
+    },
+    "anonymousApiStatus": 401
+  },
+  "publicPlatform": {
+    "authentication": "passed",
+    "csrf": "passed",
+    "ownership": "passed",
+    "uploadBounds": "passed",
+    "escapedNotes": "passed",
+    "submissionIds": [
+      "12d0469f48474652a098c909c13ef3ef",
+      "383bb12d69994ef8b962fbb0d85c160b"
+    ],
+    "matches": [
+      {
+        "id": "3e67f5e3abcf47cf929b202d27365b3e",
+        "status": "completed",
+        "hashes": [
+          "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+          "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870"
+        ]
+      }
+    ],
+    "compilerFailure": "passed",
+    "idempotentMatchCreation": "passed",
+    "authorizedSnapshotsAndArtifacts": "passed",
+    "status": "passed"
+  },
+  "publicDownloads": {
+    "status": "passed",
+    "packages": [
+      {
+        "name": "TuringSignalRelay-windows.zip",
+        "bytes": 38233406,
+        "sha256": "7a3b84cd6a679d2482cbd4339210d7f0457b9d71481cb6442d061dfa0d64c7bc",
+        "status": "passed"
+      },
+      {
+        "name": "TuringSignalRelay-linux.tar.gz",
+        "bytes": 31333867,
+        "sha256": "0ca1ce960fec7116f3c78eddb2c287d99f74ebb1482de6c5bc48f3448c766f29",
+        "status": "passed"
+      },
+      {
+        "name": "TuringSignalRelay-server-linux.tar.gz",
+        "bytes": 6081964,
+        "sha256": "b3de249fe1c6fb7cc1772d87e0a035f38f9f2d7056b244c15971ce6480947487",
+        "status": "passed"
+      },
+      {
+        "name": "TuringSignalRelay-sdk.zip",
+        "bytes": 157455,
+        "sha256": "e6a4f285d8e82deeef2e75f4d6d256d12f5becd8eef79f853c8303b7fc4a31a4",
+        "status": "passed"
+      },
+      {
+        "name": "TuringSignalRelay-source.zip",
+        "bytes": 746099,
+        "sha256": "e7be7f595cff1923a5676586eac474b7e3e3364fec011da752e8c3cbb00b3df6",
+        "status": "passed"
+      }
+    ]
+  },
+  "publicBoundaries": {
+    "status": "passed",
+    "routes": {
+      "/Login": 200,
+      "/health": 200,
+      "/api/submissions": 401,
+      "/downloads/contest.db": 404,
+      "/downloads/initial-judge.json": 404,
+      "/downloads/SHA256SUMS.txt": 200
+    }
+  },
+  "deployment": {
+    "verifiedAt": "2026-11-07T13:37:50.607216+00:00",
+    "services": {
+      "nginx": "active",
+      "tsr-platform": "active",
+      "tsr-worker": "active",
+      "ssh": "active"
+    },
+    "releaseDirectory": "/opt/tsr/releases/20261107T133433Z",
+    "health": {
+      "status": "ok",
+      "service": "relay-contest"
+    },
+    "activeSandboxCgroups": [],
+    "backup": {
+      "status": "passed",
+      "fileCount": 1230,
+      "manifestSha256": "619cddba788788269b6d9406db128b8ea6520a14999b847d41421389a3fad668"
+    },
+    "sha256": {
+      "platform/Platform.dll": "650ee30f703a8c9398347eb18e0aca39bf248d33bbe765de6f173523ffd90489",
+      "worker/Evaluation.dll": "bece439d4b9ee5f0173a1e52566c645b9bf3b6a407df457ff27096549568ec01",
+      "worker/Worker.dll": "bad2e2df154ac8d0c88f7e9ef3546f2aff25cc10a2198b0f1ddfb33043776c82"
+    },
+    "nginxConfigSha256": "450278581e740e9b3835bcae89ef9832c7c69c8cfee11aca58779558eef830d0"
+  },
+  "remainingValidation": [
+    {
+      "item": "Fresh Ubuntu24.04 x86_64 installation from scratch",
+      "status": "not-performed-no-additional-host",
+      "impact": "Release remains RC; current target environment is verified"
+    }
+  ],
+  "carriedEvidence": [
+    {
+      "record": "docs/STAGE56_VALIDATION.json",
+      "scope": "14 sandbox cases and 13 formal fault/recovery cases",
+      "rerunInThisRelease": false
+    },
+    {
+      "record": "docs/PLATFORM_VALIDATION.json",
+      "scope": "database restore, upload concurrency and rollback",
+      "rerunInThisRelease": false
+    }
+  ],
+  "documentation": {
+    "distribution": "current feat/1-bootstrap Git branch",
+    "programArchives": "immutable cbb4135 source snapshot; later documentation changes distributed through Git"
+  },
+  "evidenceFiles": [
+    {
+      "path": "artifacts/release-http/unity-baseline-check.json",
+      "sha256": "44e534866335d9bea425633248940d9d1cea2abfcea679b6f237503c17fd86fe"
+    },
+    {
+      "path": "artifacts/release-http/public-platform/CHECKS.json",
+      "sha256": "50adb91427bd702210d3349194b923dfae67e1e94c659002f98967ac538a978a"
+    },
+    {
+      "path": "artifacts/release-http/service-health.json",
+      "sha256": "56f45e7c6d79c630b5b67db504f2a45b3b2944d3961f0626907848617093da92"
+    },
+    {
+      "path": "artifacts/release-http/public-downloads.json",
+      "sha256": "20d29d7cdd3e7df6cf3a55ef2c48520cb5b9c20901e193b1a8f9616838954183"
+    },
+    {
+      "path": "artifacts/release-http/public-boundaries.json",
+      "sha256": "f8e7363fab86f6513c5edb9e94b7b52784def497fe8c0e94e2cdff0c706375f6"
+    },
+    {
+      "path": "artifacts/release-http/delivery/BUILD-INFO.json",
+      "sha256": "f26faa146f70adee3cde0028c86685402cd6aec57eb80fcf25be45dc67512a71"
+    },
+    {
+      "path": "artifacts/release-http/delivery/DELIVERY.json",
+      "sha256": "29fbf1c0d7870c00e97bf9cef221c61d936b91ee0cb9da4a7bc820055fe7a13a"
+    },
+    {
+      "path": "artifacts/release-http/delivery/UBUNTU.json",
+      "sha256": "14c43e555b7afb6126788c5bc71c896a10fcef627d489f04160f414cce380129"
+    },
+    {
+      "path": "artifacts/release-http/delivery/package-checks.json",
+      "sha256": "6d1f0e429f0b07b89359652f5f315d7dee1cea9711b391d79b37fc5831ef6889"
+    },
+    {
+      "path": "artifacts/release-http/delivery/full-game/CHECKS.json",
+      "sha256": "0e8e8eafcadbbe393269e2e6e36953b2f4fc8f75a139cb90a0f268d48457e339"
+    },
+    {
+      "path": "artifacts/release-http/delivery/worker-checks/CHECKS.json",
+      "sha256": "f33295bf884db5b2da160dcf4e5e525022231a1f7f01a6eb44c85755616662ee"
+    },
+    {
+      "path": "artifacts/release-http/delivery/observer-acceptance.json",
+      "sha256": "973c017cd421785c5de311362ef9863fd326dbd40a09d098a49836b1db20e13f"
+    },
+    {
+      "path": "artifacts/release-http/delivery/observer-network.json",
+      "sha256": "c0a6f244372a260cbf86a1adc2e170e60586838854c0402d92f4cbc3164055e9"
+    },
+    {
+      "path": "artifacts/release-http/delivery/windows-headless/CHECKS.json",
+      "sha256": "a71c0ae152fae2663d4b9b875cfc269eeeb46a38452e75209b4f9cad391d7891"
+    },
+    {
+      "path": "artifacts/release-http/delivery/windows-full-game/CHECKS.json",
+      "sha256": "4d49254ee01e5973f613bc3af8e147dce763cbed4528e81db50eb65317e5d4a7"
+    }
+  ]
+}

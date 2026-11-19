@@ -1,0 +1,22 @@
+[Unit]
+Description=Turing Signal Relay isolated evaluation worker
+After=tsr-platform.service
+Requires=tsr-platform.service
+
+[Service]
+User=tsr-worker
+Group=tsr-data
+WorkingDirectory=/opt/tsr/current
+EnvironmentFile=/etc/tsr/contest.env
+ExecStartPre=+/bin/mkdir -p /sys/fs/cgroup/tsr
+ExecStartPre=+/bin/sh -c 'echo "+memory +pids +cpu" > /sys/fs/cgroup/cgroup.subtree_control; echo "+memory +pids +cpu" > /sys/fs/cgroup/tsr/cgroup.subtree_control'
+ExecStart=/opt/tsr/dotnet/dotnet /opt/tsr/current/worker/Worker.dll serve
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=45
+UMask=0007
+PrivateTmp=true
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

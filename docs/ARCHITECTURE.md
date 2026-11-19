@@ -46,3 +46,5 @@
 1 号负责日常集成和跨模块接口，3 号负责规则问题整理；用户/规则负责人决定赛事语义。技术实现选择在 Issue 中记录并由相邻负责人审查。未定规则不阻止做与其无关的最小演示，但阻止宣称正式规则完整。
 
 具体使用的工具、文件级归属和1/5号worker分担方式见[技术栈与联调手册](IMPLEMENTATION_GUIDE.md)。Web页面采用Razor Pages：4号负责.cshtml/CSS布局，5号负责PageModel、登录/权限和数据库；Web服务不直接执行比赛，独立.NET worker调用1号的MatchRunner与5号的沙箱适配器。
+
+2026-11-07正式宿主决策已确认。生产Worker通过server/Evaluation编译引用Unity工程同一份纯C#规则源码，在.NET10进程内推进双局，AI分别运行于nsjail。Unity Linux原生入口保留为构建与一致性验证路径。原编号用于模块定位，当前五部分由用户个人开发。部署与恢复实测见[平台验收记录](PLATFORM_VALIDATION.json)。

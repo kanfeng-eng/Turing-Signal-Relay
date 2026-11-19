@@ -1,0 +1,178 @@
+{
+  "verifiedOn": "2026-11-07T20:53:53+08:00",
+  "scope": "stage7-publication-and-existing-ubuntu-validation",
+  "status": "partial",
+  "availableWorkStatus": "passed",
+  "overallStage7Status": "pending-release-gates",
+  "sourceCommit": "01b22ce82fdb76185c7a36729878291cb798a588",
+  "sourceModified": false,
+  "teamEditor": "6000.3.26f1",
+  "buildEditor": "6000.6.8f1",
+  "deliveryDirectory": "artifacts/stage7/release-final",
+  "packages": [
+    {
+      "name": "TuringSignalRelay-windows.zip",
+      "bytes": 38233021,
+      "sha256": "d5ef0ebea787e7e6e9c017626c7243def88ff21137acc14de9c20d5f60ae7a12"
+    },
+    {
+      "name": "TuringSignalRelay-linux.tar.gz",
+      "bytes": 31333504,
+      "sha256": "c9422ce1b39f65cbd7cc65b9f410fccebb9e55dcd34ed82d206c4feac27cc373"
+    },
+    {
+      "name": "TuringSignalRelay-server-linux.tar.gz",
+      "bytes": 6060051,
+      "sha256": "d136e14cf7d6eb6e6ad8c8de6add65738d5fc9d75f20c6ad524772e593d94abb"
+    },
+    {
+      "name": "TuringSignalRelay-sdk.zip",
+      "bytes": 157346,
+      "sha256": "a5544bbf1154509b98a2ff70e18b0698dc3e89d72b5df4d075d3def10857f592"
+    },
+    {
+      "name": "TuringSignalRelay-source.zip",
+      "bytes": 717273,
+      "sha256": "674755b523e3f679dddd5a540d6d9f6932f2f30203db54b5129f0a8ca7fd339b"
+    }
+  ],
+  "packageChecks": {
+    "status": "passed",
+    "windows": "PE-x86_64",
+    "linux": "ELF64-x86_64",
+    "buildInfoMatches": true,
+    "codeSourceMatches": true,
+    "formalServicePackages": "passed-linux-x64",
+    "sdkAndSourceArchives": "passed"
+  },
+  "localCompleteGame": {
+    "status": "passed",
+    "fullRuleAssertions": 76,
+    "bridgeCases": 9,
+    "pairedGames": 2,
+    "participantFaultCases": 2,
+    "cpuBudgetEnforced": false
+  },
+  "windowsFullGame": {
+    "status": "passed",
+    "ticks": 9000,
+    "stateHash": "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+    "scoresHalfPoints": [
+      420,
+      440
+    ]
+  },
+  "ubuntu": {
+    "status": "passed",
+    "architecture": "x86_64",
+    "stateHash": "47683abf831ae7c667b7b3f7f657355ba55fc8da133145ba98bccc4f9b073423",
+    "headlessCaseCount": 10,
+    "workerCaseCount": 24,
+    "pairSucceeded": 2,
+    "platformHttp": {
+      "/": {
+        "status": 200,
+        "bytes": 1862
+      },
+      "/History": {
+        "status": 200,
+        "bytes": 1862
+      },
+      "/Judge": {
+        "status": 200,
+        "bytes": 1862
+      },
+      "/Results": {
+        "status": 200,
+        "bytes": 1862
+      },
+      "/css/site.css": {
+        "status": 200,
+        "bytes": 8232
+      }
+    },
+    "payloadSha256": "55614160164dca588ccb421b19473b87e17d496ae0ef24080f276b40ceba9d3c",
+    "fullGame": {
+      "status": "passed",
+      "ticks": 9000,
+      "stateHash": "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+      "scoresHalfPoints": [
+        420,
+        440
+      ]
+    },
+    "anonymousApiStatus": 401
+  },
+  "productionPlatformHttp": {
+    "authentication": "passed",
+    "csrf": "passed",
+    "ownership": "passed",
+    "uploadBounds": "passed",
+    "escapedNotes": "passed",
+    "submissionIds": [
+      "a74668a2e34747bb9ba83483e44e9b77",
+      "26bffec05c704e848c57f6cd25219c5c"
+    ],
+    "matches": [
+      {
+        "id": "423b7edd649d4e4898b3ea30adf62a45",
+        "status": "completed",
+        "hashes": [
+          "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+          "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870"
+        ]
+      }
+    ],
+    "compilerFailure": "passed",
+    "idempotentMatchCreation": "passed",
+    "authorizedSnapshotsAndArtifacts": "passed",
+    "status": "passed"
+  },
+  "deployment": {
+    "release": "/opt/tsr/releases/20261107T125042Z",
+    "platformService": "active",
+    "workerService": "active",
+    "healthHttpStatus": 200,
+    "sha256": {
+      "Platform.dll": "ea920f0d562feacfeb3c3b3253d14517cd95263f3d7786ca911f5870af283d48",
+      "Evaluation.dll": "a48a7d24341e92c745140b30aa2a498111fef031fb3ede5fc87733fd97d344ec",
+      "Worker.dll": "ed9643df51777586eecb130e912a85ff0381ec84505a4ad8e26f6d02fa077f4c"
+    }
+  },
+  "baselineFreshTrace": {
+    "status": "unresolved",
+    "editorVersion": "6000.3.26f1",
+    "editorExitCode": 1,
+    "project": "new-empty-project",
+    "packageManagerRequestsStatus": 500,
+    "editorLog": "editor.log",
+    "upmLog": "upm.log",
+    "packageManagerTraceEnabled": true
+  },
+  "serverCleanup": {
+    "status": "passed",
+    "unrelatedApplicationRemoved": true,
+    "cleanupBackupRetained": false,
+    "requestedByUser": true,
+    "projectAndSshServicesActive": true,
+    "evidence": "artifacts/stage7/server-cleanup/CHECKS.json"
+  },
+  "remaining": [
+    {
+      "item": "Unity 6000.3.26f1 UPM import and build",
+      "status": "unresolved-toolchain",
+      "evidence": "artifacts/stage7/baseline-trace"
+    },
+    {
+      "item": "Fresh Ubuntu host installation from scratch",
+      "status": "deferred-no-additional-host",
+      "userChoice": "Proceed with independently completable work"
+    }
+  ],
+  "notes": [
+    "Five immutable archives were built from a clean source commit. Windows/Linux native complete-game hashes and the deployed shared-rules judge hash match.",
+    "An asynchronous descendant-exit assertion in Worker.Checks was synchronized with the existing bounded wait helper. Windows and Ubuntu each passed all 24 cases afterwards.",
+    "The unrelated legacy site and its temporary backup were deleted following the user instruction. Current game data, runtime and SSH access remain available.",
+    "These are verified development-copy release candidates. The team Unity version remains unchanged and both overall release gates remain explicit."
+  ]
+}

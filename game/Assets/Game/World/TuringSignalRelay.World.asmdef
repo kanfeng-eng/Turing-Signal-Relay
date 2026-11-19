@@ -1,0 +1,7 @@
+{
+  "name": "TuringSignalRelay.World",
+  "references": [
+    "TuringSignalRelay.Core"
+  ],
+  "noEngineReferences": true
+}

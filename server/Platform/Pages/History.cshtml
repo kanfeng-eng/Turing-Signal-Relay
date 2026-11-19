@@ -1,0 +1,29 @@
+@page
+@model WorkspaceModel
+@{ ViewData["Title"] = "提交历史"; }
+<h1>提交历史</h1>
+<p>队伍版本与诊断记录</p>
+<div class="table-wrap">
+<table>
+<caption>@Model.TeamName 的提交记录</caption>
+<thead>
+<tr>
+<th>提交编号</th>
+<th>版本说明</th>
+<th>提交时间（北京时间）</th>
+<th>状态</th>
+<th>诊断</th>
+</tr>
+</thead>
+<tbody>@foreach (var submission in Model.Submissions) {<tr>
+<td>@submission.Id</td>
+<td>@submission.Note</td>
+<td>@submission.CreatedUtc.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss")</td>
+<td>@WorkspaceModel.StatusLabel(submission.Status)</td>
+<td>
+<pre>@submission.Diagnostic</pre>
+</td>
+</tr>}</tbody>
+</table>
+</div>
+@if (Model.Submissions.Count == 0) { <p>还没有提交。请到提交AI页面上传首个版本。</p> }

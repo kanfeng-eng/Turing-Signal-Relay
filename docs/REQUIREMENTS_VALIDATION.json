@@ -1,0 +1,383 @@
+{
+  "verifiedOn": "2026-11-17T17:54:58+08:00",
+  "status": "verified-current-environment",
+  "version": "1.0.0-rc.2",
+  "releaseChannel": "prerelease",
+  "githubReleaseUrl": "https://github.com/kanfeng-eng/Turing-Signal-Relay/releases/tag/v1.0.0-rc.2",
+  "packageSourceCommit": "44aaa3e1734f8d2fde454660be44ad32dc8b0116",
+  "packageSourceModified": false,
+  "teamEditor": "6000.6.8f1",
+  "buildEditor": "6000.6.8f1",
+  "urls": {
+    "login": "http://111.231.101.147/Login",
+    "windowsClient": "http://111.231.101.147/downloads/TuringSignalRelay-windows.zip",
+    "sdk": "http://111.231.101.147/downloads/TuringSignalRelay-sdk.zip",
+    "validation": "http://111.231.101.147/downloads/REQUIREMENTS_VALIDATION.json",
+    "sha256": "http://111.231.101.147/downloads/SHA256SUMS.txt"
+  },
+  "requirements": {
+    "parallelGames": "passed",
+    "matchBudgetSeconds": 1024,
+    "sandboxSupervisorSeconds": 1054,
+    "sourceScanAndJudgeReview": "passed",
+    "disqualificationAuditAndRace": "passed",
+    "eventCountdown": "passed",
+    "parameterFreezeAndReplayDigest": "passed",
+    "legacyUnityConfiguration": "passed",
+    "retiredUnity63Gate": true
+  },
+  "local": {
+    "fullGame": {
+      "status": "passed",
+      "fullRuleAssertions": 76,
+      "bridgeCases": 9,
+      "pairedGames": 2,
+      "participantFaultCases": 2,
+      "cpuBudgetEnforced": false
+    },
+    "requirements": {
+      "status": "passed",
+      "deadlineSeconds": 1024,
+      "scan": "passed",
+      "reviewAndMigration": "passed",
+      "countdown": "passed",
+      "parameters": "passed"
+    },
+    "workerCaseCount": 24,
+    "unitySmoke": {
+      "status": "passed",
+      "sourceCommit": "44aaa3e1734f8d2fde454660be44ad32dc8b0116"
+    },
+    "unityDelivery": "passed",
+    "windowsHeadlessCases": 10,
+    "windowsFullGame": {
+      "status": "passed",
+      "ticks": 9000,
+      "stateHash": "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+      "scoresHalfPoints": [
+        420,
+        440
+      ]
+    },
+    "observerNetwork": "passed"
+  },
+  "observerMemory": {
+    "firstAttempt": "failed",
+    "firstRetainedBytes": 664993792,
+    "isolatedRetry": {
+      "frames": 9001,
+      "loads": 3,
+      "viewportSizes": 5,
+      "fixtureBytes": 357380497,
+      "loadSeconds": [
+        9.442357,
+        8.874127099999999,
+        8.9753438
+      ],
+      "retainedBytes": [
+        27729920,
+        28946432,
+        29134848
+      ],
+      "peakWorkingSetBytes": 0,
+      "peakWorkingSetAvailable": false,
+      "unityAllocatedBytes": 244487008,
+      "status": "passed"
+    },
+    "sampledPeakWorkingSetBytes": 7002537984,
+    "failureLog": "artifacts/requirements-fixes/observer-acceptance-first-failure.log",
+    "limitation": "One retained-memory measurement exceeded the gate. The isolated retry passed all three loads. Cause remains unconfirmed."
+  },
+  "ubuntuPackage": {
+    "status": "passed",
+    "architecture": "x86_64",
+    "stateHash": "47683abf831ae7c667b7b3f7f657355ba55fc8da133145ba98bccc4f9b073423",
+    "headlessCaseCount": 10,
+    "workerCaseCount": 24,
+    "pairSucceeded": 2,
+    "platformHttp": {
+      "/": {
+        "status": 200,
+        "bytes": 5179
+      },
+      "/History": {
+        "status": 200,
+        "bytes": 5179
+      },
+      "/Judge": {
+        "status": 200,
+        "bytes": 5179
+      },
+      "/Results": {
+        "status": 200,
+        "bytes": 5179
+      },
+      "/css/site.css": {
+        "status": 200,
+        "bytes": 11102
+      }
+    },
+    "payloadSha256": "29eb89380c1effc3374c2da7e0b977b2166d52c91ce441be714f2477ce41a569",
+    "fullGame": {
+      "status": "passed",
+      "ticks": 9000,
+      "stateHash": "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+      "scoresHalfPoints": [
+        420,
+        440
+      ]
+    },
+    "anonymousApiStatus": 401
+  },
+  "production": {
+    "releaseDirectory": "/opt/tsr/releases/20261117T094533Z",
+    "evaluationAssemblySha256": "3a12aa06af40c3f3a4ea148fd69b1d8c08a3dcb7c707ea6865db7782f27788f1",
+    "backupVerifiedFiles": 1363,
+    "platform": {
+      "authentication": "passed",
+      "csrf": "passed",
+      "ownership": "passed",
+      "uploadBounds": "passed",
+      "escapedNotes": "passed",
+      "submissionIds": [
+        "377043b67d6b492da9481323d10643d0",
+        "3e78c091d947485bb95674f3313de5ba"
+      ],
+      "matches": [
+        {
+          "id": "1e45b52385f44c498159580efb58341d",
+          "status": "completed",
+          "hashes": [
+            "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+            "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870"
+          ]
+        }
+      ],
+      "simultaneousGames": [
+        50,
+        90
+      ],
+      "matchElapsedSeconds": 24.655999999959022,
+      "compilerFailure": "passed",
+      "idempotentMatchCreation": "passed",
+      "authorizedSnapshotsAndArtifacts": "passed",
+      "scanReviewAndDisqualification": "passed",
+      "status": "passed"
+    },
+    "normalPlatform": {
+      "authentication": "passed",
+      "csrf": "passed",
+      "ownership": "passed",
+      "uploadBounds": "passed",
+      "escapedNotes": "passed",
+      "submissionIds": [
+        "8fc57f4415b54272b1a42701bedeff24",
+        "3849943f89ba4329b2a676c977f0bfeb"
+      ],
+      "matches": [
+        {
+          "id": "776dc59df2ac4f14b298b1950e07df19",
+          "status": "completed",
+          "hashes": [
+            "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+            "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870"
+          ]
+        }
+      ],
+      "matchElapsedSeconds": 20.09399999998277,
+      "compilerFailure": "passed",
+      "idempotentMatchCreation": "passed",
+      "authorizedSnapshotsAndArtifacts": "passed",
+      "status": "passed"
+    },
+    "runningDisqualification": {
+      "status": "passed",
+      "match": "ae1e22951b104c59ab01898f7a96565e",
+      "statusAfterWorkerFinalization": "disqualified",
+      "auditArtifacts": 3,
+      "snapshots": 410
+    },
+    "operations": {
+      "status": "passed",
+      "cases": [
+        {
+          "case": "file-access-forfeit",
+          "id": "7a13285de6d04882ac7b6e9ceb8c4c61",
+          "status": "passed",
+          "reason": "EndOfStreamException: AI stdout closed.",
+          "tick": 2
+        },
+        {
+          "case": "three-cpu-timeouts",
+          "id": "f23dabc5628e463e9c16df8395d58019",
+          "status": "passed",
+          "reason": "Three computation timeouts.",
+          "tick": 2
+        },
+        {
+          "case": "network-forfeit",
+          "id": "b4fc69a96f66416e9fa3f15895b090aa",
+          "status": "passed",
+          "reason": "EndOfStreamException: AI stdout closed.",
+          "tick": 1
+        },
+        {
+          "case": "fork-forfeit",
+          "id": "8e78d3b029994b9dacae52701292c45d",
+          "status": "passed",
+          "reason": "EndOfStreamException: AI stdout closed.",
+          "tick": 1
+        },
+        {
+          "case": "thread-forfeit",
+          "id": "b2b541be6e864cada00898fc42e850b2",
+          "status": "passed",
+          "reason": "EndOfStreamException: AI stdout closed.",
+          "tick": 1
+        },
+        {
+          "case": "three-wall-timeouts",
+          "id": "23168f6604074a47bc8dc7f26caff616",
+          "status": "passed",
+          "reason": "Three computation timeouts.",
+          "tick": 2
+        },
+        {
+          "case": "memory-forfeit",
+          "id": "4d947cef648f44948d205f347a8d50d7",
+          "status": "passed",
+          "reason": "EndOfStreamException: AI stdout closed.",
+          "tick": 1
+        },
+        {
+          "case": "stdout-flood-forfeit",
+          "id": "a5b9dda1764044cb81e1f57e05d5452b",
+          "status": "passed",
+          "reason": "InvalidDataException: AI stdout line exceeds limit.",
+          "tick": 0
+        },
+        {
+          "case": "malformed-json-forfeit",
+          "id": "addd06ea65ac43cf96ebcdb5700111f9",
+          "status": "passed",
+          "reason": "JsonException: Expected depth to be zero at the end of the JSON payload. There is an open JSON object or array that should be closed. Path: $ | LineNumber: 0 | BytePositionInLine: 1.",
+          "tick": 0
+        },
+        {
+          "case": "future-tick-forfeit",
+          "id": "878fa5d5744747d0adeb6232f714dfa5",
+          "status": "passed",
+          "reason": "InvalidDataException: AI replied for a future tick.",
+          "tick": 0
+        },
+        {
+          "case": "action-limit-forfeit",
+          "id": "ae049b099c454868810a07dad8f1fe3e",
+          "status": "passed",
+          "reason": "InvalidDataException: Invalid command batch.",
+          "tick": 0
+        },
+        {
+          "case": "both-teams-forfeit",
+          "id": "3db9217bdf444d57bd2b6aeaf46f7e64",
+          "status": "passed"
+        },
+        {
+          "case": "worker-restart-recovery",
+          "id": "94597faf0f1046348a8ba6c6521d5fab",
+          "status": "passed",
+          "attempts": 2,
+          "hashes": [
+            "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+            "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870"
+          ]
+        }
+      ]
+    },
+    "operationsCaseCount": 13,
+    "health": {
+      "platform": "active",
+      "worker": "active",
+      "release": "/opt/tsr/releases/20261117T094533Z",
+      "helperSha256": "6fe12ab6dc7f1cf0c122f83463c1f348c9d8a78ee8dd42cf911b4218ebe70d50",
+      "runtimeGroups": [],
+      "runtimeRuns": [],
+      "databaseIntegrity": "ok",
+      "pendingMatches": 0
+    }
+  },
+  "slowLegalAi": {
+    "deploymentDirectory": "/opt/tsr/releases/20261117T090351Z",
+    "provenance": "Earlier deployment with the same timing and sandbox changes, before final parameter compatibility and transaction fixes. Final package has separate platform and operation results.",
+    "frameSleepMilliseconds": 50,
+    "result": {
+      "authentication": "passed",
+      "csrf": "passed",
+      "ownership": "passed",
+      "uploadBounds": "passed",
+      "escapedNotes": "passed",
+      "submissionIds": [
+        "d7ab40d748944a43b7eabdb0140bdb72",
+        "dfe3784a6f594413bd28f868fabbb8a6"
+      ],
+      "matches": [
+        {
+          "id": "919e960455d24a3394906c18b876443e",
+          "status": "completed",
+          "hashes": [
+            "be0e9ecde5dcc9b8235d2db4cf846d1a93067be7c1dfa382a4bbf2f6d7edcb2e",
+            "545b070bbe9a311db7b3c8ea87fd346b182b357822e9396ec20edea8ca232870"
+          ]
+        }
+      ],
+      "simultaneousGames": [
+        0,
+        0
+      ],
+      "matchElapsedSeconds": 469.0,
+      "compilerFailure": "passed",
+      "idempotentMatchCreation": "passed",
+      "authorizedSnapshotsAndArtifacts": "passed",
+      "scanReviewAndDisqualification": "passed",
+      "status": "passed"
+    }
+  },
+  "sandbox": {
+    "status": "passed",
+    "caseCount": 14,
+    "helperSha256": "6fe12ab6dc7f1cf0c122f83463c1f348c9d8a78ee8dd42cf911b4218eebe70d50",
+    "allRuntimeGroupsRemoved": true
+  },
+  "packages": [
+    {
+      "name": "TuringSignalRelay-windows.zip",
+      "bytes": 38242947,
+      "sha256": "be3be434ca7a6414a061641024403d019ed573ae61a8df06212b951f43b6c8c5"
+    },
+    {
+      "name": "TuringSignalRelay-linux.tar.gz",
+      "bytes": 31352883,
+      "sha256": "a0f0c0d3b4aeb3c1869c73e95fb004903b967c9e2899eceb9ce9127108397726"
+    },
+    {
+      "name": "TuringSignalRelay-server-linux.tar.gz",
+      "bytes": 6127842,
+      "sha256": "167c01d7759e3766b6a131b78a1b185de515758c82e8020ffcc128078eccc71c"
+    },
+    {
+      "name": "TuringSignalRelay-sdk.zip",
+      "bytes": 158852,
+      "sha256": "a3faaf0146fa3712ebc39f2539567fce044b1cae1f42277f0d59590a6ffe1c58"
+    },
+    {
+      "name": "TuringSignalRelay-source.zip",
+      "bytes": 772551,
+      "sha256": "a03518769a978a6462715931167464cff367ac832795cc21da02c6e868e7f932"
+    }
+  ],
+  "remainingValidation": [
+    "Fresh Ubuntu host installation from zero",
+    "Intermittent observer retained-memory measurement requires further investigation"
+  ],
+  "historicalPublicRelease": "docs/PUBLIC_RELEASE.json"
+}
